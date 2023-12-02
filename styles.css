@@ -1,5 +1,45 @@
-body{
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
-    background: lightblue;
+    padding: 0;
+    background-color: #f0f0f0;
+}
+
+header {
+    background-color: #3498db;
+    color: white;
     text-align: center;
+    padding: 1em;
+}
+
+nav {
+    background-color: #2980b9;
+    padding: 1em;
+    width: 200px;
+    position: fixed;
+    height: 100%;
+    overflow: auto;
+}
+
+nav a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    color: white;
+    border-bottom: 1px solid #2574a9;
+    transition: background-color 0.3s;
+}
+
+nav a:hover {
+    background-color: #2574a9;
+}
+
+section {
+    margin-left: 220px;
+    padding: 1em;
+    background-color: white;
+}
+
+article {
+    margin-bottom: 20px;
 }
