@@ -65,9 +65,10 @@ main section article h2 {
 }
 
 main section article ul {
-    list-style-type: disc;
+    list-style-type: decimal;
     padding-left: 20px;
 }
+
 
 main section article .table-of-contents {
     background-color: #f4f4f4; /* Couleur de fond */
