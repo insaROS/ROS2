@@ -69,6 +69,11 @@ main section article ul {
     padding-left: 20px;
 }
 
+main section article ul li ul{
+    list-style-type: circle;
+    padding-left: 20px;
+}
+
 main section article .table-of-contents {
     background-color: #f4f4f4; /* Couleur de fond */
     padding: 10px;
@@ -83,14 +88,4 @@ main section article .table-of-contents h3 {
 main section article .table-of-contents h4 {
     margin-left: 20px;
     margin-bottom: 5px;
-}
-
-/* Style pour personnaliser la puce de la table des matières (sections) */
-main section article .table-of-contents ul {
-    list-style-type: disc; /* Puce pleine */
-}
-
-/* Style pour personnaliser la puce de la table des matières (sous-sections) */
-main section article .table-of-contents ul ul {
-    list-style-type: circle; /* Cercle creux */
 }
