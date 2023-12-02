@@ -63,3 +63,8 @@ article {
 main section article h2 {
     text-align: center;
 }
+
+main section article ul {
+    list-style-type: disc;
+    padding-left: 20px;
+}
