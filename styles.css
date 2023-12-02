@@ -26,7 +26,7 @@ main {
 nav {
     background-color: #2980b9;
     padding: 1em;
-    width: 200px;
+    width: 300px;
     overflow: auto;
     box-sizing: border-box;
 }
@@ -58,4 +58,8 @@ section {
 
 article {
     margin-bottom: 20px;
+}
+
+main section article h2 {
+    text-align: center;
 }
