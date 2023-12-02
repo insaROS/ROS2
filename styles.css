@@ -40,6 +40,11 @@ nav a {
     transition: background-color 0.3s;
 }
 
+nav a.active {
+    background-color: #1a5276; /* Bleu foncé */
+    color: white;
+}
+
 nav a:hover {
     background-color: #2574a9;
 }
