@@ -26,7 +26,9 @@ main {
 
 nav {
     background-color: #292c2d;
-    padding: 1em;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 5px;
     width: 320px;
     min-width: 320px;
     overflow: auto;
@@ -118,7 +120,7 @@ img {
     position: fixed;
     left: 30px;
     top: 40px;
-    width: 100px;
+    width: 80px;
     height: 30px;
     background: #292c2d;
     color: white;
@@ -129,7 +131,7 @@ img {
     display: none;
 }
 
-@media only screen and (max-width: 950px) {
+@media only screen and (max-width: 1100px) {
     nav {
         display: none; /* Masquer le menu en dehors de l'écran à gauche */
     }
@@ -154,6 +156,7 @@ img {
         padding: 10px;
         text-decoration: none;
         color: white;
+        border-bottom: 1px solid #9b9ea0;
         transition: background-color 0.2s;
     }
     
