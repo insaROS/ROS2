@@ -16,7 +16,7 @@ header {
     padding: 10px; /*1em de base*/
     width: 100%;
     box-sizing: border-box;
-    z-index: 1;
+    z-index: 2;
 }
 
 main {
@@ -129,9 +129,10 @@ img {
     top: 40px;
     width: 80px;
     height: 30px;
+    border-radius: 3px;
     background: #292c2d;
     color: white;
-    z-index: 2; /* Mettez le bouton au-dessus du menu */
+    z-index: 3; /* Mettez le bouton au-dessus du menu */
 }
 
 #menu-dropdown {
@@ -160,6 +161,7 @@ img {
         background-color: #292c2d;
         border-bottom: 1px solid #9b9ea0;
         width: 320px;
+        z-index: 1;
     }
 
     #menu-dropdown a {
@@ -190,8 +192,16 @@ img {
     border-radius: 5px;
 }
 
+/* Style pour le bouton de copie lorsqu'il est dans .code-block :hover */
+.code-block:hover .copy-button {
+    opacity: 1;
+}
+
 /* Style pour le bouton de copie */
 .copy-button {
+    display: block;
+    transition: opacity 0.4s; /* Ajoutez une transition d'opacité sur 0.2s avec une courbe de facilité */
+    opacity: 0; /* Commencez avec une opacité à 0 pour le cacher initialement */
     position: absolute;
     top: 5px;
     right: 5px;
@@ -203,6 +213,7 @@ img {
     cursor: pointer;
     user-select: none; /* Empêcher la sélection du texte lors du clic */
     outline: none; /* Supprimer le contour de la bordure lorsqu'il est cliqué */
+    z-index: 3;
 }
 
 /* Style pour le contenu du bloc de code */
