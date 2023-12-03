@@ -180,3 +180,31 @@ img {
         color: white;
     }
 }
+
+/* Style pour le bloc de code */
+.code-block {
+    position: relative;
+    background-color: #f1f1f1;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+/* Style pour le bouton de copie */
+.copy-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    padding: 5px 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Style pour le contenu du bloc de code */
+.code-content {
+    text-align: left; /* Aligner le contenu à gauche */
+    white-space: pre-wrap; /* Gérer le retour à la ligne */
+    margin: 0; /* Supprimer la marge par défaut du navigateur */
+}
