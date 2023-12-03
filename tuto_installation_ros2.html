@@ -61,25 +61,16 @@
 
                     <ol>    
                         <li> 
-                            <p>Télécharger l'image de Ubuntu 22.04 (Jammy Jellyfish) sur le <a href="https://ubuntu.com/download/desktop">site officiel</a>de Ubuntu.</p>
-                            <p>Cliquez sur <i>Download 22.04.03</i> et le téléchargelent se lancera tout seul:</p>
+                            <p>Téléchargez l'image de Ubuntu 22.04 (Jammy Jellyfish) sur le <a href="https://ubuntu.com/download/desktop">site officiel</a> de Ubuntu.</p>
+                            <p>Cliquez sur <span style="background:#078a2c; color:#fefffe"><i>Download 22.04.03</i></span> et le téléchargement se lancera tout seul:</p>
+                            <p><img src="images/tuto_installation_ros2/section1/donwload_ubuntu_iso.png" height="3.5%"></p>
+
+                        </li>
                             
-                            <img src="images/tuto_installation_ros2/section1/donwload_ubuntu_iso.png" height="10%" class="center">
-
-                        </li>
-
                         <li>
-
-
-
+                            <p>Enregistrez/déplacez l'image (fichier .iso) dans le répertoire général de l'ordinateur (ici 'C:\').</p>
+                            <p><img src="images/tuto_installation_ros2/section1/iso_dans_re_C.png" height="0.9%"></p>
                         </li>
-
-                        <li>
-
-
-
-                        </li>
-
 
                     </ol>
 
@@ -87,22 +78,100 @@
 
                 <section id="section2">
                     <h3>Installation d'Oracle VM VirtualBox</h3>
-                    <p>Contenu de la section 1...</p>
+                    <p>Dans cette partie, nous allons installer l'application Oracle VM. Cette applicaion permet de pouvoir créer des machines virtuelles sur votre environnement. Voici les différentes étapes à suivre :</p>
+                
+                    <ol>
+                        <li>
+                            <p>Téléchargez VirtualBox 7.0.10 pour votre OS sur le <a href="https://www.virtualbox.org/wiki/Downloads">site officiel</a> de VirtualBox.</p>
+
+                            <p>Cliquez sur le type de votre OS. Cela téléchargera l'installateur de VirtualBox:</p>
+
+                            <p><img src="images/tuto_installation_ros2/section2/download_virtualbox.png" height="6%"></p>
+                        </li>
+
+                        <li>
+                            <p>Suivez ensuite les instructions de l'installateur de VirtualBox</p>
+                        </li>
+                    </ol>
                 </section>
 
                 <section id="section3">
                     <h3>Création de la machine virtuelle avec l'image d'Ubuntu 22.04</h3>
-                    <p>Contenu de la section 1...</p>
+                    <p>Dans cette partie, nous allons créer une machine virtuelle ROS2 grâce à l'application Oracle VM.</p>
+                    <p>Voici comment procéder :</p>
+
+                    <ol>
+                        <li><p>Ouvrez l'application Oracle VM VirtualBox.</p></li>
+
+                        <li>
+                            <p>Lancez la création d'une Machine Virtuelle en cliquant sur :</p>
+                            <p><img src="images/tuto_installation_ros2/section3/0 btn_new_VM.png" height="1%"></p>
+                        </li>
+
+                        <li>
+                            <p>Remplissez la fenêtre comme suit, en lui donnant un nom 
+                                (« ROS2 » par exemple) et en sélectionnant le chemin de 
+                                l'image Linux Ubuntu 22.04, puis cliquez sur « Suivant » :
+                            </p>
+                            <p><img src="images/tuto_installation_ros2/section3/1 nom_et_iso.png" height="5%"></p>
+                        </li>
+
+                        <li id="VM_create_user_password">
+                            <p>Créez un domaine d'utilisateur, Username et Password. 
+                                Vous pouvez les choisir comme vous voulez (mais retenez-les !). 
+                                Ne pas toucher la partie « Additional Options ». 
+                                (Dans mon cas User : <i>insa</i> et Password : <i>insa</i>) :
+                            </p>
+                            <p><img src="images/tuto_installation_ros2/section3/2 User_Password.png" height="5%"></p>
+                        </li>
+
+                        <li>
+                            <p>Réglez ensuite la quantité de RAM maximale que la machine virtuelle utilisera 
+                                (un minimum de 4Go rendra la machine plus rapide et réactive) et le nombre de 
+                                cœurs du processeur que l'on attribuera à la machine virtuelle (entre 4 et 6 cœurs) :
+                            </p>
+                            <p><img src="images/tuto_installation_ros2/section3/3 Ram.png" height="5%"></p>
+                        </li>
+
+                        <li>
+                            <p>Choisissez ensuite la taille du disque virtuel que l'on va créer sur le disque dur de l'ordinateur réel 
+                                (Après l'installation de ROS2 18Go sont utilisés => Prendre minimum 25Go pour être sûr) :
+                            </p>
+                            <p><img src="images/tuto_installation_ros2/section3/4 Espace_disque.png" height="5%"></p>
+                        </li>
+
+                        <li>
+                            <p>Finissez la création de la Machine Virtuelle en cliquant sur « Finish » :</p>
+                            <p><img src="images/tuto_installation_ros2/section3/5 Récap.png" height="5%"></p>
+                        </li>
+
+                        <li>
+                            <p>Vous obtenez donc notre Machine Virtuelle « ROS2 » avec Ubuntu 22.04 :</p>
+                            <p><img src="images/tuto_installation_ros2/section3/6 Ecran Oracle VM.png" height="5%"></p>
+                        </li>
+                    </ol>
                 </section>
 
                 <section id="section4">
                     <h3>Lancement et paramétrage de la machine virtuelle</h3>
-                    <p>Contenu de la section 1...</p>
+                    <p>Dans cette partie, nous allons allumer mais aussi paramétrer notre machine virtuelle (VM).</p>
 
                     <!-- Sous-section avec titre h4 -->
                     <section id="subsection4-1">
                         <h4>Lancement de la VM</h4>
-                        <p></p>
+                        <ol>
+                            <li>
+                                <p>On lance la VM avec le bouton « Afficher » :</p>
+                            </li>
+
+                            <li>
+                                <p>Le premier allumage de la Machine Virtuelle peut  être assez long. 
+                                    Une fois quelle est lancée, on arrive sur l'écran de verrouillage. 
+                                    Sélectionnez le Username créé à la section <a href="VM_create_user_password">ci-dessus</a> 
+                                    et rentrer le Password :</p>
+                            </li>
+
+                        </ol>
                     </section>
 
                     <section id="subsection4-2">

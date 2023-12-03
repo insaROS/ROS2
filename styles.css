@@ -53,6 +53,7 @@ section {
     padding: 1em;
     background-color: white;
     box-sizing: border-box;
+    width: 100%;
     flex: 1;
 }
 
@@ -102,9 +103,7 @@ main section article .table-of-contents h4 {
 
 
 /* Class Center images*/
-.center {
+img {
     display: block;
-    margin-left: auto;
-    margin-right: auto;
-    width: 50%;
+    margin: auto;
   }
