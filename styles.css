@@ -6,6 +6,7 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    /*min-width: 900px;  Ajustez cette valeur en fonction de vos besoins */
 }
 
 header {
@@ -26,9 +27,10 @@ main {
 nav {
     background-color: #292c2d;
     padding: 1em;
-    width: 20%;
+    width: 320px;
     overflow: auto;
     box-sizing: border-box;
+    display: block;
 }
 
 nav a {
@@ -107,3 +109,42 @@ img {
     display: block;
     margin: auto;
   }
+
+
+/* Style pour le bouton du menu déroulant */
+#menu-button {
+    display: none; /* Masquer le bouton par défaut */
+    position: fixed;
+    left: 10px;
+    top: 10px;
+    z-index: 1; /* Mettez le bouton au-dessus du menu */
+}
+
+
+@media only screen and (max-width: 950px) {
+    nav {
+        display: none; /* Masquer le menu en dehors de l'écran à gauche */
+    }
+
+    #menu-button {
+        display: block; /* Afficher le bouton lorsque l'écran est réduit */
+    }
+    
+    /* Style pour le menu déroulant */
+    #menu-dropdown {
+        display: none;
+        position: fixed;
+        left: 0;
+        top: 0;
+        background-color: #f4f4f4;
+        width: 100%;
+        padding-top: 20px;
+    }
+
+    #menu-dropdown a {
+        display: block;
+        padding: 10px;
+        text-decoration: none;
+        color: #333;
+    }
+}
