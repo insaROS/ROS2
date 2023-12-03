@@ -151,4 +151,8 @@ img {
         text-decoration: none;
         color: white;
     }
+    
+    #menu-dropdown a:hover {
+        background-color: #9b9ea0;  /*#2574a9*/
+    }
 }
