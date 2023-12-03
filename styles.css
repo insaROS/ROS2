@@ -16,7 +16,7 @@ header {
     padding: 10px; /*1em de base*/
     width: 100%;
     box-sizing: border-box;
-    z-index: 2;
+    z-index: 1;
 }
 
 main {
@@ -161,7 +161,7 @@ img {
         background-color: #292c2d;
         border-bottom: 1px solid #9b9ea0;
         width: 320px;
-        z-index: 1;
+        z-index: 3;
     }
 
     #menu-dropdown a {
