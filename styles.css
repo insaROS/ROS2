@@ -184,9 +184,10 @@ img {
 /* Style pour le bloc de code */
 .code-block {
     position: relative;
-    background-color: #d2e3e7;
+    background-color: #d7e8eb;
     padding: 10px;
     margin-bottom: 20px;
+    border-radius: 5px;
 }
 
 /* Style pour le bouton de copie */
@@ -195,7 +196,7 @@ img {
     top: 5px;
     right: 5px;
     padding: 5px 10px;
-    background-color: #4CAF50;
+    background-color: #4c6faf;
     color: white;
     border: none;
     border-radius: 5px;
