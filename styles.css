@@ -28,6 +28,7 @@ nav {
     background-color: #292c2d;
     padding: 1em;
     width: 320px;
+    min-width: 320px;
     overflow: auto;
     box-sizing: border-box;
     display: block;
@@ -39,7 +40,7 @@ nav a {
     text-decoration: none;
     color: white;
     border-bottom: 1px solid #9b9ea0; /*#2574a9*/
-    transition: background-color 0.3s;
+    transition: background-color 0.2s;
 }
 
 nav a.active {
@@ -124,6 +125,9 @@ img {
     z-index: 1; /* Mettez le bouton au-dessus du menu */
 }
 
+#menu-dropdown {
+    display: none;
+}
 
 @media only screen and (max-width: 950px) {
     nav {
@@ -150,6 +154,7 @@ img {
         padding: 10px;
         text-decoration: none;
         color: white;
+        transition: background-color 0.2s;
     }
     
     #menu-dropdown a:hover {
