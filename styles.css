@@ -163,4 +163,9 @@ img {
     #menu-dropdown a:hover {
         background-color: #9b9ea0;  /*#2574a9*/
     }
+
+    #menu-dropdown a.active {
+        background-color: #9b9ea0; /* Bleu foncé */
+        color: white;
+    }
 }
