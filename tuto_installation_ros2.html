@@ -26,7 +26,7 @@
             <!-- Ajoutez d'autres liens pour chaque tutoriel -->
         </nav>
 
-        <div id="menu-button">
+        <div id="menu-dropdown">
             <a href="/ROS2/index.html">Home</a>
             <a href="/ROS2/tuto_installation_ros2.html" class="active">Installation de ROS2</a>
             <a href="/ROS2/tuto_installation_prerequis_matlab.html">Installation des prérequis à l'utilisation de Matlab avec ROS2</a>
@@ -243,7 +243,15 @@
     </main>
 
     <script>
-        
+        // Script pour gérer l'affichage du menu
+        var nav = document.querySelector('nav');
+        var menuButton = document.getElementById('menu-button');
+        var menuDropdown = document.getElementById('menu-dropdown');
+
+        menuButton.addEventListener('click', function() {
+            // Toggle la visibilité du menu déroulant
+            menuDropdown.style.display = (menuDropdown.style.display === 'block') ? 'none' : 'block';
+        });
     </script>
 </body>
 </html>

@@ -115,8 +115,12 @@ img {
 #menu-button {
     display: none; /* Masquer le bouton par défaut */
     position: fixed;
-    left: 10px;
-    top: 10px;
+    left: 30px;
+    top: 40px;
+    width: 100px;
+    height: 30px;
+    background: #292c2d;
+    color: white;
     z-index: 1; /* Mettez le bouton au-dessus du menu */
 }
 
@@ -134,17 +138,17 @@ img {
     #menu-dropdown {
         display: none;
         position: fixed;
-        left: 0;
-        top: 0;
-        background-color: #f4f4f4;
-        width: 100%;
-        padding-top: 20px;
+        left: 30px;
+        top: 70px;
+        background-color: #292c2d;
+        border-bottom: 1px solid #9b9ea0;
+        width: 320px;
     }
 
     #menu-dropdown a {
         display: block;
         padding: 10px;
         text-decoration: none;
-        color: #333;
+        color: white;
     }
 }
