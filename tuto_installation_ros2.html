@@ -78,7 +78,7 @@
                     <ol>    
                         <li> 
                             <p>Téléchargez l'image de Ubuntu 22.04 (Jammy Jellyfish) sur le <a href="https://ubuntu.com/download/desktop">site officiel</a> de Ubuntu.</p>
-                            <p>Cliquez sur <span style="background:#078a2c; color:#fefffe"><i>Download 22.04.03</i></span> et le téléchargement se lancera tout seul:</p>
+                            <p>Cliquez sur <span style="background:#078a2c; color:#fefffe">Download 22.04.03</span> et le téléchargement se lancera tout seul:</p>
                             <img src="images/tuto_installation_ros2/section1/donwload_ubuntu_iso.png" height="2.5%">
 
                         </li>
@@ -256,7 +256,7 @@
                                 
                                 <!-- Exemple de bloc de code -->
                                 <div class="code-block">
-                                    <button class="copy-button" onclick="copyCode('code1')">Copier</button>
+<button class="copy-button" onclick="copyCode('code1')">Copier</button>
 <pre id="code1" class="code-content">
 sudo apt-get update
 sudo apt upgrade
@@ -265,13 +265,95 @@ sudo apt upgrade
 
                             </li>
 
-                            
+                            <li>
+                                <p>Dans le cas où votre user (ici insa) n'est pas dans les utilisateurs 
+                                    administrateurs, il faut passez en mode root :
+                                </p>
+                                
+                                <!-- Exemple de bloc de code -->
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code1')">Copier</button>
+<pre id="code1" class="code-content">
+su -
+</pre>
+                                </div>
+
+                                <p>Maintenant vous pourrez voir que votre terminal à changé. Vous êtes en mode root#.
+                                    La commande <i>adduser insa sudo</i> permet d'ajouter l'utilisateur <i>insa</i> à la liste des 
+                                    sudo (= super-utilisateurs et/ou administrateurs). La commande <i>exit</i> permet de sortir du
+                                    mode root# et de revenir dans un terminal normal. 
+                                </p>
+                                <p>Tapez donc ces commandes :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code1')">Copier</button>
+<pre id="code1" class="code-content">
+adduser insa sudo
+exit
+</pre>
+                                </div>
+
+                                <p><strong>Faites un redémarrage de votre machine virtuelle pour qu'elle prenne en compte 
+                                    le changement d'utilisateur.
+                                    </strong>
+                                </p>
+                                <p> Ouvrez de nouveau un terminal avec "<i>crtl+alt+T</i>", puis tapez les commandes qui 
+                                    n'ont pas été réalisées précédemment suite au problème d'utilisateur :
+                                </p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code1')">Copier</button>
+<pre id="code1" class="code-content">
+sudo apt-get update
+sudo apt upgrade
+</pre>
+                                </div>
+                            </li>
+
+                            <p> Vous venez de faire la mise à jour d'Ubuntu et de tous ses packages !</p>
+
                         </ol>
                     </section>
 
                     <section id="subsection4-4">
                         <h4>Résolution d'un bug de clavier pour l'écran de verrouillage</h4>
-                        <p></p>
+                        
+
+                        <ol>
+                            <li>
+                                <p>Ouvrez un terminal et taper les commandes suivantes pour régler le problème du clavier qui revient en 
+                                    QWERTY à chaque démarrage pour l'écran de verrouillage :
+                                </p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code1')">Copier</button>
+<pre id="code1" class="code-content">
+sudo apt purge ~c
+sudo loadkeys fr
+setxkbmap fr
+</pre>
+                                </div>
+
+                            </li>
+
+                            <li>
+                                <p>La prochaine commande permet de rentrer différents paramètres de clavier (comme 
+                                    le nombre de touches, la langue,...) :
+                                </p>
+                                
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code1')">Copier</button>
+<pre id="code1" class="code-content">
+sudo dpkg-reconfigure keyboard-configuration
+</pre>
+                                </div>
+                                <p>Remplir alors les paramètres en fonction de votre clavier 
+                                    puis faites un reboot de votre VM.
+                                </p>
+
+                            </li>
+                        </ol>
+                        <p>Votre machine à donc le clavier en AZERTY partout, même sur l'écran de verrouillage !</p>
+                        
+
+                        
                     </section>
 
                     <section id="subsection4-5">
