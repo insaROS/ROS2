@@ -24,6 +24,20 @@
             <a href="/ROS2/contact.html">Contact</a>
             <!-- Ajoutez d'autres liens pour chaque tutoriel -->
         </nav>
+
+        <div id="menu-dropdown">
+            <a href="/ROS2/index.html">Home</a>
+            <a href="/ROS2/tuto_installation_ros2.html">Installation de ROS2</a>
+            <a href="/ROS2/tuto_installation_prerequis_matlab.html">Installation des prérequis à l'utilisation de Matlab avec ROS2</a>
+            <a href="/ROS2/tuto_1_noeuds_topics_services_actions.html">Noeuds, Topics, Services et Actions</a>
+            <a href="/ROS2/tuto_2_packages_python_cpp.html" class="active">Création de packages Python et C++</a>
+            <a href="/ROS2/tuto_3_ros_domain_id.html">Comprendre les ROS_DOMAIN_ID</a>
+            <a href="/ROS2/tuto_4_ros2_matlab.html">Utiliser Matlab avec ROS2</a>
+            <a href="/ROS2/tuto_5_micro-ros.html">Micro-ROS</a>
+            <a href="/ROS2/tuto_6_turtlebot3.html">TurtleBot3</a>
+            <a href="/ROS2/contact.html">Contact</a>
+            <!-- Ajoutez d'autres liens pour chaque tutoriel -->
+        </div>
         
         <section>
             <article>
@@ -33,5 +47,16 @@
             <!-- Ajoutez d'autres articles pour chaque tutoriel -->
         </section>
     </main>
+    <script>
+        // Script pour gérer l'affichage du menu
+        var nav = document.querySelector('nav');
+        var menuButton = document.getElementById('menu-button');
+        var menuDropdown = document.getElementById('menu-dropdown');
+
+        menuButton.addEventListener('click', function() {
+            // Toggle la visibilité du menu déroulant
+            menuDropdown.style.display = (menuDropdown.style.display === 'block') ? 'none' : 'block';
+        });
+    </script>
 </body>
 </html>
