@@ -51,7 +51,19 @@
             <!-- Ajoutez d'autres articles pour chaque tutoriel -->
         </section>
     </main>
+    
     <script>
+        // Fonction pour copier le contenu du bloc de code
+        function copyCode(id) {
+            const codeBlock = document.getElementById(id);
+            const range = document.createRange();
+            range.selectNode(codeBlock);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            document.execCommand("copy");
+            window.getSelection().removeAllRanges();
+        }
+
         // Script pour gérer l'affichage du menu
         var nav = document.querySelector('nav');
         var menuButton = document.getElementById('menu-button');

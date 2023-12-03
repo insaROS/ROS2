@@ -67,5 +67,17 @@
             <!-- Ajoutez d'autres articles pour chaque tutoriel -->
         </section>
     </main>
+    
+    <script>
+        // Script pour gérer l'affichage du menu
+        var nav = document.querySelector('nav');
+        var menuButton = document.getElementById('menu-button');
+        var menuDropdown = document.getElementById('menu-dropdown');
+
+        menuButton.addEventListener('click', function() {
+            // Toggle la visibilité du menu déroulant
+            menuDropdown.style.display = (menuDropdown.style.display === 'block') ? 'none' : 'block';
+        });
+    </script>
 </body>
 </html>
