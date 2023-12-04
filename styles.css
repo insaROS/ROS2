@@ -87,6 +87,11 @@ main section article ul li ul{
     padding-left: 20px;
 }
 
+main section article a {
+    color: #498eb9; /* Couleur bleue foncée pour les liens */
+    text-decoration: none;
+}
+
 main section article ul li a {
     color: #498eb9; /* Couleur bleue foncée pour les liens */
     text-decoration: none;
