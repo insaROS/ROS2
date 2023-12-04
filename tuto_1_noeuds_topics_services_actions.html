@@ -76,7 +76,7 @@
                                 temps réel distribués/répartis. Cela signifie que l'architecture est composée de nœuds qui se chargent 
                                 d'effectuer des calculs ou des opérations simples, reliés entre eux par un réseau en temps réel.
                             </p>
-                            <p><br>La différence entre les deux vient du protocole réseau utilisé. ROS2 utilise un protocole réseau DDS (Data Distribution Service),
+                            <p>La différence entre les deux vient du protocole réseau utilisé. ROS2 utilise un protocole réseau DDS (Data Distribution Service),
                                  qui a pour but de simplifier la programmation réseau. Chaque nœud créé avec ce protocole est à la fois un Publisher et un Subscriber 
                                  (voir la partie suivante pour plus de détails sur ce que sont les Publishers et Subscribers ), et est automatiquement créé sur une 
                                  fraction du sous-réseau auquel ROS2 a accès. Cette fraction est appelée domaine, et tous les nœuds d'un domaine sont connectés entre 
@@ -110,7 +110,7 @@
                                 envoyées avant d'attendre de les recevoir. Un "Subscriber" peut avoir souscrit à plusieurs "Publisher", et un "Publisher" peut fournir la même 
                                 information à plusieurs "Subscriber".
                             </p>
-                            <p><br>Les trois points suivants sont des interfaces permettant aux nœuds de communiquer entre eux. Chacun de ces types d'interface diffère 
+                            <p>Les trois points suivants sont des interfaces permettant aux nœuds de communiquer entre eux. Chacun de ces types d'interface diffère 
                                 des autres sur certains points. De plus, ils ont chacun leur domaine d'application.
                             </p>
                         </li>
@@ -164,7 +164,7 @@
                                 se créer directement de nœud à nœud sans passer par un serveur (utilisation de la méthode pear-to-pear directement). ROS2 est donc un système à part de ROS, qui 
                                 utilise un protocole de réseau DDS (Data Distribution Service) qui permet une sécurité et une fiabilité qui n'étaient pas le point fort des protocole TCP/IP 
                                 (Transmission Control Protocol/Internet Protocol) et UDP/IP (User Datagram Protocol) modifiés utilisé par ROS et couplés au ROS master.
-                            </p><br>
+                            </p>
                             <p>En effet, le protocole DDS est bien plus sécuritaire que les protocoles UDP/IP ou TCP/IP, et l'absence de ROS master fait que l'ensemble du système ne repose 
                                 plus sur le fonctionnement d'un seul élément. Il est cependant possible de lier des nœuds ROS2 à des nœuds ROS grâce à un pont qui permettent de recréer un 
                                 système existant déjà sur ROS plus facilement. Ce système est pour le moment particulièrement utile car certains packages n'existent pas encore pour ROS2. 
