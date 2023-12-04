@@ -102,7 +102,7 @@
 
                     <ul>
                         <li>
-                            <p><strong>Nœuds</strong> : Un nœud est l'unité fondamentale de ROS2, et dont la tâche consiste la plupart du temps à réaliser une action spécifique. 
+                            <p><strong><i>Nœuds</i></strong> : Un nœud est l'unité fondamentale de ROS2, et dont la tâche consiste la plupart du temps à réaliser une action spécifique. 
                                 Ils peuvent être crées de diverses manières, mais leur fonctionnement reste similaire. 
                                 Il en existe deux catégories principales : les nœuds "Publisher" et les nœuds "Subscriber". De ces deux catégories est née une troisième catégorie : 
                                 les nœuds "Composed", qui sont composées d'un "Publisher" et d'un "Subscriber". 
@@ -112,39 +112,39 @@
                             </p>
                             <p>Les trois points suivants sont des interfaces permettant aux nœuds de communiquer entre eux. Chacun de ces types d'interface diffère 
                                 des autres sur certains points. De plus, ils ont chacun leur domaine d'application.
-                            </p>
+                            </p><br>
                         </li>
 
                         <li>
-                            <p><strong>Topics</strong> : Les topics sont des canaux de communication unidirectionnels qui relient entre eux les différents nœuds. Ils agissent comme une 
+                            <p><strong><i>Topics</i></strong> : Les topics sont des canaux de communication unidirectionnels qui relient entre eux les différents nœuds. Ils agissent comme une 
                                 sorte de relayeur d'informations. Ils reçoivent chacun les informations d'un seul noeud Publisher et peuvent transmettre à plusieurs Subscriber. 
                                 Ils permettent ainsi à plusieurs entités d'avoir accès à un même topic, mais l'information ne se transmets que dans un seul sens.
                                 Un topic est donc dit asynchrone. Le "Publisher" ne sait pas exactement qui sont les "Subscriber" qui vont récupérer les informations 
                                 transmises à ce topic. Les topics sont utilisées pour les flots de données continus, tel que des données de capteurs (position/vitesse/distance...).
-                            </p>
+                            </p><br>
                         </li>
 
                         <li>
-                            <p><strong>Services</strong> : Les services sont des terminaux qui relient deux nœuds directement entre eux, et dont les informations peuvent être 
+                            <p><strong><i>Services</i></strong> : Les services sont des terminaux qui relient deux nœuds directement entre eux, et dont les informations peuvent être 
                                 transmises dans les deux sens selon le système Request/Reply. Les services sont dit "<strong>synchrones</strong>". Ainsi, le nœud ayant effectué la demande,
                                  attends la réponse de la part du second nœud. Les services sont donc utilisés pour des procédures qui se terminent rapidement, comme des calculs rapides ou 
                                  la récupération de l'état d'un nœud. L'utilisation d'un service pour une procédure longue risque de bloquer les deux nœuds pour le temps de la procédure, et
                                   de générer des problèmes dans tous les autres nœuds qui pourraient être connectés à ceux-ci. Les services sont donc généralement utilisés pour récupérer 
                                   rapidement des données spécifiques.
-                            </p>
+                            </p><br>
                         </li>
 
                         <li>
-                            <p><strong>Actions</strong> : Les actions ressemblent beaucoup à des services dans le sens où les actions utilisent également le système Request/Reply. 
+                            <p><strong><i>Actions</i></strong> : Les actions ressemblent beaucoup à des services dans le sens où les actions utilisent également le système Request/Reply. 
                                 La différence est qu'une action possède deux terminaux assimilés au nœuds : un client d'action (qui formule la requête) et un serveur d'action 
                                 (qui réalise la tâche). Trois services et deux topics transitent entre ces deux nœuds :
                             </p>
-                            <ul style="list-style-type: '-  ';">
+                            <ul style="list-style-type: square;">
                                 <li>
-                                    <p><strong>Les services</strong> : <strong>Send goal, Cancel goal, Get result</strong>. Ils transitent du client d'action vers le serveur d'action.</p>
+                                    <p><strong><i>Les services</i></strong> : <i>Send goal, Cancel goal, Get result</i>. Ils transitent du client d'action vers le serveur d'action.</p>
                                 </li>
                                 <li>
-                                    <p><strong>Les topics</strong> : <strong>Feedback</strong> et <strong>Status</strong>. Ils transitent pour leur part dans le sens inverse aux services, 
+                                    <p><strong><i>Les topics</i></strong> : <i>Feedback</i> et <i>Status</i>. Ils transitent pour leur part dans le sens inverse aux services, 
                                         c'est-à-dire du serveur d'action vers le client d'action.
                                     </p>
                                 </li>
@@ -155,11 +155,11 @@
                                 d'une action en cours ou bien de récupérer le statut final d'une action. Plusieurs actions peuvent être demandées à un même serveur d'action car chaque action 
                                 possède son propre identifiant. Les actions servent donc à pallier le problème des services : ils seront utilisés pour des processus long mais nécessitant des 
                                 retours sur sa progression de façon régulière. Elles sont donc principalement utilisées pour des actions réelles, tel que la mise en mouvement de robot.
-                            </p>
+                            </p><br>
                         </li>
 
                         <li>
-                            <p><strong>Différence ROS et ROS2</strong> : Avec ROS, les nœuds établissent des communications entre eux en passant par un serveur (un ROS Master : terminal où 
+                            <p><strong><i>Différence ROS et ROS2</i></strong> : Avec ROS, les nœuds établissent des communications entre eux en passant par un serveur (un ROS Master : terminal où 
                                 on écrit la commande : \$ roscore). Dans ROS2 il n'y a plus de ROS master. La méthode de communication des nœuds a été modifiée afin que ces communications puissent 
                                 se créer directement de nœud à nœud sans passer par un serveur (utilisation de la méthode pear-to-pear directement). ROS2 est donc un système à part de ROS, qui 
                                 utilise un protocole de réseau DDS (Data Distribution Service) qui permet une sécurité et une fiabilité qui n'étaient pas le point fort des protocole TCP/IP 
