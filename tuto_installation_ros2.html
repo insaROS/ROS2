@@ -79,13 +79,13 @@
                         <li> 
                             <p>Téléchargez l'image de Ubuntu 22.04 (Jammy Jellyfish) sur le <a href="https://ubuntu.com/download/desktop">site officiel</a> de Ubuntu.</p>
                             <p>Cliquez sur <span style="background:#078a2c; color:#fefffe">Download 22.04.03</span> et le téléchargement se lancera tout seul:</p>
-                            <img src="images/tuto_installation_ros2/section1/donwload_ubuntu_iso.png" height="2.5%">
+                            <img src="images/tuto_installation_ros2/section1/donwload_ubuntu_iso.png" height="1.3%">
 
                         </li>
                             
                         <li>
                             <p>Enregistrez/déplacez l'image (fichier .iso) dans le répertoire général de l'ordinateur (ici 'C:\').</p>
-                            <img src="images/tuto_installation_ros2/section1/iso_dans_re_C.png" height="0.6%">
+                            <img src="images/tuto_installation_ros2/section1/iso_dans_re_C.png" height="0.36%">
                         </li>
 
                     </ol>
@@ -102,7 +102,7 @@
 
                             <p>Cliquez sur le type de votre OS. Cela téléchargera l'installateur de VirtualBox:</p>
 
-                            <img src="images/tuto_installation_ros2/section2/download_virtualbox.png" height="5%">
+                            <img src="images/tuto_installation_ros2/section2/download_virtualbox.png" height="2%">
                         </li>
 
                         <li>
@@ -121,7 +121,7 @@
 
                         <li>
                             <p>Lancez la création d'une Machine Virtuelle en cliquant sur :</p>
-                            <img src="images/tuto_installation_ros2/section3/0 btn_new_VM.png" height="0.7%">
+                            <img src="images/tuto_installation_ros2/section3/0 btn_new_VM.png" height="0.4%">
                         </li>
 
                         <li>
@@ -129,7 +129,7 @@
                                 (« ROS2 » par exemple) et en sélectionnant le chemin de 
                                 l'image Linux Ubuntu 22.04, puis cliquez sur « Suivant » :
                             </p>
-                            <img src="images/tuto_installation_ros2/section3/1 nom_et_iso.png" height="3.5%">
+                            <img src="images/tuto_installation_ros2/section3/1 nom_et_iso.png" height="2%">
                         </li>
 
                         <li id="VM_create_user_password">
@@ -138,7 +138,7 @@
                                 Ne pas toucher la partie « Additional Options ». 
                                 (Dans mon cas User : <i>insa</i> et Password : <i>insa</i>) :
                             </p>
-                            <img src="images/tuto_installation_ros2/section3/2 User_Password.png" height="3.5%">
+                            <img src="images/tuto_installation_ros2/section3/2 User_Password.png" height="2%">
                         </li>
 
                         <li>
@@ -146,24 +146,24 @@
                                 (un minimum de 4Go rendra la machine plus rapide et réactive) et le nombre de 
                                 cœurs du processeur que l'on attribuera à la machine virtuelle (entre 4 et 6 cœurs) :
                             </p>
-                            <img src="images/tuto_installation_ros2/section3/3 Ram.png" height="3.5%">
+                            <img src="images/tuto_installation_ros2/section3/3 Ram.png" height="2%">
                         </li>
 
                         <li>
                             <p>Choisissez ensuite la taille du disque virtuel que l'on va créer sur le disque dur de l'ordinateur réel 
                                 (Après l'installation de ROS2 18Go sont utilisés => Prendre minimum 25Go pour être sûr) :
                             </p>
-                            <img src="images/tuto_installation_ros2/section3/4 Espace_disque.png" height="3.5%">
+                            <img src="images/tuto_installation_ros2/section3/4 Espace_disque.png" height="2%">
                         </li>
 
                         <li>
                             <p>Finissez la création de la Machine Virtuelle en cliquant sur « Finish » :</p>
-                            <img src="images/tuto_installation_ros2/section3/5 Récap.png" height="3.5%">
+                            <img src="images/tuto_installation_ros2/section3/5 Récap.png" height="2%">
                         </li>
 
                         <li>
                             <p>Vous obtenez donc notre Machine Virtuelle « ROS2 » avec Ubuntu 22.04 :</p>
-                            <img src="images/tuto_installation_ros2/section3/6 Ecran Oracle VM.png" height="3.5%">
+                            <img src="images/tuto_installation_ros2/section3/6 Ecran Oracle VM.png" height="2%">
                         </li>
                     </ol>
                 </section>
@@ -178,7 +178,7 @@
                         <ol>
                             <li>
                                 <p>On lance la VM avec le bouton « Afficher » :</p>
-                                <img src="images/tuto_installation_ros2/section4/0 btn_affich_VM.png" height="0.8%">
+                                <img src="images/tuto_installation_ros2/section4/0 btn_affich_VM.png" height="0.4%">
                             </li>
 
                             <li>
@@ -188,7 +188,8 @@
                                     <a href="#VM_create_user_password">ci-dessus</a> 
                                     et rentrer le Password :
                                 </p>
-                                <img src="images/tuto_installation_ros2/section4/1 Ecran_verrouillage_VM.png" height="3.5%">
+                                <img src="images/tuto_installation_ros2/section4/1 Ecran_verrouillage_VM.png" height="2%">
+                                <br>
                                 <p>Le clavier de la machine virtuelle est en QWERTY et est différent du votre (AZERTY) !</p>
                             </li>
 
@@ -207,10 +208,12 @@
                                 <ul>
                                     <li><p>Allez dans "<i>Settings</i>"</p></li>
                                     <li><p>Puis dans "<i>Keyboard</i>"</p></li>
-                                    <li><p>Ensuite, cliquez sur le "<i>+</i>" dans la partie "<i>Input Sources</i>"</p></li>
+                                    <li><p>Ensuite, cliquez sur le "<i>+</i>" dans la partie "<i>Input Sources</i>" :</p>
+                                        <img src="images/tuto_installation_ros2/section4/2 Langue_clavier_ajout.png" height="2.5%">
+                                        <br>
+                                    </li>
+                                    <li>Supprimez le clavier US en cliquant sur les petits points à droite du clavir US (permet de ne laisser que la clavier FR)</li>
                                 </ul>
-                                <img src="images/tuto_installation_ros2/section4/2 Langue_clavier_ajout.png" height="4%">
-                                
                                 <ul>
                                     <li><p> Cliquez sur les "<i>...</i>" (Les "..." correspondent à "more languages").</p></li>
                                     <li><p>Tapez "<i>French</i>"</p></li>
@@ -224,24 +227,43 @@
                                     Voici la liste des étapes à suivre :
                                 </p>
                                 <ul>
-                                    <li><p>Aller dans l'onglet "<i>Language and Region</i>"</p></li>
+                                    <li><p>Aller dans l'onglet "<i>Language and Region</i>"</p>
+                                        <img src="images/tuto_installation_ros2/section4/3 Langues_param.png" height="2.5%">
+                                        <br>
+                                    </li>
                                     <li><p>Dans la partie Language, cliquez sur "<i>Manage Installed Languages</i>"</p></li>
                                     <li><p>Cliquez sur "<i>Install/Remove Languages</i>"</p></li>
                                     <li><p>Sélectionnez la langue "<i>French</i>" et cliquez sur "<i>Apply</i>"</p></li>
-                                    <li><p>Retournez dans l'onglet "<i>Region and Language</i>" et cliquez sur "<i>Language</i>" et sélectionner "<i>French (variante)</i>"</p></li>
+                                    <li><p>Retournez dans l'onglet "<i>Region and Language</i>" et cliquez sur "<i>Language</i>" et sélectionner "<i>French (variante)</i>"</p>
+                                        <img src="images/tuto_installation_ros2/section4/3 Langue_système_ajout.png" height="2.5%">
+                                    </li>
+                            
                                 </ul>
-                                <img src="images/tuto_installation_ros2/section4/3 Langue_système_ajout.png" height="4%">
+                                
 
                             </li>
 
                             <li>
                                 <p>Redémarrage de la machine virtuelle :</p>
-                                <p>Fermez la fenêtre des paramètres. 
-                                    Et Cliquez sur l'onglet "Machine" puis "Redémarrage".
-                                </p>
-                                <img src="images/tuto_installation_ros2/section4/4 Redémarrage_VM.png" height="2.2%">
-                                <p><strong><i>Attention il y a un bug qui remets le clavier en QWERTY sur l'écran de verrouillage 
-                                    (Ce bug sera réglé juste après l'étape de mise à jour du système).</i></strong></p>
+                                <ul>
+                                    <li><p>Fermez la fenêtre des paramètres. </p></li>
+                                    <li><p>Et Cliquez sur l'onglet "Machine" puis "Redémarrage".</p>
+                                        <img src="images/tuto_installation_ros2/section4/4 Redémarrage_VM.png" height="1.2%">
+                                    </li>
+                                    <li>
+                                        <p>Vous devriez ensuite voir que vos paramètres ont bien été modifiés :</p>
+                                        <img src="images/tuto_installation_ros2/section4/3 Langues_param_modif.png" height="2.5%">
+                                        <br>
+                                    </li>
+                                    <li> <p><strong><i>Attention il y a un bug qui remets le clavier en QWERTY sur l'écran de verrouillage 
+                                            (Ce bug sera réglé juste après l'étape de mise à jour du système).</i></strong>
+                                        </p>
+                                    </li>
+                                </ul>
+                                
+                                
+                                
+                               
                             </li>
 
                         </ol>
@@ -358,12 +380,70 @@ sudo dpkg-reconfigure keyboard-configuration
 
                     <section id="subsection4-5">
                         <h4>Modification de la résolution de l'écran de la VM</h4>
+                        <p>Pour que l'écran de la VM ait la même taille que l'écran de votre ordinateur :</p>
+                        
+                        <ol>
+                            <li>
+                                <p>Ouvrez les paramètres et aller dans l'onglet "<i>Ecran</i>"". Modifier la "Définition" 
+                                    en fonction de la taille/résolution de votre écran d'ordinateur.
+                                </p>
+                            </li>
+                            <li>
+                                <p>Si, lors du changement de résolution, un écran noir apparaît, cela implique que
+                                     la mémoire vidéo assignée à votre VM n'est pas suffisante pour la résolution 
+                                     souhaitée. Suivez les instructions suivantes :
+                                </p>
+
+                                <ul>
+                                    <li><p>Annulez les modifications effectuées !</p></li>
+                                    <li>
+                                        <p>Eteignez la VM en mode "<i>Eteindre la machine</i>" et pas en mode 
+                                            "<i>Enregistrer l'état de la machine</i>". En cliquant dans l'onglet "Fichier" puis "Eteindre".
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <p>Allez dans les paramètres de "<i>Configuration</i>" de votre VM. 
+                                            Puis, allez dans l'onglet affichage pour augmenter la mémoire vidéo allouée (la mettre au max si possible).
+                                        </p>
+                                    </li>
+                                </ul>
+
+                            </li>
+                        </ol>
                         <p></p>
                     </section>
 
                     <section id="subsection4-6">
                         <h4>Modification des paramètres Wifi de la VM</h4>
-                        <p>Contenu</p>
+                        <p>Dans la suite des tutoriels, vous aurez besoin de pouvoir faire communiquer la VM avec votre ordinateur et aussi de connecter 
+                            la VM à la carte Wifi de votre ordinateur. Pour ce faire, il faut modifier les paramètres de base de la VM.
+                        </p>
+                        <p> Suivez les instructions suivantes :</p>
+
+                        <ol>
+                            <li>
+                                <p> Eteignez la VM en mode "<i>Eteindre la machine</i>" et pas en mode "<i>Enregistrer l'état de la machine</i>". 
+                                Pour ce faire cliquez sur l'onglet "Fichier" puis "Eteindre" en haut de la VM.
+                                </p>
+                            </li>
+
+                            <li>
+                                <p>Allez dans les paramètres de "<i>Configuration</i>" de votre VM. Puis, allez dans "<i>Réseau</i>", 
+                                sélectionnez "<i>Mode d'accès réseaux : Accès par pont</i>".
+                                </p>
+                            </li>
+
+                            <li>
+                                <p>Sélectionner ensuite la carte Wifi de votre ordinateur.</p>
+                            </li>
+
+                            <li>
+                                <p>Pour finir et toujours dans "<i>Réseau</i>", ouvrez le menu déroulant "<i>advanced</i>" et 
+                                    sélectionnez : "<i>Mode promiscuité=Allow All</i>". </p>
+                                <p>Cela évitera les problèmes d'adresses IP lors des différents tutoriels et TP.</p>
+                            </li>
+                        </ol>
+
                     </section>
 
                 </section>
@@ -371,10 +451,62 @@ sudo dpkg-reconfigure keyboard-configuration
 
                 <section id="section5">
                     <h3>Installation de ROS2 Humble</h3>
-                    <p>Contenu de la section 1...</p>
 
                     <section id="subsection5-1">
                         <h4>Configuration du système pour l'installation de ROS2</h4>
+
+                        <ol>
+                            <li>
+                                <p>Définir les paramètres linguistiques :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code1')">Copier</button>
+<pre id="code1" class="code-content">
+locale  # check for UTF-8
+
+sudo apt update && sudo apt install locales
+sudo locale-gen en_US en_US.UTF-8
+sudo update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
+export LANG=en_US.UTF-8
+
+locale  # verify settings
+</pre>
+                                </div>
+                            </li>
+
+                            <li>
+                                <p>Assurez-vous d'abord que le dépôt Ubuntu Universe est activé :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code1')">Copier</button>
+<pre id="code1" class="code-content">
+sudo apt install software-properties-common
+sudo add-apt-repository universe
+</pre>
+                                </div>
+                            </li>
+
+                            <li>
+                                <p>Ajoutez maintenant la clé GPG de ROS 2 avec apt :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code1')">Copier</button>
+<pre id="code1" class="code-content">
+sudo apt update && sudo apt install curl -y
+sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
+</pre>
+                                </div>
+
+                            </li>
+
+                            <li>
+                                <p>Ajoutez ensuite le dépôt à la liste de sources :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code1')">Copier</button>
+<pre id="code1" class="code-content">
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
+</pre>
+                                </div>
+                            </li>
+
+                        </ol>
                         <p>Contenu de la sous-section 2.2...</p>
                     </section>
 
