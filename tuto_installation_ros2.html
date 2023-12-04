@@ -505,19 +505,84 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-a
 </pre>
                                 </div>
                             </li>
-
                         </ol>
-                        <p>Contenu de la sous-section 2.2...</p>
                     </section>
 
                     <section id="subsection5-2">
                         <h4>Installation de ROS2</h4>
-                        <p>Contenu de la sous-section 2.2...</p>
+
+                        <ol>
+                            <li>
+                                <p>Mise à jour système :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code1')">Copier</button>
+<pre id="code1" class="code-content">
+sudo apt-get update && sudo apt upgrade
+</pre>
+                                </div>
+                            </li>
+
+                            <li>
+                                <p>Installation de ROS2 <i>(Cette opération peut durer plusieurs minutes)</i> :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code1')">Copier</button>
+<pre id="code1" class="code-content">
+sudo apt install ros-humble-desktop
+</pre>
+                                </div>
+                            </li>
+                        </ol>
+                        
                     </section>
 
                     <section id="subsection5-3">
                         <h4>Mise en place de l'environnement de ROS2</h4>
-                        <p>Contenu de la sous-section 2.2...</p>
+                        <p>La mise en place de l'environnement ROS2 consiste à mettre la source des fichier setup de ROS2 
+                            dans chaque Terminal que vous ouvrez. Cela permet de pouvoir utiliser les fonctions liées à 
+                            ROS2 dans chaque Terminal où ces fichiers sont setup sont "sourcés". Pour ce faire, il y a 2 méthodes :
+                        </p>
+
+                        <ul style="list-style-type: square;">
+                            <li>Sourcer les fichiers setup de ROS2 pour chaque nouveau terminal, dans lequel vous voudriez utiliser des fonctionnalités de ROS2.</li><br>
+                            <li>Sourcer automatiquement ces fichiers pour tous les Terminaux ouvert. Voici ces deux méthodes.</li>
+                        </ul>
+
+                        <p>Voici les étapes à suivre pour chacune des méthodes :</p>
+
+                        <ol>
+                            <li>
+                                <p>Indication de la source du fichier de setup dans le terminal :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code1')">Copier</button>
+<pre id="code1" class="code-content">
+source /opt/ros/humble/setup.bash
+</pre>
+                                </div>
+                                <p>Il vous faudra faire cette opération pour chaque terminal que vous ouvrez !</p>
+                            </li>
+
+                            <li>
+                                <p>Mise de la source du fichier setup dans le fichier .bashrc :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code1')">Copier</button>
+<pre id="code1" class="code-content">
+sudo nano ~/.bashrc
+</pre>
+                                </div>
+                                <p>Descendre à la fin du fichier et ajouter la ligne :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code1')">Copier</button>
+<pre id="code1" class="code-content">
+source /opt/ros/humble/setup.bash
+</pre>
+                                </div>
+
+                                <img src="images/tuto_installation_ros2/section5/fichier bashrc.png" height="1.8%">
+
+                                <p>Sauvegarder et quitter le fichier avec "<i>Crtl+O</i>", "<i>Entrer</i>" et ensuite "<i>Crtl+X</i>".\\
+                                    Le fichier setup est donc sourcé automatiquement pour chaque nouveau terminal lancé !</p>
+                            </li>
+                        </ol>
                     </section>
                 </section>
 
