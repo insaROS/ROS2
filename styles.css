@@ -217,11 +217,6 @@ img {
     z-index: 3;
 }
 
-.copy-button.copied {
-    background-color: #eacf9c; /* Nouvelle couleur pendant la période de copie */
-    transition: background-color 1s; /* Ajoutez une transition de couleur de 1 seconde */
-}
-
 /* Style pour le contenu du bloc de code */
 .code-content {
     text-align: left; /* Aligner le contenu à gauche */
