@@ -294,8 +294,8 @@ sudo apt upgrade
                                 
                                 <!-- Exemple de bloc de code -->
                                 <div class="code-block">
-<button class="copy-button" onclick="copyCode('code1')">Copier</button>
-<pre id="code1" class="code-content">
+<button class="copy-button" onclick="copyCode('code2')">Copier</button>
+<pre id="code2" class="code-content">
 su -
 </pre>
                                 </div>
@@ -307,8 +307,8 @@ su -
                                 </p>
                                 <p>Tapez donc ces commandes :</p>
                                 <div class="code-block">
-<button class="copy-button" onclick="copyCode('code1')">Copier</button>
-<pre id="code1" class="code-content">
+<button class="copy-button" onclick="copyCode('code3')">Copier</button>
+<pre id="code3" class="code-content">
 adduser insa sudo
 exit
 </pre>
@@ -322,8 +322,8 @@ exit
                                     n'ont pas été réalisées précédemment suite au problème d'utilisateur :
                                 </p>
                                 <div class="code-block">
-<button class="copy-button" onclick="copyCode('code1')">Copier</button>
-<pre id="code1" class="code-content">
+<button class="copy-button" onclick="copyCode('code4')">Copier</button>
+<pre id="code4" class="code-content">
 sudo apt-get update
 sudo apt upgrade
 </pre>
@@ -345,8 +345,8 @@ sudo apt upgrade
                                     QWERTY à chaque démarrage pour l'écran de verrouillage :
                                 </p>
                                 <div class="code-block">
-<button class="copy-button" onclick="copyCode('code1')">Copier</button>
-<pre id="code1" class="code-content">
+<button class="copy-button" onclick="copyCode('code5')">Copier</button>
+<pre id="code5" class="code-content">
 sudo apt purge ~c
 sudo loadkeys fr
 setxkbmap fr
@@ -361,8 +361,8 @@ setxkbmap fr
                                 </p>
                                 
                                 <div class="code-block">
-<button class="copy-button" onclick="copyCode('code1')">Copier</button>
-<pre id="code1" class="code-content">
+<button class="copy-button" onclick="copyCode('code6')">Copier</button>
+<pre id="code6" class="code-content">
 sudo dpkg-reconfigure keyboard-configuration
 </pre>
                                 </div>
@@ -459,8 +459,8 @@ sudo dpkg-reconfigure keyboard-configuration
                             <li>
                                 <p>Définir les paramètres linguistiques :</p>
                                 <div class="code-block">
-<button class="copy-button" onclick="copyCode('code1')">Copier</button>
-<pre id="code1" class="code-content">
+<button class="copy-button" onclick="copyCode('code7')">Copier</button>
+<pre id="code7" class="code-content">
 locale  # check for UTF-8
 
 sudo apt update && sudo apt install locales
@@ -476,8 +476,8 @@ locale  # verify settings
                             <li>
                                 <p>Assurez-vous d'abord que le dépôt Ubuntu Universe est activé :</p>
                                 <div class="code-block">
-<button class="copy-button" onclick="copyCode('code1')">Copier</button>
-<pre id="code1" class="code-content">
+<button class="copy-button" onclick="copyCode('code8')">Copier</button>
+<pre id="code8" class="code-content">
 sudo apt install software-properties-common
 sudo add-apt-repository universe
 </pre>
@@ -487,8 +487,8 @@ sudo add-apt-repository universe
                             <li>
                                 <p>Ajoutez maintenant la clé GPG de ROS 2 avec apt :</p>
                                 <div class="code-block">
-<button class="copy-button" onclick="copyCode('code1')">Copier</button>
-<pre id="code1" class="code-content">
+<button class="copy-button" onclick="copyCode('code9')">Copier</button>
+<pre id="code9" class="code-content">
 sudo apt update && sudo apt install curl -y
 sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
 </pre>
@@ -499,8 +499,8 @@ sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o
                             <li>
                                 <p>Ajoutez ensuite le dépôt à la liste de sources :</p>
                                 <div class="code-block">
-<button class="copy-button" onclick="copyCode('code1')">Copier</button>
-<pre id="code1" class="code-content">
+<button class="copy-button" onclick="copyCode('code10')">Copier</button>
+<pre id="code10" class="code-content">
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
 </pre>
                                 </div>
@@ -515,8 +515,8 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-a
                             <li>
                                 <p>Mise à jour système :</p>
                                 <div class="code-block">
-<button class="copy-button" onclick="copyCode('code1')">Copier</button>
-<pre id="code1" class="code-content">
+<button class="copy-button" onclick="copyCode('code11')">Copier</button>
+<pre id="code11" class="code-content">
 sudo apt-get update && sudo apt upgrade
 </pre>
                                 </div>
@@ -525,8 +525,8 @@ sudo apt-get update && sudo apt upgrade
                             <li>
                                 <p>Installation de ROS2 <i>(Cette opération peut durer plusieurs minutes)</i> :</p>
                                 <div class="code-block">
-<button class="copy-button" onclick="copyCode('code1')">Copier</button>
-<pre id="code1" class="code-content">
+<button class="copy-button" onclick="copyCode('code12')">Copier</button>
+<pre id="code12" class="code-content">
 sudo apt install ros-humble-desktop
 </pre>
                                 </div>
@@ -553,8 +553,8 @@ sudo apt install ros-humble-desktop
                             <li>
                                 <p>Indiquez la source du fichier de setup dans le terminal :</p>
                                 <div class="code-block">
-<button class="copy-button" onclick="copyCode('code1')">Copier</button>
-<pre id="code1" class="code-content">
+<button class="copy-button" onclick="copyCode('code13')">Copier</button>
+<pre id="code13" class="code-content">
 source /opt/ros/humble/setup.bash
 </pre>
                                 </div>
@@ -564,15 +564,15 @@ source /opt/ros/humble/setup.bash
                             <li>
                                 <p>Mettez la source du fichier setup dans le fichier .bashrc :</p>
                                 <div class="code-block">
-<button class="copy-button" onclick="copyCode('code1')">Copier</button>
-<pre id="code1" class="code-content">
+<button class="copy-button" onclick="copyCode('code14')">Copier</button>
+<pre id="code14" class="code-content">
 sudo nano ~/.bashrc
 </pre>
                                 </div>
                                 <p>Descendez à la fin du fichier et ajoutez la ligne :</p>
                                 <div class="code-block">
-<button class="copy-button" onclick="copyCode('code1')">Copier</button>
-<pre id="code1" class="code-content">
+<button class="copy-button" onclick="copyCode('code15')">Copier</button>
+<pre id="code15" class="code-content">
 source /opt/ros/humble/setup.bash
 </pre>
                                 </div>
@@ -601,7 +601,20 @@ source /opt/ros/humble/setup.bash
             window.getSelection().addRange(range);
             document.execCommand("copy");
             window.getSelection().removeAllRanges();
+
+            // Changer la couleur de fond du bouton après la copie
+            const copyButton = document.querySelector('.copy-button');
+            copyButton.style.backgroundColor = '#d4ca98'; // Nouvelle couleur après la copie
+
+            // Rétablir la couleur de fond après une courte période (1000 millisecondes = 1 seconde)
+            setTimeout(() => {
+                const computedStyle = getComputedStyle(copyButton);
+                copyButton.style.backgroundColor = computedStyle.getPropertyValue('background-color'); // Couleur initiale du bouton
+            }, 1000);
         }
+
+        
+
 
         // Script pour gérer l'affichage du menu
         var nav = document.querySelector('nav');
