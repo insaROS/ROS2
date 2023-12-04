@@ -601,13 +601,6 @@ source /opt/ros/humble/setup.bash
             window.getSelection().addRange(range);
             document.execCommand("copy");
             window.getSelection().removeAllRanges();
-
-            // Ajouter la classe "copied" pendant une courte période
-            const copyButton = document.querySelector('.copy-button');
-            copyButton.classList.add('copied');
-            setTimeout(() => {
-                copyButton.classList.remove('copied');
-            }, 1000); // 1000 millisecondes (1 seconde)
         }
 
         // Script pour gérer l'affichage du menu
