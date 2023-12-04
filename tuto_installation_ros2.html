@@ -291,43 +291,54 @@ sudo apt upgrade
                                 <p>Dans le cas où votre user (ici insa) n'est pas dans les utilisateurs 
                                     administrateurs, il faut passez en mode root :
                                 </p>
-                                
+
+                                <ul>
+                                    <li>
+                                        <p>Passez en mode root en tapant la commande :</p>
                                 <!-- Exemple de bloc de code -->
-                                <div class="code-block">
+                                        <div class="code-block">
 <button class="copy-button" onclick="copyCode('code2')">Copier</button>
 <pre id="code2" class="code-content">
 su -
 </pre>
-                                </div>
+                                        </div>
+                                        <p>Maintenant vous pourrez voir que votre terminal à changé. Vous êtes en mode root#.
+                                            La commande <i>adduser insa sudo</i> permet d'ajouter l'utilisateur <i>insa</i> à la liste des 
+                                            sudo (= super-utilisateurs et/ou administrateurs). La commande <i>exit</i> permet de sortir du
+                                            mode root# et de revenir dans un terminal normal. 
+                                        </p>
+                                    </li>
 
-                                <p>Maintenant vous pourrez voir que votre terminal à changé. Vous êtes en mode root#.
-                                    La commande <i>adduser insa sudo</i> permet d'ajouter l'utilisateur <i>insa</i> à la liste des 
-                                    sudo (= super-utilisateurs et/ou administrateurs). La commande <i>exit</i> permet de sortir du
-                                    mode root# et de revenir dans un terminal normal. 
-                                </p>
-                                <p>Tapez donc ces commandes :</p>
-                                <div class="code-block">
+                                    <li>
+                                        <p>Tapez donc ces commandes :</p>
+                                        <div class="code-block">
 <button class="copy-button" onclick="copyCode('code3')">Copier</button>
 <pre id="code3" class="code-content">
 adduser insa sudo
 exit
 </pre>
-                                </div>
-
-                                <p><strong>Faites un redémarrage de votre machine virtuelle pour qu'elle prenne en compte 
-                                    le changement d'utilisateur.
-                                    </strong>
-                                </p>
-                                <p> Ouvrez de nouveau un terminal avec "<i>crtl+alt+T</i>", puis tapez les commandes qui 
-                                    n'ont pas été réalisées précédemment suite au problème d'utilisateur :
-                                </p>
-                                <div class="code-block">
+                                        </div>
+                                        <p><strong>Faites un redémarrage de votre machine virtuelle pour qu'elle prenne en compte 
+                                            le changement d'utilisateur.
+                                            </strong>
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <p> Ouvrez de nouveau un terminal avec "<i>crtl+alt+T</i>", puis tapez les commandes qui 
+                                            n'ont pas été réalisées précédemment suite au problème d'utilisateur :
+                                        </p>
+                                        <div class="code-block">
 <button class="copy-button" onclick="copyCode('code4')">Copier</button>
 <pre id="code4" class="code-content">
 sudo apt-get update
 sudo apt upgrade
 </pre>
-                                </div>
+                                        </div>
+                                    </li>
+
+
+                                </ul>
+
                             </li>
 
                             <p> Vous venez de faire la mise à jour d'Ubuntu et de tous ses packages !</p>
