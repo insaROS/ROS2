@@ -601,16 +601,6 @@ source /opt/ros/humble/setup.bash
             window.getSelection().addRange(range);
             document.execCommand("copy");
             window.getSelection().removeAllRanges();
-
-            // Changer la couleur de fond du bouton après la copie
-            const copyButton = document.querySelector('.copy-button');
-            copyButton.style.backgroundColor = '#d4ca98'; // Nouvelle couleur après la copie
-
-            // Rétablir la couleur de fond après une courte période (1000 millisecondes = 1 seconde)
-            setTimeout(() => {
-                const computedStyle = getComputedStyle(copyButton);
-                copyButton.style.backgroundColor = computedStyle.getPropertyValue('background-color'); // Couleur initiale du bouton
-            }, 1000);
         }
 
         

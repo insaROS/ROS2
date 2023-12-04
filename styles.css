@@ -207,13 +207,11 @@ img {
     top: 5px;
     right: 5px;
     padding: 5px 10px;
-    background-color: #4c6faf;
+    background-color: #4c6faf; /*dbd7a0*/
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    user-select: none; /* Empêcher la sélection du texte lors du clic */
-    outline: none; /* Supprimer le contour de la bordure lorsqu'il est cliqué */
     z-index: 3;
 }
 
