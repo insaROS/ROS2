@@ -209,7 +209,7 @@ source /opt/ros/humble/setup.bash
                         <ol>
                             <li>
                                 <p>Pour lancer TurtleSim, nous devons activer le nœud de TurtleSim. Pour ce faire nous devons utiliser une structure de commande particulière. Voici la structure à utiliser :</p>
-                                <div class="code-block">
+                                <div class="code-block" style="background-color: lightgrey;">
 <pre class="code-content">
 ros2 run &lt;package_name&gt; &lt;executable_name&gt;
 </pre>
@@ -255,7 +255,7 @@ ros2 run turtlesim turtlesim_node
                             <li>
                                 <p>Pour lancer la télécommande, nous devons lancer le nœud de la télécommande. Pour ce faire nous devons utiliser la structure de commande précédente.</p>
                                 <p>Voici la structure :</p>
-                                <div class="code-block">
+                                <div class="code-block" style="background-color: lightgrey;">
 <pre class="code-content">
 ros2 run &lt;package_name&gt; &lt;executable_name&gt;
 </pre>
@@ -320,13 +320,67 @@ ros2 run turtlesim turtle_teleop_key
                             <p>Vous avez réussi à faire bouger votre tortue dans TurtleSim à l'aide de la télécommande en ayant lancé le noeuds de TurtleSim en arrière plan. 
                                 La prochaine étape concerne la mise automatique de la source de RO2 pour chaque nouveau terminal ouvert.
                             </p>
+
                         </ol>
                         
                     </section>
 
                     <section id="subsection3-5">
                         <h4>Mise de la source dans fichier ~/.bashrc</h4>
-                        <p></p>
+                        <p>Cette partie consiste à ce que la source de ROS2 soit ajouté automatiquement pour chaque nouveau terminal que vous ouvrez. 
+                            Pour ce faire suivez les instructions suivantes :
+                        </p>
+
+                        <ol>
+                            <li>
+                                <p>
+                                    Ouvrez un terminal avec "<i>ctrl+alt+T</i>", puis modifier le fichier ".bashrc" avec la commande suivante puis tapez votre mot de passe 
+                                    (<i>lorsque vous rentrez votre mot de passe celui-ci ne s'affiche pas</i>):
+                                </p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code6')">Copier</button>
+<pre id="code6" class="code-content">
+sudo nano .bashrc
+</pre>
+                                </div>
+                                <img src="images/tuto_1/section3/sudo_nano_bashrc.png" width="250px">
+                                <p>
+                                    Explication de la commande :
+                                </p>
+                                <ul style="list-style-type: '';">
+                                    <li><p><strong>sudo</strong> : nous l'utilisons pour lancer une commande dans un terminal en mode administrateur.</p></li>
+                                    <li><p><strong>nano</strong> : c'est un éditeur de fichier et permet de les modifier.</p> </li>
+                                    <li><p><strong>.bashrc</strong> : c'est un fichier de configuration de notre machine virtuelle.</p></li>
+                                </ul>
+                                <p>Donc la commande <i>sudo nano .bashrc</i> permet d'ouvrir le fichier ".bashrc" dans l'éditeur de fichier "nano" le tout en mode administrateur.</p>
+                            </li>
+
+                            <li>
+                                <p>
+                                    Pour pouvoir utiliser TurtleSim, vous devez indiquer au terminal le chemin du fichier setup de ROS2. 
+                                    Voici la ligne de code que vous avez à mettre à la fin de ce fichier : 
+                                </p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code7')">Copier</button>
+<pre id="code7" class="code-content">
+source /opt/ros/humble/setup.bash
+</pre>
+                                </div>
+                            </li>
+                            <li>
+                                <p>Ajoutez le chemin du fichier setup de ROS2 à la fin de ce fichier et vous devriez obtenir :</p>
+                                <img src="images/tuto_1/section3/bashrc.png" width="450px">
+                            </li>
+
+                            <li>
+                                <p>Sauvegardez et quittez le fichier avec "<i>Ctrl + O</i>", "<i>Entrer</i>" et ensuite "<i>Crtl + X</i>".</p>
+                                <p>L'ajout de cette ligne de code permet au système de connaître automatiquement le chemin du fichier setup de ROS2. 
+                                    C'est-à-dire, que pour chaque nouveau Terminal que vous ouvrez, le fichier setup sera sourcé.
+                                </p>
+                            </li>
+
+                            <p> Le 1er tutoriel est fini. Passons au suivant pour contrôler la tortue en publiant des messages directement sur le topic "turtle1/cmd_vel".</p>
+                        </ol>
                     </section>
 
                 </section>
@@ -334,11 +388,36 @@ ros2 run turtlesim turtle_teleop_key
 
                 <section id="section4">
                     <h3>Visualisation des nœuds et topics avec rqt graph</h3>
-                    <p>Contenu de la section 1...</p>
 
                     <!-- Sous-section avec titre h4 -->
                     <section id="subsection4-1">
                         <h4>Ouvrir rqt_graph</h4>
+                        <ol>
+                            <li>
+                                <p>
+                                    Vérifiez que la source des fichiers de setup de ROS2 est bien dans la fichier <i>.bashrc</i>. 
+                                    Cette étape a été vue à la section
+                                </p>
+                            </li>
+
+                            <li>
+                                <p>Ouvrez un terminal avec "<i>ctrl+alt+T</i>"</p>
+                            </li>
+
+                            <li>
+                                <p>Lancez rqt_graph en tapant la commande suivante et une fenêtre rqt_graph va s'ouvrir:</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code8')">Copier</button>
+<pre id="code8" class="code-content">
+rqt_graph
+</pre>
+                                </div>
+                                <img src="images/tuto_1/section4/cmd_rqt_graph.png" width="175px">
+                                <br>
+                                <img src="images/tuto_1/section4/rqt_graph_vide.png" width="450px">
+
+                            </li>
+                        </ol>
                         <p></p>
                     </section>
 
