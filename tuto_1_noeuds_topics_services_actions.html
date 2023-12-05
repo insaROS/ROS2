@@ -160,7 +160,7 @@
 
                         <li>
                             <p><strong><i>Différence ROS et ROS2</i></strong> : Avec ROS, les nœuds établissent des communications entre eux en passant par un serveur (un ROS Master : terminal où 
-                                on écrit la commande : \$ roscore). Dans ROS2 il n'y a plus de ROS master. La méthode de communication des nœuds a été modifiée afin que ces communications puissent 
+                                on écrit la commande : $ roscore). Dans ROS2 il n'y a plus de ROS master. La méthode de communication des nœuds a été modifiée afin que ces communications puissent 
                                 se créer directement de nœud à nœud sans passer par un serveur (utilisation de la méthode pear-to-pear directement). ROS2 est donc un système à part de ROS, qui 
                                 utilise un protocole de réseau DDS (Data Distribution Service) qui permet une sécurité et une fiabilité qui n'étaient pas le point fort des protocole TCP/IP 
                                 (Transmission Control Protocol/Internet Protocol) et UDP/IP (User Datagram Protocol) modifiés utilisé par ROS et couplés au ROS master.
@@ -405,7 +405,7 @@ source /opt/ros/humble/setup.bash
                             </li>
 
                             <li>
-                                <p>Lancez rqt_graph en tapant la commande suivante et une fenêtre rqt_graph va s'ouvrir:</p>
+                                <p>Lancez rqt_graph en tapant la commande suivante et une fenêtre rqt_graph va s'ouvrir :</p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code8')">Copier</button>
 <pre id="code8" class="code-content">
@@ -415,20 +415,70 @@ rqt_graph
                                 <img src="images/tuto_1/section4/cmd_rqt_graph.png" width="175px">
                                 <br>
                                 <img src="images/tuto_1/section4/rqt_graph_vide.png" width="450px">
-
+                                <ul style="list-style-type: '- ';">
+                                    <li><p>Dans la fenêtre rqt_graph, cliquez sur "Nodes only" (A côté des deux flèches bleues)</p></li>
+                                    <li><p>Choisissez ensuite "Nodes/Topics (all)".</p></li>
+                                    <li><p>Décocher ensuite "Dead sinks" et "Leaf topics" de la partie "Hide".</p></li>
+                                </ul>
+                                <p>rqt_graph permet de voir l'interaction entre les différents nœuds et topics actifs en ce moment. Notre rqt_graph est vide. <i>Est-ce normal ?</i>
+                                    Oui, nous avons pour le moment aucun nœud actif dans les terminaux. De ce fait nous voyons rien sur ce graph</p>
                             </li>
                         </ol>
-                        <p></p>
+
                     </section>
 
                     <section id="subsection4-1">
                         <h4>Lancer TurtleSim</h4>
-                        <p></p>
+
+                        <ol>
+                            <li><p>Ouvrez un second Terminal (et vérifiez la source \ref{sub_sec:source .bashrc})</p></li>
+                            <li>
+                                <p>Tapez la commande qui permet de lancer TurtleSim en arrière plan :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code9')">Copier</button>
+<pre id="code9" class="code-content">
+ros2 run turtlesim turtlesim_node &
+</pre>
+                                </div>
+                                <img src="images/tuto_1/section3/ros2 run turtlesim arriere plan.png" width="380px">
+                                    
+                            </li>
+
+                            <li>
+                                <p>Appuyez ensuite sur le bouton "Rafraîchir" de la fenêtre rqt_graph (bouton avec 2 flèches bleues sur la gauche).</p>
+                                <p>Vous obtiendrez ceci :</p>
+                                <img src="images/tuto_1/section4/rqt_graph_turtle1.png" width="500px">
+                            </li>
+                            
+                            <p>Vous pouvez donc voir le nœud turtlesim que vous venez de lancer avec la commande ci-dessus. 
+                                Vous pouvez voir aussi tous les topics, liés à la tortue « /turtle1 », qui peuvent interagir avec le nœud. 
+                                Vous retrouverez le topic « /turtle1/cmd_vel » qui sera utilisé dans la suite de ce tutoriel.</p>
+                            
+                        </ol>
+
                     </section>
 
                     <section id="subsection4-1">
                         <h4>Lancer la télécommande</h4>
-                        <p></p>
+
+                        <ol>
+                            <li>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code10')">Copier</button>
+<pre id="code10" class="code-content">
+ros2 run turtlesim turtle_teleop_key
+</pre>
+                                </div>
+                                <img src="images/tuto_1/section3/ros2 run turtlesim teleop.png" width="380px">
+                            </li>
+
+                            <li>
+                                <p> Retournez sur la fenêtre rqt_graph et rafraîchissez le graph. Vous allez obtenir ceci :</p>
+                                <img src="images/tuto_1/section4/rqt_graph_turtle1_teleop.png" width="500px">
+                                
+                            </li>
+                            <p>Vous pouvez donc voir que le nœud de la télécommande est apparu lui aussi sous le nom /teleop_turtle. On peut voir que la télécommande ne peut agir que sur le topic /turtle1/cmd_vel.</p>
+                        </ol>
                     </section>
                 
                 </section>
@@ -436,31 +486,139 @@ rqt_graph
 
                 <section id="section5">
                     <h3>Comprendre les topics avec TurtleSim</h3>
-                    <p>Contenu de la section 1...</p>
 
                     <section id="subsection5-1">
                         <h4>Trouver la liste des "topics" actifs</h4>
-                        <p></p>
+                        
+                        <ol>
+                            <li><p>Lancez TurtleSim dans un nouveau terminal.</p></li>
+                            <li>
+                                <p>Dans un second terminal, visualisez les topics actifs en tapant la commande :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code11')">Copier</button>
+<pre id="code11" class="code-content">
+ros2 topic list
+</pre>
+                                </div>
+                                <img src="images/tuto_1/section5/ros2_topic_list.png" width="230px">
+
+                            </li>
+                            <p>Vous constaterez que vous avez dans la liste des topics actifs, les topics sur lesquels TurtleSim publie ses données. Nous avons déjà vu ces topics dans la section précédente.
+                                Le topic qui nous intéresse est le topic /turtle1/cmd_vel
+                            </p>
+                        </ol>
                     </section>
 
                     <section id="subsection5-2">
                         <h4>Trouver les informations précises d'un "topic"</h4>
-                        <p></p>
+                        <ol>
+                            <li>
+                                <p>Tapez la commande :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code12')">Copier</button>
+<pre id="code12" class="code-content">
+ros2 topic info /turtle1/cmd_vel
+</pre>
+                                </div>
+                                <img src="images/tuto_1/section5/ros2_topic_info_cmd_vel.png" width="350px">
+                            </li>
+                            <li>
+                                <p>Le topic /turtle1/cmd_vel accepte uniquement les messages de type geometry_msgs/msg/Twist.</p>
+                            </li>
+                            <p>Nous verrons dans le prochain tutoriel à quoi correspondent les termes "Publisher" et "Subscription".</p>
+                        </ol>
                     </section>
 
                     <section id="subsection5-3">
                         <h4>Trouver les caractéristiques d'un "geometry_msgs/msg/Twist"</h4>
-                        <p></p>
+                        <ol>
+                            <li>
+                                <p>Tapez la commande suivante, pour trouver les caractéristique d'un message de type geometry_msgs/msg/Twist :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code13')">Copier</button>
+<pre id="code13" class="code-content">
+ros2 interface show geometry_msgs/msg/Twist
+</pre>
+                                </div>
+                                <img src="images/tuto_1/section5/carac_geo_msg_twist.png" width="550px">
+                            </li>
+
+                            <li>
+                                <p>Vous pouvez voir qu'un message de type geometry_msgs/msg/Twist contient deux vecteurs. Un pour indiquer les vitesses linéaires 
+                                    que l'on veut donner à la tortue et le second pour les vitesses angulaires.
+                                </p>
+                                <p>La tortue évoluant dans un système 2D, il sera uniquement possible de lui envoyer des vitesses linéaires selon x et y et des 
+                                    vitesses angulaires selon z. L'axe x est correspond à la direction de la tortue, l'axe y à la vitesse latérale de la tortue 
+                                    et l'axe z correspond la vitesse angulaire de la tortue en sachant que z pointe vers vous.
+                                </p>
+                            </li>
+                        </ol>
                     </section>
 
                     <section id="subsection5-4">
                         <h4>Envoyer un geometry_msgs/msg/Twist sur le topic /turtle1/cmd_vel</h4>
-                        <p></p>
+                        <ol>
+                            <li>
+                                <p>Observez la structure de la commande permettant d'envoyer un message sûr un topic :</p>
+                                <div class="code-block" style="background-color: lightgrey;">
+<pre class="code-content">
+ros2 topic pub &lt;pub_frequency&gt; &lt;topic_name&gt; &lt;message_type&gt; &lt;message&gt;
+</pre>
+                                </div>
+                            </li>
+
+                            <li>
+                                <p>Tapez la commande suivante, pour envoyer un geometry_msgs/msg/Twist sur le topic /turtle1/cmd_vel 
+                                    (<i>en spécifiant en paramètre "--once" pour n'envoyer qu'un seul message sur ce topic</i>)  :
+                                </p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code14')">Copier</button>
+<pre id="code14" class="code-content">
+ros2 topic pub --once /turtle1/cmd_vel geometry_msgs/msg/Twist "{linear: {x: 2.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 1.8}}"
+</pre>
+                                </div>
+                                <img src="images/tuto_1/section5/cmd_pub_geo_once.png" width="600px">
+                                <p>Vous pourrez voir dans le terminal que le geometry_msgs/msg/Twist a été publié /turtle1/cmd_vel :</p>
+                                <img src="images/tuto_1/section5/pub_geo_msg_twist_once.png" width="600px">
+                            </li>
+
+                            <li>
+                                <p>On remarque que notre tortue "turtle1" a avancée en tournant sur la gauche.</p>
+                                <img src="images/tuto_1/section5/turtlesim_pub_once.png" width="250px">
+                                <p>Ce qui correspond bien à une vitesse selon x et une vitesse angulaire selon z.</p>
+                            </li>
+                        </ol>
                     </section>
 
                     <section id="subsection5-5">
                         <h4>Envoyer un message en boucle sur le topic /turtle1/cmd_vel</h4>
-                        <p></p>
+                        <ol>
+                            <li>
+                                <p>Pour envoyer en boucle le message précédent, il vous suffit de modifier le paramètre "--once" 
+                                    par "--rate &lt;freq_Hz&gt;" (<i>&lt;freq_Hz&gt; correspond à la fréquence d'envoi du message</i>). 
+                                    Dans notre cas, nous allons écrire le paramètre « --rate 1 » pour envoyer ce message 
+                                    successivement à une fréquence de 1Hz.
+                                </p>
+                                <p>Tapez la commande suivante :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code15')">Copier</button>
+<pre id="code15" class="code-content">
+ros2 topic pub --rate 1 /turtle1/cmd_vel geometry_msgs/msg/Twist "{linear: {x: 2.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 1.8}}"
+</pre>
+                                </div>
+                                <img src="images/tuto_1/section5/pub_geo_msg_twist_rate.png" width="600px">
+                                    
+                            </li>
+
+                            <li>
+                                <p>On remarque donc que le message est bien envoyé en boucle avec une fréquence de 1Hz et que la tortue tourne en boucle :</p>
+                                <img src="images/tuto_1/section5/turtlesim_pub_rate.png" width="600px">
+                                <p> Vous pourrez voir les messages que vous avez publiés sur le topic /turtle1/cmd_vel, 
+                                    s'afficher toutes les secondes (<i>car on à mis un rate de 1Hz</i>)
+                                </p>
+                            </li>
+                            <p>La partie du tutoriel sur les topics est finie. Dans la partie suivante nous étudirons le fonctionnement des topics en utilisant TurtleSim et rqt.</p>
+                        </ol>
                     </section>
 
                 </section>
