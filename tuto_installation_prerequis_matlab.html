@@ -69,47 +69,203 @@
 
                 <section id="section1">
                     <h3>Introduction</h3>
-                    <p></p>
+                    <p>L'objectif principal de ce guide consiste à vous guider à travers les étapes essentielles pour effectuer les 
+                        installations requises en vue d'assurer le bon fonctionnement de Matlab en conjonction avec ROS2. Il est à 
+                        noter que lors de nos essais avec Matlab R2023a, nous avons rencontré des difficultés et des échecs. Par 
+                        conséquent, nous vous recommandons vivement d'opter pour la version R2023b de Matlab pour éviter ces problèmes.
+                    </p>
+                    <p>Il convient de souligner que, bien que les Publishers puissent être utilisés sans avoir préalablement effectué 
+                        ces installations, l'accès à des messages spécifiques et l'utilisation des Subscribers resteront restreints 
+                        jusqu'à ce que vous ayez complété ce tutoriel. En conséquence, suivre scrupuleusement ces instructions vous 
+                        permettra de profiter pleinement des fonctionnalités offertes par cette combinaison de logiciels.
+                    </p>
                 </section>
+
 
                 <section id="section2">
                     <h3>Création de l'environnement virtuel Python</h3>
-                    <p>Contenu de la section 1...</p>
+                    <p>La première étape de la configuration des prérequis implique la création d'un environnement virtuel Python, 
+                        crucial pour que Matlab puisse récupérer les messages via les Subscribers. Si toutefois vous rencontrez 
+                        des problèmes liés à une bibliothèque ou à l'environnement Python lors de l'utilisation du Subscriber, 
+                        il vous faudra reprendre cette étape.
+                    </p>
 
                     <section id="subsection2-1">
                         <h4>Télécharger Python</h4>
-                        <p>Contenu de la sous-section 2.2...</p>
+                        <ol>
+                            <li>
+                                <p>
+                                    Pour commencer, vous devrez installer la version 3.10.0rc2 de Python. Évitez de choisir les versions 
+                                    les plus récentes de Python, car cela posera des problèmes de compatibilité avec Matlab. Pour référence,
+                                    veuillez noter que Matlab R2023a accepte au mieux la version 3.11 de Python, tandis que la ROS ToolBox 
+                                    est compatible avec la version 3.10 de Python au maximum.
+                                </p>
+                                <p>
+                                    Pour ce faire, vous pouvez télécharger le lanceur directement via le <a href="https://www.python.org/ftp/python/3.10.0/python-3.10.0rc2-amd64.exe">ce lien</a>.
+                                </p>
+                            </li>
+                            <li>
+                                <p>
+                                    Une fois le téléchargement terminé, lancez le fichier pour procéder à l'installation de la version appropriée de Python.
+                                    <i><strong>Astuce</strong> : Assurez-vous de noter le chemin d'accès choisi pour l'installation et, si possible, copiez-le pour faciliter les étapes suivantes.</i>
+                                </p>
+                            </li>
+                            <li>
+                                <p>
+                                    Après avoir retenu le chemin d'accès pour l'installation de Python, ou si vous avez décidé de choisir 
+                                    vous-même l'emplacement d'installation, ouvrez une invite de commande Windows en saisissant « cmd » 
+                                    dans la barre de recherche :
+                                </p>
+                                <img src="images/tuto_installation_prerequis/section2/cmd.png" width="400px">
+                            </li>
+                        </ol>
+
                     </section>
 
                     <section id="subsection2-2">
                         <h4>Créer l'environnement virtuel Python</h4>
-                        <p>Contenu de la sous-section 2.2...</p>
+                        <ol>
+                            <li>
+                                <p>Procédez à la création d'un environnement virtuel selon la syntaxe suivante :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code1')">Copier</button>
+<pre id="code1" class="code-content">
+[Chemin vers le repertoire d'installation de Python]\python -m venv [Chemin vers le dossier destiné à votre environnement virtuel]\[Nom de votre environnement virtuel]
+</pre>
+                                </div>
+                                <p>
+                                    Par exemple, si vous exécutez Python depuis le dossier <i>D:\Python</i>, cette commande aboutira 
+                                    à la création d'un environnement virtuel Python dans un répertoire spécifique tel que <i>D:\py38</i> :
+                                </p>
+                                <img src="images/tuto_installation_prerequis/section2/env python cmd.png" width="400px">
+
+                            </li>
+                        </ol>
+                        
                     </section>
 
                     <section id="subsection2-3">
                         <h4>Indiquer l'environnement virtuel Python à Matlab et à la ROS Toolbox</h4>
-                        <p>Contenu de la sous-section 2.2...</p>
+                        <p>La prochaine étape implique d'indiquer à Matlab le répertoire où il devra localiser les bibliothèques Python.</p>
+                        <ol>
+                            <li>
+                                <p>Pour ce faire, accédez à la section "Environnement" puis cliquez sur "Préférences" :</p>
+                                <img src="images/tuto_installation_prerequis/section2/matlab preference.png" width="600px">
+                            </li>
+
+                            <li>
+                                <p>Ensuite, rendez-vous dans l'onglet "ROS toolbox" et sélectionnez "Ouvrir les préférences de ROS toolbox" :</p>
+                                <img src="images/tuto_installation_prerequis/section2/matlab rostoolbox.png" width="500px">
+                            </li>
+
+                            <li>
+                                <p>Utilisez le bouton "Browse..." pour accéder au dossier d'installation de Python et sélectionnez 
+                                    le fichier exécutable Python. Enfin, confirmez en appuyant sur "Ouvrir" une fois que le fichier 
+                                    est sélectionné, puis sur "OK" pour valider les changements :
+                                </p>
+                                <img src="images/tuto_installation_prerequis/section2/matlab rostoolbox preference.png" width="400px">
+                            </li>
+
+                            <li>
+                                <p>Pour permettre à Matlab d'accéder à cet environnement, exécutez la commande suivante :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code2')">Copier</button>
+<pre id="code2" class="code-content">
+pyenv('Version', '[Chemin vers le dossier contenant l'environnement virtuel]\textbackslash Scripts\textbackslash python', 'ExecutionMode', 'OutOfProcess')
+</pre>
+                                </div>
+                                <p>En suivant l'exemple précédent, vous pouvez constater que la version de Python est correcte, 
+                                    que la bibliothèque est située au bon endroit, et que l'exécutable utilisé par Matlab provient 
+                                    de l'environnement virtuel. Après cette étape, il est crucial de redémarrer votre ordinateur. 
+                                    Ignorer ce redémarrage pourrait entraîner des problèmes de bibliothèque tout au long de la suite du tutoriel.
+                                </p>
+                            </li>
+                        </ol>
                     </section>
                 </section>
 
 
                 <section id="section3">
                     <h3>Ajout des messages turtlesim dans la bibliothèque Matlab</h3>
-                    <p>Contenu de la section 1...</p>
+                    <p>Maintenant que nous avons établi l'accès de Matlab à Python, nous allons explorer la manière d'ajouter des messages dans 
+                        la bibliothèque Matlab, en nous concentrant spécifiquement sur les messages turtlesim.
+                    </p>
+
 
                     <section id="subsection3-1">
                         <h4>Télécharger le package turtlesim depuis Github</h4>
-                        <p>Contenu de la sous-section 2.2...</p>
+                        
+                        <ol>
+                            <li>
+                                <p>nous commencerons par installer le package turtlesim sur notre système. Vous pouvez le trouver dans le 
+                                    Github ros\_tutorials de ROS à l'adresse suivante : <a href="https://github.com/ros/ros\_tutorials">https://github.com/ros/ros\_tutorials</a>
+                                </p>
+                            </li>
+
+                            <li>
+                                <p>Une fois le dossier compressé téléchargé, extrayez les fichiers et sélectionnez la partie pertinente, 
+                                    à savoir le dossier « turtlesim ». Ensuite, placez ce dossier « turtlesim » dans un nouveau dossier nommé « msgs », 
+                                    que vous placerez dans le répertoire actif de Matlab. Vous aurez alors la configuration suivante :
+                                </p>
+                                <img src="images/tuto_installation_prerequis/section3/current folder.png" width="115px">
+                            </li>
+                        </ol>
+                        
                     </section>
+
 
                     <section id="subsection3-2">
                         <h4>Utiliser le répertoire msgs pour créer le répertoire custom</h4>
-                        <p>Contenu de la sous-section 2.2...</p>
+                        <p>Nous allons ensuite demander à Matlab de créer un nouveau répertoire dans lequel il pourra stocker les différents packages.</p>
+
+                        <ol>
+                            <li>
+                                <p>Utilisez les deux commandes suivantes :</p>
+                                <img src="images/tuto_installation_prerequis/section3/cmd matlab folder.png" width="350px">
+                            </li>
+
+                            <li>
+                                <p>On a alors ceci :</p>
+                                <img src="images/tuto_installation_prerequis/section3/current folder 2.png" width="115px">
+                            </li>
+                        </ol>
                     </section>
 
                     <section id="subsection3-3">
                         <h4>Construire les packages python des différents messages</h4>
-                        <p>Contenu de la sous-section 2.2...</p>
+                        <p>Après avoir terminé l'étape précédente, nous pouvons désormais procéder à la construction des packages pour les différents types de messages. 
+                            À cet effet, nous ferons appel à la fonction "ros2genmsg()" de Matlab. Cette fonction utilise le constructeur colcon pour construire les 
+                            différents packages, permettant ainsi à Matlab de les utiliser en tant que messages pour ROS2.
+                        </p>
+
+                        <ol>
+                            <li>
+                                <p> Vous pouvez employer la commande suivante pour ce faire :</p>
+                                <img src="images/tuto_installation_prerequis/section3/ros2genmsg.png" width="620px">
+
+                            </li>
+
+                            <li>
+                                <p>Une fois cette étape réalisée, si vous entrez la commande suivante :</p>
+                                <img src="images/tuto_installation_prerequis/section3/ros2 msg list.png" width="170px">
+
+                            </li>
+
+                            <li>
+                                <p>Vous devriez pouvoir visualiser les messages turtlesim ci-dessous :</p>
+                                <img src="images/tuto_installation_prerequis/section3/liste.png" width="275px">
+
+                            </li>
+                        </ol>
+                        <p>En suivant ces instructions pas à pas, vous devriez maintenant être en mesure de gérer efficacement les messages et les packages, 
+                            notamment ceux liés à turtlesim. Assurez-vous de respecter les étapes de configuration recommandées afin de maximiser l'efficacité 
+                            et la compatibilité de votre environnement de développement.
+                        </p>
+                        <p>N'hésitez pas à explorer davantage les fonctionnalités offertes par cette synergie entre Matlab et ROS2 pour tirer pleinement parti 
+                            de leurs capacités combinées dans vos projets futurs. Si vous rencontrez des difficultés ou avez des questions, n'hésitez pas à vous 
+                            référer à la documentation complémentaire ou à la communauté pour obtenir de l'aide.
+                        </p>
+
                     </section>
                 </section>
 
