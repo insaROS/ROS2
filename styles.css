@@ -82,6 +82,10 @@ main section article ul {
     padding-left: 20px;
 }
 
+main section article ol li {
+    font-size: 14px;
+}
+
 main section article ul li ul{
     list-style-type: circle;
     padding-left: 20px;
@@ -225,4 +229,9 @@ img {
     text-align: left; /* Aligner le contenu à gauche */
     white-space: pre-wrap; /* Gérer le retour à la ligne */
     margin: 0; /* Supprimer la marge par défaut du navigateur */
+}
+
+
+p {
+    font-size: 14px; /* Taille du texte en pixels */
 }
