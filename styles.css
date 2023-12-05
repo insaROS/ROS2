@@ -80,6 +80,7 @@ main section article h2 {
 main section article ul {
     list-style-type: disc;
     padding-left: 20px;
+    font-size: 14px;
 }
 
 main section article ol li {
