@@ -174,28 +174,154 @@
                     </ul>
                 </section>
 
+
                 <section id="section3">
                     <h3>Lancer Turtlesim et contrôler la tortue avec le teleopkey</h3>
-                    <p>Contenu de la section 1...</p>
 
                     <section id="subsection3-1">
                         <h4>Mise de la source dans le terminal</h4>
-                        <p></p>
+                        <ol>
+                            <li>
+                                <p>Ouvrez un terminal avec "<strong><i>ctrl+alt+T</i></strong>"</p>
+                            </li>
+                            <li>
+                                <p>Indiquez à ce terminal le chemin des fichiers de configuration de ROS2. Cela vous permettra de pouvoir utiliser des fonctions de ROS2. 
+                                    Voici la commande à taper dans le terminal :
+                                </p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code1')">Copier</button>
+<pre id="code1" class="code-content">
+source /opt/ros/humble/setup.bash
+</pre>
+                                </div>
+
+                                <img src="images/tuto_1/section3/source_ROS2.png" width="350px">
+                                <p>Après avoir taper cette commande dans votre terminal, vous pourrez donc avoir accès à toutes les fonctions primaires de ROS2. Une autre méthode permet d'avoir 
+                                    automatiquement tous les terminaux sourcés. Cette seconde méthode sera vu dans la section \hyperref[sub_sec:source .bashrc]{3.5}
+                                </p>
+                            </li>
+
+                        </ol>
                     </section>
 
                     <section id="subsection3-2">
                         <h4>Lancer TurtleSim</h4>
-                        <p></p>
+                        <ol>
+                            <li>
+                                <p>Pour lancer TurtleSim, nous devons activer le nœud de TurtleSim. Pour ce faire nous devons utiliser une structure de commande particulière. Voici la structure à utiliser :</p>
+                                <div class="code-block">
+<pre class="code-content">
+ros2 run &lt;package_name&gt; &lt;executable_name&gt;
+</pre>
+                                </div>
+                                <p>Dans notre cas &lt;package_name&gt; sera l'application TurtleSim qui se nommera "turtlesim" et &lt;executable_name&gt; sera l'exécutable du nœud de TurtleSim qui sera "turtlesim_node".</p>
+                            </li>
+
+                            <li>
+                                <p>Voici la commande à taper dans le terminal :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code2')">Copier</button>
+<pre id="code2" class="code-content">
+ros2 run turtlesim turtlesim_node
+</pre>
+                                </div>
+                                <img src="images/tuto_1/section3/ros2 run turtlesim.png" width="350px">
+                            </li>
+
+                            <li>
+                                <p>Une fenêtre « TurtleSim » va s'ouvrir :</p>
+                                <img src="images/tuto_1/section3/turtlesim.png" width="600px">
+                            </li>
+
+                            <li>
+                                <p>Plusieurs informations apparaissent dans le terminal :</p>
+                                <ul style="list-style-type: '- ';">
+                                    <li><p>TurtleSim a été démarré avec le nœud "/turtlesim"</p></li>
+                                    <li><p>Une tortue a été créée avec le nom "turtle1"</p></li>
+                                    <li><p>Et elle a été placée dans la fenêtre TurtleSim avec les coordonnées x,y et &theta; suivantes : x=5.54 ; y=5,54 et une orientation &theta;=0.00&deg;</p></li>
+                                </ul>
+                            </li>
+                        </ol>
                     </section>
 
                     <section id="subsection3-3">
                         <h4>Lancer la télécommande</h4>
-                        <p></p>
+                        <p>Dans cette partie, nous allons voir comment lancer une télécommande qui nous permettra de faire bouger la tortue dans la fenêtre TurtleSim.</p>
+
+                        <ol>
+                            <li>
+                                <p>Ouvrez un second terminal et tapez la commande pour ajouter la source à ce terminal.</p>
+                            </li>
+                            <li>
+                                <p>Pour lancer la télécommande, nous devons lancer le nœud de la télécommande. Pour ce faire nous devons utiliser la structure de commande précédente.</p>
+                                <p>Voici la structure :</p>
+                                <div class="code-block">
+<pre class="code-content">
+ros2 run &lt;package_name&gt; &lt;executable_name&gt;
+</pre>
+                                </div>
+
+                                <p>Dans notre cas &lt;package_name&gt; est TurtleSim qui se nommera "turtlesim" et &lt;executable_name&gt; est l'exécutable du nœud de la télécommande qui sera "turtle_teleop_key".</p>
+                            </li>
+
+                            <li>
+                                <p>Voici, finalement, la commande à taper dans le 2nd terminal :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code3')">Copier</button>
+<pre id="code3" class="code-content">
+ros2 run turtlesim turtle_teleop_key
+</pre>
+                                </div>
+                                <img src="images/tuto_1/section3/ros2 run turtlesim teleop.png" width="380px">
+                                <p>Cela va démarrer la télécommande qui vous permettra de contrôler les mouvements de la tortue dans l'environnement Turtlesim en utilisant les touches du clavier.</p>
+                            </li>
+
+                            <li>
+                                <p>Vous allez donc pouvoir contrôler la tortue avec les 4 flèches de votre clavier :</p>
+                                <img src="images/tuto_1/section3/turtlesim et teleop.png" width="600px">
+                                <p><i>Nous verrons dans un des prochains tutoriels à quoi correspondent les rotations vers les orientations absolue avec les  touches G,B,V,C,D,E,R et T.</i></p>
+                            </li>
+                        </ol>
                     </section>
 
                     <section id="subsection3-4">
                         <h4>Lancer TurtleSim et la télécommande dans le même terminal</h4>
-                        <p></p>
+                        <ol>
+                            <li>
+                                <p>Arrêtez la commande de de la télécommande Turtlesim dans le second terminal et aussi la commande de TurtleSim dans le premier terminal, en faisant un "<i>ctrl+C</i>" dans chaque terminal.</p>
+                            </li>
+                            <li>
+                                <p>Fermez un des deux terminaux.</p>
+                            </li>
+                            <li>
+                                <p>Sur le terminal qui vous reste, tapez la commande pour lancer le nœud de TurtleSim avec un "&" à la fin . Le "&" a pour but de faire fonctionner TurtleSim en arrière-plan dans ce terminal.</p>
+                                <p id="cmd_turtlesim_arr_plan">Voici la commande :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code4')">Copier</button>
+<pre id="code4" class="code-content">
+ros2 run turtlesim turtlesim_node &
+</pre>
+                                </div>
+                                <img src="images/tuto_1/section3/ros2 run turtlesim arriere plan.png" width="380px">
+                                <p>Faites "<i>Entrer</i>" et vous constaterez que vous pouvez de nouveau utiliser ce terminal.</p>
+                            </li>
+
+                            <li>
+                                <p>Tapez la commande pour avoir la télécommande teleop_key :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code5')">Copier</button>
+<pre id="code5" class="code-content">
+ros2 run turtlesim turtle_teleop_key
+</pre>
+                                </div>
+                                <img src="images/tuto_1/section3/turtlesim et teleop 1 terminal.png" width="600px">
+
+                            </li>
+                            <p>Vous avez réussi à faire bouger votre tortue dans TurtleSim à l'aide de la télécommande en ayant lancé le noeuds de TurtleSim en arrière plan. 
+                                La prochaine étape concerne la mise automatique de la source de RO2 pour chaque nouveau terminal ouvert.
+                            </p>
+                        </ol>
+                        
                     </section>
 
                     <section id="subsection3-5">
