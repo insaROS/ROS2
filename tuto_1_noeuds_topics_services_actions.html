@@ -404,7 +404,7 @@ source /opt/ros/humble/setup.bash
                                 <p>Ouvrez un terminal avec "<i>ctrl+alt+T</i>"</p>
                             </li>
 
-                            <li>
+                            <li id="rqt_graph">
                                 <p>Lancez rqt_graph en tapant la commande suivante et une fenêtre rqt_graph va s'ouvrir :</p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code8')">Copier</button>
@@ -809,29 +809,137 @@ ros2 node info /turtlesim
                             <li>
                                 <p>Utilisez et modifiez la commande précédente pour trouver les informations du noeud /teleop_turtle :</p>
                                 <img src="images/tuto_1/section7/8 ros2 node info teleop.png" width="550px">
-                                <p>On remarque que le nœud /teleop'turtle est un client de l'action /turtle1/rotate'absolute. C'est-à-dire qu'il peut envoyer actions que le serveur doit effectuer et il peut recevoir des données de la part du serveur.</p>
+                                <p>On remarque que le nœud /teleop_turtle est un client de l'action /turtle1/rotate_absolute. C'est-à-dire qu'il peut envoyer actions que le serveur doit effectuer et il peut recevoir des données de la part du serveur.</p>
                             </li>
                         </ol>
                     </section>
 
                     <section id="subsection7-3">
                         <h4>Trouver la liste des actions disponibles et leurs informations</h4>
-                        <p></p>
+                        <ol>
+                            <li>
+                                <p>Tapez la commande suivante dans le second terminal pour avoir la liste des actions disponibles :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code18')">Copier</button>
+<pre id="code18" class="code-content">
+ros2 action list
+</pre>
+                                </div>
+                                <img src="images/tuto_1/section7/9 actions list.png" width="220px">
+                                <p>Vous obtiendrez dans le terminal la liste des actions disponible :</p>
+                                <img src="images/tuto_1/section7/10 actions list result.png" width="220px">
+                                <p>Cependant, chaque action possède un type précis. Il est possible de l'afficher en ajoutant le paramètre "-t" dans la commande précédente.</p>
+                            </li>
+
+                            <li>
+                                <p>Tapez la commande suivante pour obtenir la liste des actions ainsi que leur type directement:</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code19')">Copier</button>
+<pre id="code19" class="code-content">
+ros2 action list -t
+</pre>
+                                </div>
+                                <img src="images/tuto_1/section7/11 actions list result type.png" width="400px">
+                                <p>Entre crochets à droite de chaque nom d'action (dans notre cas, uniquement pour l'action /turtle1/rotate_absolute) se trouve le type d'action, 
+                                    turtlesim/action/RotateAbsolute. Vous en aurez besoin lorsque vous voudrez exécuter une action à partir de la ligne de commande ou du code.
+                                </p>
+                            </li>
+
+                            <li>
+                                <p>Tapez la commande suivante dans le second terminal pour Vous pouvez analyser l'action /turtle1/rotate_absolute : </p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code20')">Copier</button>
+<pre id="code20" class="code-content">
+ros2 action info /turtle1/rotate_absolute
+</pre>
+                                </div>
+                                <img src="images/tuto_1/section7/12 action info.png" width="380px">
+                                <p>Vous obtiendrez dans le terminal les informations de cette action :</p>
+                                <img src="images/tuto_1/section7/13 action info res.png" width="380px">
+                                <p>Cela nous indique ce que nous avons appris plus tôt en exécutant ros2 node info sur chaque nœud : Le noeud /teleop_turtle est un client d'action et le noeud /turtlesim est un serveur d'action pour l'action /turtle1/rotate_absolute</p>
+                            </li>
+                        </ol>
                     </section>
 
                     <section id="subsection7-4">
                         <h4>Visualisation de l'action /turtle1/rotate_absolute avec rqt_graph</h4>
-                        <p></p>
+                        
+                        <ol>
+                            <li><p>Tapez la commande pour ouvrir rqt_graph, toujours dans le second terminal (Voir la section <a href="#rqt_graph">Visualisation des nœuds et topics avec rqt graph 1.</a>).</p></li>
+                            <li><p>Faites les réglages, concernant les cases à cocher ou à décocher dans rqt_graph (Voir la section <a href="#rqt_graph">Visualisation des nœuds et topics avec rqt graph 1.</a>).</p></li>
+                            <li>
+                                <p>Comme TurtleSim et la télécommande teleop_key sont lancés, les nœuds /turtlesim et /teleop_turtle le sont aussi. Vous obtiendrez :</p>
+                                <img src="images/tuto_1/section7/14 rqt_graph.png" width="450px">
+                                <p>Vous pouvez constater que l'action /turtle1/rotate_absolute peut recevoir des données du nœud /turtlesim (serveur de l'action) et que le nœud /teleop_turtle peut recevoir des données de cette action (client de l'action).</p>
+                            </li>
+                        </ol>
                     </section>
 
                     <section id="subsection7-5">
                         <h4>Trouver la structure du type d'action "turtlesim/action/RotateAbsolute"</h4>
-                        <p></p>
+                        <p>Une autre information dont vous aurez besoin avant d'envoyer ou d'exécuter vous-même un objectif d'action est la structure du type de cette action.
+                            Rappelez-vous que vous avez identifié précédemment le type de /turtle1/rotate_absolue en exécutant la commande <i>$ ros2 action list -t</i> (type : turtlesim/action/RotateAbsolute).
+                        </p>
+
+                        <ol>
+                            <li>
+                                <p>Entrez la commande suivante pour déterminer la structure de ce type d'action :</p>
+                                <img src="images/tuto_1/section7/15 interface show.png" width="450px">
+                                <p>Vous obtiendrez dans le terminal :</p>
+                                <img src="images/tuto_1/section7/16 interface show res.png" width="450px">
+                            </li>
+
+                            <li>
+                                <p>Identifiez les différents paramètres : </p>
+                                <ul style="list-style-type: '- ';">
+                                    <li><p>La section du message au-dessus du premier "---" est la structure (type de données et nom) de la demande d'objectif.</p></li>
+                                    <li><p>La section suivante est la structure du résultat.</p></li>
+                                    <li><p>La dernière section est la structure du feedback.</p></li>
+                                </ul>
+                                <p>On remarque que ces trois paramètres sont du type float32 (soit des chiffres à virgule codés sur 32 bits).</p>
+                            </li>
+                        </ol>
                     </section>
 
                     <section id="subsection7-6">
                         <h4>Envoyer un objectif à une action en ligne de commande</h4>
-                        <p></p>
+                        <ol>
+                            <li>
+                                <p>Observez la structure d'une commande pour envoyer un objectif à une action :</p>
+                                <div class="code-block" style="background-color: lightgrey;">
+<pre id="code21" class="code-content">
+    ros2 action send_goal &lt;action_name&gt; &lt;action_type&gt; &lt;values&gt;
+</pre>
+                                </div>
+                            </li>
+
+                            <li>
+                                <p>Gardez un oeil sur la fenêtre TurtleSim, et entrez la commande suivante dans votre terminal :</p>
+                                <img src="images/tuto_1/section7/17 send_goal.png" width="450px">
+                                <p>Votre tortue, dans la fenêtre TurtleSim, va tourner. Vous obtiendrez cette réponse :</p>
+                                <img src="images/tuto_1/section7/18 send_goal_res.png" width="450px">
+                                <p>Chaque objectif est associé à un identifiant unique, mentionné dans le message de retour. 
+                                De plus, vous pouvez observer le résultat, représenté par un champ nommé "delta", qui indique le déplacement par rapport à la position initiale.
+                                </p>
+                            </li>
+
+                            <li>
+                                <p>Ajoutez le paramètre "--feedback" à la commande ros2 action send_goal, pour voir le feedback d'un objectif. 
+                                    Changez la valeur de theta, par exemple <i>&theta;=-1.57</i> et n'oubliez pas d'ajouter le paramètre "--feedback" :
+                                </p>    
+                                <img src="images/tuto_1/section7/19 send_goal_feedback.png" width="450px">
+                                <p>Votre terminal vous renvoie le message :</p>
+                                <div> 
+                                    <img src="images/tuto_1/section7/20 send_goal_feedback_res1.png" width="500px">
+                                    <img src="images/tuto_1/section7/20 fleche_texte.png" width="500px">
+                                    <img src="images/tuto_1/section7/20 send_goal_feedback_res2.png" width="500px">
+                                </div>
+                                <p>Les actions sont comme des services qui vous permettent d'exécuter des tâches de longue durée. Ces actions fournissent un retour d'information régulier et peuvent être annulées.</p>
+                            </li>
+                        </ol>
+                        
+                        <p>Un système robotique utilisera probablement des actions pour la navigation. Un objectif d'action pourrait indiquer à un robot de se rendre à une position. Pendant que le robot navigue vers la position, il peut envoyer des mises à jour en cours de route (c'est-à-dire un retour d'information), puis un message de résultat final une fois qu'il à atteint sa destination.</p>
+                        <p>Turtlesim dispose d'un serveur d'action auquel les clients d'action peuvent envoyer des objectifs pour faire bouger les tortues. Dans ce tutoriel, vous avez étudié cette action, /turtle1/rotate_absolute, pour avoir une meilleure idée de ce que sont les actions et comment elles fonctionnent.</p>
                     </section>
 
                 </section>
@@ -839,36 +947,209 @@ ros2 node info /turtlesim
 
                 <section id="section8">
                     <h3>Comprendre les services avec TurtleSim</h3>
-                    <p>Contenu de la section 1...</p>
 
                     <section id="subsection8-1">
                         <h4>Découvrir les services</h4>
-                        <p></p>
+                        
+                        <ol>
+                            <li>
+                                <p>Ouvrez un terminal et tapez la commande suivante pour avoir la liste des services actifs en ce moment :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code22')">Copier</button>
+<pre id="code22" class="code-content">
+ros2 service list
+</pre>
+                                </div>
+                                <img src="images/tuto_1/section8/service list vide.png" width="225px">
+                                <p>Le terminal ne vous renvoie rien. Est-ce normal ? Oui, car aucun noeud n'a encore été lancé et donc aucun service n'est disponible!</p>
+                            </li>
+
+                            <li><p>Lancez TurtleSim en arrière plan dans un second terminal (Voir cette <a href="#turtlesim_arr_p">section</a>)</p></li>
+
+                            <li>
+                                <p>Tapez à nouveau la commande pour avoir la liste des services actifs :</p>
+                                <img src="images/tuto_1/section8/service list turtlesim.png" width="275px">
+                                Comme vous pouvez le voir, tous les services liés au noeud turtlesim et à la /turtle1 sont visibles, donc actifs.
+                            </li>
+
+                            <li>
+                                <p>Tapez la commande pour lancer la télécommande dans le second terminal et tapez à nouveau la commande pour avoir la liste des services actifs. Vous obtiendrez la liste de services actifs suivants :</p>
+                                <img src="images/tuto_1/section8/service list turtlesim teleop.png" width="275px">
+                                <p>Vous verrez que les deux nœuds ont six services identiques avec des paramètres dans leurs noms. Presque tous les nœuds de ROS 2 ont ces services d'infrastructure à partir desquels les paramètres sont construits.</p>
+                            </li>
+                        </ol>
+                        <p> Dans ce tutoriel, les services de paramètres seront omis de la discussion.</p>
+                        <p>Pour l'instant, concentrons-nous sur les services spécifiques à turtlesim, /clear, /kill, /reset, /spawn, /turtle1/set_pen, /turtle1/teleport_absolute, et /turtle1/teleport_relative.</p>
                     </section>
 
                     <section id="subsection8-2">
                         <h4>Trouver le type d'un service</h4>
-                        <p></p>
+                        <p>Les services ont des types qui décrivent comment les données de demande et de réponse d'un service sont structurées. Les types de service sont définis de la même manière que les types de topics, sauf que les types de service ont deux parties : un message pour la demande et un autre pour la réponse.</p>
+                    
+                        <ol>
+                            <li>
+                                <p>Observez la structure d'une commande pour trouver le type d'un service :</p>
+                                <div class="code-block" style="background-color: lightgrey;">
+<pre id="code23" class="code-content">
+ros2 service type &lt;service_name&gt;
+</pre>
+                                </div>
+                            </li>
+
+                            <li>
+                                <p>Utilisez cette commande pour le service /clear de turtlesim (Le service /clear permet d'effacer la trace que la tortue laisse sur la fenêtre de TurtleSim après avoir bougée) :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code24')">Copier</button>
+<pre id="code24" class="code-content">
+ros2 service /clear
+</pre>
+                                </div>
+                                <img src="images/tuto_1/section8/service type clear.png" width="250px">
+                                <p>Le terminal vous renvoie :</p>
+                                <img src="images/tuto_1/section8/service type clear res.png" width="250px">
+                                <p>Le type <i>Empty</i> signifie que l'appel de service n'envoie aucune donnée lorsqu'il émet une requête et ne reçoit aucune donnée lorsqu'il reçoit une réponse.</p>
+
+                            </li>
+
+                            <li>
+                                <p>Tapez la commande suivante, pour directement avoir la liste des services actifs et leur type respectif :</p>
+                                <img src="images/tuto_1/section8/service list -t.png" width="500px">
+                            </li>
+
+                        </ol>
                     </section>
 
                     <section id="subsection8-3">
                         <h4>Trouver tous les services actifs du même type</h4>
-                        <p></p>
+                        <ol>
+                            <li>
+                                <p>Observez la structure de la commande pour trouver les services d'un certain type :</p>
+                                <div class="code-block" style="background-color: lightgrey;">
+<pre id="code25" class="code-content">
+ros2 service find &lt;type_name&gt;
+</pre>
+                                </div>
+                            </li>
+
+                            <li>
+                                <p>Utilisez cette commande pour trouver tous les services actifs du type Empty  :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code26')">Copier</button>
+<pre id="code26" class="code-content">
+ros2 service /clear
+</pre>
+                                </div>
+                                <img src="images/tuto_1/section8/service find cmd.png" width="325px">
+                                <p>Le terminal vous renvoie :</p>
+                                <img src="images/tuto_1/section8/service find res.png" width="325px">
+                            </li>
+                        </ol>
                     </section>
+
 
                     <section id="subsection8-4">
                         <h4>Trouver la structure du type de service</h4>
-                        <p></p>
+                        <ol>
+                            <li>
+                                <p>Observez la structure de la commande pour trouver la structure d'un type de service :</p>
+                                <div class="code-block" style="background-color: lightgrey;">
+<pre id="code27" class="code-content">
+ros2 interface show &lt;type_name&gt;
+</pre>
+                                </div>
+                            </li>
+
+                            <li>
+                                <p>Utilisez cette commande pour trouver la structure du type de service Empty :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code28')">Copier</button>
+<pre id="code28" class="code-content">
+ros2 service /clear
+</pre>
+                                </div>
+                                <p>Le terminal ne vous renvoie rien et c'est normal car ce type de service est Empty. 
+                                    Le type <i>Empty</i> signifie que l'appel de service n'envoie aucune donnée 
+                                    lorsqu'il émet une requête et ne reçoit aucune donnée lorsqu'il reçoit une réponse.
+                                </p>
+                            </li>
+
+                            <li>
+                                <p>Trouvez le type du service /spawn. Vous trouverez :</p>
+                                <img src="images/tuto_1/section8/spawn type.png" width="125px">
+                            </li>
+
+                            <li>
+                                <p>Trouvez ensuite la structure du type du service /spawn avec la commande :</p>
+                                <img src="images/tuto_1/section8/interface show spawn.png" width="500px">
+                                <p>Les informations au-dessus de la ligne - - - nous indiquent les arguments nécessaires pour appeler /spawn. 
+                                    x, y et &theta; déterminent la pose 2D de la tortue engendrée, et name est clairement optionnel.
+                                </p>
+                                <p>Les informations sous la ligne ne sont pas nécessaires dans ce cas, mais elles peuvent vous aider à 
+                                    comprendre le type de données de la réponse que vous obtenez lors de l'appel du service /spawn.
+                                </p>
+                            </li>
+
+                        </ol>
                     </section>
 
                     <section id="subsection8-5">
                         <h4>Appeler un service</h4>
-                        <p></p>
+                        <ol>
+                            <li>
+                                <p>Observez la structure de la commande pour appeler un service :</p>
+                                <div class="code-block" style="background-color: lightgrey;">
+<pre id="code29" class="code-content">
+ros2 service call &lt;service_name&gt; &lt;service_type&gt; &lt;arguments&gt;
+</pre>
+                                </div>
+                                <p>La partie &lt;arguments&gt; est facultative. Par exemple, vous savez que les services du type /Empty n'ont pas d'arguments.</p>
+                            </li>
+
+                            <li>
+                                <p>Utilisez cette structure de commande pour appeler le service /clear. Le service clear à pour but d'effacer le chemin parcouru par la tortue dans la fenêtre TurtleSim.
+                                    Avant d'utiliser cette commande pour effacer le chemin parcouru par la tortue faites bouger la tortue grâce à la télécommande.
+                                </p>
+                            </li>
+
+                            <li>
+                                <p>Tapez la commande suivante pour supprimer le tracé de la tortue :</p>
+                                <img src="images/tuto_1/section8/clear commande call.png" width="350px">
+                                <p>Vous pourrez voir le changement suivant dans la fenêtre TurtleSim :</p>
+                                <div>
+                                    <img src="images/tuto_1/section8/turtlesim av clear.png" width="250px" style="display: inline-block;">
+                                    <img src="images/tuto_1/section7/2 fleche.png" width="125px" style="display: inline-block;">
+                                    <img src="images/tuto_1/section8/turtlesim ap clear.png" width="250px" style="display: inline-block;">
+                                </div>
+                            </li>
+
+
+                        </ol>
                     </section>
 
                     <section id="subsection8-6">
                         <h4>Faire spawn une nouvelle tortue dans TurtleSim</h4>
-                        <p></p>
+                        <ol>
+                            <li>
+                                <p>Faites spawn une nouvelle tortue en appelant le service /spawn et en définissant des arguments. Les <arguments> d'entrée dans un appel de service à partir de la ligne de commande doivent être en syntaxe YAML.</p>
+                                <p>Voici la syntaxe :</p>
+                                <img src="images/tuto_1/section8/service call spawn.png" width="250px">
+                                <p>Le terminal va vous renvoyer les informations suivantes :</p>
+                                <img src="images/tuto_1/section8/service call spawn res.png" width="250px">
+                                <p>Ces informations montrent que nous avons appelé le service spawn avec les données x,y et theta et qu'en sortie nous avons bien fait spawn une nouvelle tortue nommée comme on le souhaitait.</p>
+                            
+                            </li>
+
+                            <li>
+                                <p>Observez TurtleSim et vous verrez qu'une seconde tortue à apparu au coordonnées que vous avez écrit dans la commande :</p>
+                                <img src="images/tuto_1/section8/turtlesim spawn.png" width="250px">
+                            </li>
+                        </ol>
+                        <p>Les nœuds peuvent communiquer en utilisant des services dans ROS 2. Contrairement à un topic - un modèle de communication à sens unique où un nœud publie des informations qui peuvent être consommées par un ou plusieurs 
+                            subscribers - un service est un modèle de demande/réponse où un client fait une demande à un nœud fournissant le service et le service traite la demande et génère une réponse.
+                        </p>
+                        <p>En général, vous ne souhaitez pas utiliser un service pour des appels continus ; des sujets ou même des actions conviendraient mieux.</p>
+                        <p>Dans ce tutoriel, vous avez utilisé des outils de ligne de commande pour identifier, introspecter et appeler des services.</p>
+
                     </section>
 
                 </section>
