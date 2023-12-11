@@ -258,6 +258,38 @@ ls
 
                 <section id="section3">
                     <h3>Comprendre les packages (Python et CMake)</h3>
+
+                    <p>Un package est une unité d'organisation pour votre code ROS 2. Si vous voulez pouvoir installer votre code ou le partager avec d'autres, vous aurez besoin de l'organiser dans un package. 
+                        Avec les packages, vous pouvez publier votre travail ROS 2 et permettre aux autres de le construire et de l'utiliser facilement.
+                    </p>
+                    <p>ROS 2 utilise "<strong>ament</strong>" comme <i>système de construction</i> de packages et "<strong>colcon</strong>" comme <i>outil de construction</i> de ces packages. 
+                        Vous pouvez créer un package en utilisant CMake ou Python, qui sont officiellement supportés, bien que d'autres types de construction existent.
+                    </p>
+                    <p>Les paquets ROS 2 Python et CMake ont chacun leur propre contenu minimum requis :</p>
+                    
+                    <ul style="list-style-type: disc;">
+                        <li>
+                            <p><i><U>Package Python</U></i></p>
+                            <ul style="list-style-type: '- ';">
+                                <li><p><strong>package.xml</strong> : fichier contenant des méta-informations sur le package</p></li>
+                                <li><p><strong>resource/&lt;nom_du_package&gt;</strong> : fichier marqueur pour le package</p></li>
+                                <li><p><strong>setup.cfg</strong>  est nécessaire lorsqu'un package a des exécutables, afin que ros2 run puisse les trouver</p></li>
+                                <li><p><strong>setup.py</strong> contient les instructions pour l'installation du package</p></li>
+                                <li><p><strong>&lt;nom_du_package&gt;</strong> est un répertoire avec le même nom que votre package, utilisé par les outils de ROS 2 pour trouver votre package, qui contient le fichier python __init__.py</p></li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <p><i><U>Package CMake</U></i></p>
+                            <ul style="list-style-type: '- ';">
+                                <li><p><strong>CMakelist.txt</strong> : fichier qui décrit comment construire le code dans le package</p></li>
+                                <li><p><strong>include/&lt;nom_du_package&gt;</strong> : le répertoire contenant les en-têtes publics du package</p></li>
+                                <li><p><strong>package.xml</strong> : fichier contenant des méta-informations sur le package</p></li>
+                                <li><p><strong>src</strong> : répertoire contenant le code source du package</p></li>                   
+                            </ul>
+                        </li>
+                    </ul>
+                
                 </section>
 
                 <section id="section4">
