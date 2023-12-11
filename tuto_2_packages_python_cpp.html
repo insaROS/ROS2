@@ -46,7 +46,515 @@
         <section>
             <article>
                 <h2>Tutoriel : Création de packages Python et C++</h2>
-                <p>Contenu du tutoriel en construction...</p>
+                
+                <div class="table-of-contents">
+                    <h3>Table des matières</h3>
+                    <ul>
+                        <li><a href="#section1">Introduction</a></li>
+                        <li><a href="#section2">Créer un workspace ROS2</a></li>
+                        <li><a href="#section3">Comprendre les packages (Python et CMake)</a></li>
+                        <li><a href="#section4">Créer un package Python</a></li>
+                        <li><a href="#section5">Créer un package CMake</a></li>
+                        <li><a href="#section6">Créer un package publisher/subscriber en Python</a></li>
+                        <li><a href="#section7">Créer un package pour faire bouger une tortue de TurtleSim</a></li>
+                        <li><a href="#section8">Annexes</a></li>
+                    </ul>
+                </div>
+
+                <section id="section1">
+                    <h3>Introduction</h3>
+                    <p>Ce second tutoriel a pour but de comprendre plus en profondeur ce que sont les Publishers et les Subscribers. 
+                        Notamment, de mettre en place une communication entre un Publisher et un Subscriber en utilisant le langage de programmation Python et CMake (C++). 
+                        Nous allons donc d'abord nous intéresser à ce que sont Python et CMake.
+                    </p>
+
+                    <ul style="list-style-type: disc;">
+                        <li>
+                            <p>
+                                <strong>Python</strong> : Python est un langage de programmation simple, utilisé pour le développement back-end d'applications web ou mobile, 
+                                mais aussi pour développer des applications pour PC. En plus de cela, Python possède un grand nombre de bibliothèque qui rendent son utilisation 
+                                applicable dans la plupart des domaines, ce qui comble le fait que le codage d'applications lourdes devient très vite difficile.
+                            </p>
+                        </li>
+
+                        <li>
+                            <p>
+                                <strong>CMake</strong> : CMake est un système de construction logicielle multiplateforme. Il facilite grandement la création de projet, en vérifiant 
+                                les prérequis nécessaires à leur création, et en déterminant les dépendances entre les différents composants d'un même projet. <br>
+                                On va alors pouvoir créer plusieurs packages qui servent à informer CMake des différentes dépendances, et ensuite utiliser des programmes écris avec 
+                                un langage de programmation supporté par CMake (C++ par exemple) dans chacun de ces packages. Cela, afin de créer un projet fonctionnel dont chaque partie 
+                                est indépendamment géré par le système de construction. Il est alors plus facile de gérer et corriger des erreurs si elles apparaissent. 
+                            </p>
+
+                        </li>
+                    </ul>
+                </section>
+
+                <section id="section2">
+                    <h3>Créer un workspace ROS2</h3>
+
+                    <p>Un workspace est simplement un dossier qui contient des packages pour ROS 2. Avant d'utiliser ROS 2, vous devez sourcer les fichiers setup de ROS2 dans votre terminal. 
+                        Cela se fait automatiquement car le fichier .bashrc contient les informations nécessaires. Cela rend les différentes fonctions de ros2 disponibles pour une utilisation dans ce terminal . 
+                        Cette source de ROS2 agit comme un "<strong>underlay</strong>" qui permet d'utiliser les fonctionnalités de ROS2.
+                    </p>
+                    
+                    <p>Vous pouvez aussi sourcer un "<strong>overlay</strong>" - un espace de travail supplémentaire où vous pouvez ajouter de nouveaux packages, que vous avez créés ou non, sans perturber votre espace de travail ROS 2 actuel. 
+                        Votre sous-couche (l'overlay) doit contenir les dépendances de tous les packages de votre "overlay". <br>
+                        Les packages de votre "overlay" auront la priorité sur ceux de la sous-couche (c'est à dire que si vous avez un package qui modifie TurtleSim dans votre workspace et que vous sourcez l'overlay ; si vous lancez 
+                        TurtleSim vous aurez alors sa version modifiée). Vous pouvez également avoir plusieurs couches de sous-couches et d'"overlays", et chaque "overlay" suivant utilise les packages de ses sous-couches parentes.
+                    </p>
+                    <section id="subsection2-1">
+                        <h4>Mise de la source dans fichier ~/.bashrc</h4>
+                        <p>Cette partie consiste à ce que la source de ROS2, "l'underlay" soit ajouté automatiquement pour chaque nouveau terminal que vous ouvrez. Pour ce faire suivez les instructions suivantes :</p>
+                    
+                        <ol>
+                            <li><p>Ouvrez un terminal avec "<i>ctrl+alt+T</i>", puis modifier le fichier ".bashrc" avec la commande suivante puis tapez votre mot de passe :</p>
+                                <img src="images/tuto_2/section2/sudo_nano_bashrc.png" width="200px">
+                                <p>La ligne de commande à été expliquée dans le <strong>Tutoriel ROS2 : Partie 1</strong></p>
+                            </li>
+
+                            <li><p>Indiquer le chemin du fichier setup de ROS2. Voici la ligne de code que vous avez à mettre à la fin de ce fichier :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code1')">Copier</button>
+<pre id="code1" class="code-content">
+source /opt/ros/humble/setup.bash
+</pre>
+                                </div>
+                                <p>Ajoutez le chemin du fichier setup de ROS2 à la fin de ce fichier et vous devriez obtenir :</p>
+                                <img src="images/tuto_2/section2/bashrc.png" width="450px">
+                                <p>Sauvegardez et quittez le fichier avec "Ctrl + O", "Entrer" et ensuite "Crtl + X".</p>
+                                <p>La source du fichier setup.bash de ROS2 correspond à l'underlay de notre espace de travail. Par la suite nous ajouterons un overlay pour pouvoir utiliser nos propres packages.</p>
+                            </li>
+                        </ol>
+                    </section>
+
+                    <section id="subsection2-2">
+                        <h4>Créer le répertoire qui servira de workspace</h4>
+                        <p>La meilleure pratique consiste à créer un nouveau répertoire pour chaque nouveau workspace. Le nom n'a pas d'importance, mais il est utile qu'il indique son objectif. Choisissons le nom de répertoire ros2_ws, pour "espace de développement".</p>
+
+                        <ol>
+                            <li><p>Créez votre premier workspace en tapant la commande suivante :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code2')">Copier</button>
+<pre id="code2" class="code-content">
+mkdir ~/ros2_ws/src/
+</pre>
+                                </div>
+                                <img src="images/tuto_2/section2/mkdir -p ros2_ws.png" width="230px">
+                                <p>Explication de la commande :</p>
+
+                                <ul>
+                                    <li><p><strong>mkdir</strong> : permet de créer un répertoire</p></li>
+                                    <li><p><strong>-p</strong> : paramètre de la fonction mkdir permettant de créer directement un sous répertoires à notre répertoire principal</p></li>
+                                    <li><p><strong>~/ros2_ws/src</strong> : définit un chemin de répertoire et sous répertoire.</p></li>
+                                </ul>
+
+                                <p>Donc la commande suivante permet de créer le répertoire de notre workspace ainsi qu'un sous répertoire src :</p>
+                                <div class="code-block" style="background-color: lightgrey;">
+<pre id="code3" class="code-content">
+mkdir ~/ros2_ws/src/
+</pre>
+                                </div>
+                                <p>Une autre bonne pratique consiste à placer tous les packages de votre espace de travail dans le répertoire src.</p>
+                            </li>
+
+                            <li><p>Déplacez vous dans le répertoire src de votre workspace. Pour ce faire tapez la commande :</p>
+                                <img src="images/tuto_2/section2/cd src worspace.png" width="210px">
+                            </li>
+
+                            <li>
+                                <p>Vous pouvez utiliser la commande "<i>ls</i>" pour voir les fichiers dans le sous-répertoire src.</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code4')">Copier</button>
+<pre id="code4" class="code-content">
+ls
+</pre>
+                                </div>
+
+                                <p>Pour le moment, ce sous-répertoire est vide et cela est bien normal. C'est dans ce répertoire que vous allez créer prochainement des nouveaux packages.</p>
+                            </li>
+
+                            <li>
+                                <p>Revenez dans la racine de votre workspace pour la suite du tutoriel (ie. revenez dans le répertoire ~/ros2_ws).</p>
+                                <p id="sub_sec:cd arriere">Vous avez le choix entre deux méthodes pour faire ceci avec la commande cd (cd => change directory):</p>
+                                <ul style="list-style-type: '- ';">
+                                    <li>
+                                        <p>Première méthode (permet de chosir le chemin précis où vous souhaitez vous rendre) :</p>
+                                        <div class="code-block">
+<button class="copy-button" onclick="copyCode('code5')">Copier</button>
+<pre id="code5" class="code-content">
+cd ~/ros2_ws/
+</pre>
+                                        </div>
+                                        <img src="images/tuto_2/section2/cd arriere meth 1.png" width="240px">
+                                    </li>
+
+                                    <li>
+                                        <p>Deuxième méthode (permet de revenir dans le répertoire parent de celui où vous êtes):</p>
+                                        <div class="code-block">
+<button class="copy-button" onclick="copyCode('code6')">Copier</button>
+<pre id="code6" class="code-content">
+cd ..
+</pre>
+                                        </div>
+                                        <img src="images/tuto_2/section2/cd arriere meth 2.png" width="220px">
+                                    
+                                    </li>
+                                </ul>
+                            
+                            </li>
+
+                            <li>
+                                <p> Tapez la commande "<i>ls</i>" pour voir ce que contient votre workspace. Vous pourrez voir qu'il ne contient que votre sous répertoire src qui lui est vide pour le moment.</p>
+                            </li>
+                        </ol>
+                    </section>
+
+                    <section id="subsection2-3">
+                        <h4>Construire votre workspace avec colcon</h4>
+                        <p>Ceci est un mini tutoriel sur la façon de construire un workspace ROS 2 avec colcon. Un workspace ROS2 est 
+                            un répertoire avec une structure particulière. En général, il y a un sous-répertoire src (vous venez de le créer). 
+                            A l'intérieur de ce sous-répertoire se trouve le code source des différents packages.
+                            <br><br>
+                            Typiquement, le répertoire src commence par être vide (c'est votre cas !).
+                        </p>
+                        <ol>
+                            <li>
+                                <p>Depuis la racine de votre workspace (faites la commande cd ~/ros2_ws pour aller dans la racine), vous pouvez maintenant construire vos paquets à l'aide de la commande colcon :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code7')">Copier</button>
+<pre id="code7" class="code-content">
+cd ~/ros_ws/
+colcon build
+</pre>
+                                </div>
+                                <img src="images/tuto_2/section2/colcon build.png" width="240px">
+                            </li>
+
+                            <li>
+                                <p><i>Explication de colcon :</i> colcon réalise la construction du workspace à partir des sources. Par défaut, il créera les répertoires suivants en tant que répertoire voisins de src :</p>
+                                <ul style="list-style-type:disc;">
+                                    <li><p>Le répertoire <strong>build</strong> sera l'endroit où les fichiers intermédiaires seront stockés. Pour chaque package, un sous-dossier sera créé dans lequel, par exemple, CMake sera invoqué.</p></li>
+                                    <li><p>Le répertoire <strong>install</strong> est l'endroit où chaque package sera installé. Par défaut, chaque package est installé dans un sous-répertoire distinct.</p></li>
+                                    <li><p>Le répertoire <strong>log</strong> contient diverses informations de chacune des invocation de colcon.</p></li>
+                                </ul>
+                            </li>
+
+                            <li>
+                                <p>Vous pouvez ensuite faire un <i>ls</i> (en étant dans le répertoire du workspace ~/ros2_ws) pour voir que les répertoires build, install et log ont bien été créés dans la racine du workspace (à côté de src):</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code8')">Copier</button>
+<pre id="code8" class="code-content">
+ls
+</pre>
+                                </div>
+                                <img src="images/tuto_2/section2/workspace build.png" width="190px">
+                            </li>
+                        </ol>
+                    </section>
+
+
+                </section>
+
+                <section id="section3">
+                    <h3>Comprendre les packages (Python et CMake)</h3>
+                </section>
+
+                <section id="section4">
+                    <h3>Créer un package Python</h3>
+
+                    <section id="subsection4-1">
+                        <h4>Créer le package</h4>
+
+                    </section>
+
+                    <section id="subsection4-2">
+                        <h4>Construire le package</h4>
+
+                    </section>
+
+                    <section id="subsection4-3">
+                        <h4>Sourcer l'overlay de votre workspace</h4>
+
+                    </section>
+
+                    <section id="subsection4-4">
+                        <h4>Tester votre premier package Python</h4>
+
+                    </section>
+
+                    <section id="subsection4-5">
+                        <h4>Modifier votre premier package Python</h4>
+
+                    </section>
+
+                </section>
+
+                <section id="section5">
+                    <h3>Créer un package CMake</h3>
+
+                    <section id="subsection5-1">
+                        <h4>Créer le package</h4>
+
+                    </section>
+
+                    <section id="subsection5-2">
+                        <h4>Construire le package</h4>
+
+                    </section>
+
+                    <section id="subsection5-3">
+                        <h4>Sourcer l'overlay de votre workspace</h4>
+
+                    </section>
+
+                    <section id="subsection5-4">
+                        <h4>Tester votre premier package Python</h4>
+
+                    </section>
+
+                    <section id="subsection5-5">
+                        <h4>Modifier votre premier package Python</h4>
+
+                    </section>
+
+                </section>
+
+                <section id="section6">
+                    <h3>Créer un package publisher/subscriber en Python</h3>
+                
+                    <section id="subsection6-1">
+                        <h4>Créer le package</h4>
+
+                    </section>
+
+                    <section id="subsection6-2">
+                        <h4>Créer le noeud publisher</h4>
+
+                    </section>
+
+                    <section id="subsection6-3">
+                        <h4>Explication du code du publisher</h4>
+
+                    </section>
+
+                    <section id="subsection6-4">
+                        <h4>Créer le noeud subscriber</h4>
+
+                    </section>
+
+                    <section id="subsection6-5">
+                        <h4>Explication du code du subscriber</h4>
+
+                    </section>
+
+                    <section id="subsection6-6">
+                        <h4>Ajouter les dépendances pour le publisher</h4>
+
+                    </section>
+
+                    <section id="subsection6-7">
+                        <h4>Ajouter les dépendances pour le subscriber</h4>
+
+                    </section>
+
+                    <section id="subsection6-8">
+                        <h4>Construction du package</h4>
+
+                    </section>
+
+                    <section id="subsection6-9">
+                        <h4>Sourcer l'overlay de votre workspace</h4>
+
+                    </section>
+
+                    <section id="subsection6-10">
+                        <h4>Tester votre package Python</h4>
+
+                    </section>
+
+                    <section id="subsection6-11">
+                        <h4>Visualiser les deux noeuds et le topic de votre package</h4>
+
+                    </section>
+
+                </section>
+
+                <section id="section7">
+                    <h3>Créer un package pour faire bouger une tortue de TurtleSim</h3>
+                    
+                    <section id="subsection7-1">
+                        <h4>Créer le package</h4>
+
+                    </section>
+
+                    <section id="subsection7-2">
+                        <h4>Créer le noeud publisher</h4>
+
+                    </section>
+
+                    <section id="subsection7-3">
+                        <h4>Explication du code du publisher</h4>
+
+                    </section>
+
+                    <section id="subsection7-4">
+                        <h4>Créer le noeud subscriber</h4>
+
+                    </section>
+
+                    <section id="subsection7-5">
+                        <h4>Explication du code du subscriber</h4>
+
+                    </section>
+
+                    <section id="subsection7-6">
+                        <h4>Ajouter les dépendances pour le publisher</h4>
+
+                    </section>
+
+                    <section id="subsection7-7">
+                        <h4>Ajouter les dépendances pour le subscriber</h4>
+
+                    </section>
+
+                    <section id="subsection7-8">
+                        <h4>Construction du package</h4>
+
+                    </section>
+
+                </section>
+
+                <section id="section8">
+                    <h3>Annexes</h3>
+
+                    <section id="annexe1">
+                        <h4>Annexe 1 : Script python "publisher_member_function.py"</h4>
+                        <div class="code-block">
+<button class="copy-button" onclick="copyCode('codeannexe1')">Copier</button>
+<pre id="codeannexe1" class="code-content">
+import rclpy
+from rclpy.node import Node
+
+from std_msgs.msg import String
+
+
+class MinimalPublisher(Node):
+
+    def __init__(self):
+        super().__init__('minimal_publisher')
+        self.publisher_ = self.create_publisher(String, 'topic', 10)
+        timer_period = 0.5  # seconds
+        self.timer = self.create_timer(timer_period, self.timer_callback)
+        self.i = 0
+
+    def timer_callback(self):
+        msg = String()
+        msg.data = 'Hello World: %d' % self.i
+        self.publisher_.publish(msg)
+        self.get_logger().info('Publishing: "%s"' % msg.data)
+        self.i += 1
+
+
+def main(args=None):
+    rclpy.init(args=args)
+
+    minimal_publisher = MinimalPublisher()
+
+    rclpy.spin(minimal_publisher)
+
+    # Destroy the node explicitly
+    # (optional - otherwise it will be done automatically
+    # when the garbage collector destroys the node object)
+    minimal_publisher.destroy_node()
+    rclpy.shutdown()
+
+
+if __name__ == '__main__':
+    main()
+</pre>
+                        </div>
+                    </section>
+
+                    <section id="annexe2">
+                        <h4>Annexe 2 : Script python "subscriber_member_function.py"</h4>
+                        <div class="code-block">
+<button class="copy-button" onclick="copyCode('codeannexe2')">Copier</button>
+<pre id="codeannexe2" class="code-content">
+import rclpy
+from rclpy.node import Node
+
+from std_msgs.msg import String
+
+
+class MinimalSubscriber(Node):
+
+    def __init__(self):
+        super().__init__('minimal_subscriber')
+        self.subscription = self.create_subscription(String,'topic', self.listener_callback, 10)
+        self.subscription  # prevent unused variable warning
+
+    def listener_callback(self, msg):
+        self.get_logger().info('I heard: "%s"' % msg.data)
+
+
+def main(args=None):
+    rclpy.init(args=args)
+
+    minimal_subscriber = MinimalSubscriber()
+
+    rclpy.spin(minimal_subscriber)
+
+    # Destroy the node explicitly
+    # (optional - otherwise it will be done automatically
+    # when the garbage collector destroys the node object)
+    minimal_subscriber.destroy_node()
+    rclpy.shutdown()
+
+
+if __name__ == '__main__':
+    main()
+</pre>
+                        </div>
+                    </section>
+
+                    <section id="annexe3">
+                        <h4>Annexe 3 : Script python "draw_circle.py"</h4>
+                        <div class="code-block">
+<button class="copy-button" onclick="copyCode('codeannexe3')">Copier</button>
+<pre id="codeannexe3" class="code-content">
+import rclpy
+from rclpy.node import Node
+from geometry_msgs.msg import Twist
+
+
+class DrawCircleNode(Node):
+
+    def __init__(self):
+        super().__init__('draw_circle')
+        self.cmd_vel_pub_ = self.create_publisher(Twist, "/turtle1/cmd_vel", 10)
+        timer_period = 0.5  # seconds
+        self.timer = self.create_timer(timer_period, self.send_velocity_command)
+        self.get_logger().info("Draw circle node has been started")
+
+    def send_velocity_command(self):
+        msg = Twist()
+        msg.linear.x = 2.0
+        #msg.linear.y = 1.0
+        msg.angular.z = 1.0
+        self.cmd_vel_pub_.publish(msg)
+
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = DrawCircleNode()
+    rclpy.spin(node)
+    rclpy.shutdown()
+</pre>
+                        </div>
+                    </section>
+
+                </section>
             </article>
             <!-- Ajoutez d'autres articles pour chaque tutoriel -->
         </section>
