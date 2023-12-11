@@ -1132,9 +1132,15 @@ ros2 service call &lt;service_name&gt; &lt;service_type&gt; &lt;arguments&gt;
                             <li>
                                 <p>Faites spawn une nouvelle tortue en appelant le service /spawn et en définissant des arguments. Les <arguments> d'entrée dans un appel de service à partir de la ligne de commande doivent être en syntaxe YAML.</p>
                                 <p>Voici la syntaxe :</p>
-                                <img src="images/tuto_1/section8/service call spawn.png" width="250px">
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code30')">Copier</button>
+<pre id="code30" class="code-content">
+ros2 service call /spawn turtlesim/srv/Spawn "{x: 2, y: 2, theta: 0.2, name: 'turtle_tutoriel'}"
+</pre>
+                                </div>
+                                <img src="images/tuto_1/section8/service call spawn.png" width="640px">
                                 <p>Le terminal va vous renvoyer les informations suivantes :</p>
-                                <img src="images/tuto_1/section8/service call spawn res.png" width="250px">
+                                <img src="images/tuto_1/section8/service call spawn res.png" width="640px">
                                 <p>Ces informations montrent que nous avons appelé le service spawn avec les données x,y et theta et qu'en sortie nous avons bien fait spawn une nouvelle tortue nommée comme on le souhaitait.</p>
                             
                             </li>
