@@ -44,7 +44,411 @@
         <section>
             <article>
                 <h2>Tutoriel : Comprendre les ROS_DOMAIN_ID</h2>
-                <p>Contenu du tutoriel en construction...</p>
+
+                <div class="table-of-contents">
+                    <h3>Table des matières</h3>
+                    <ul>
+                        <li><a href="#section1">Introduction</a></li>
+                        <li><a href="#section2">Comprendre les domain_id avec TurtleSim</a>
+                            <ul>
+                                <li><a href="#subsection2-1">Essai sans spécification de domain_id</a></li>
+                                <li><a href="#subsection2-2">Essai avec spécification de domain_id différents</a></li>
+                                <li><a href="#subsection2-3">Essai avec spécification de domain_id identiques</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#section3">Comprendre les domain_id avec TurtleSim et sa télécommande</a>
+                            <ul>
+                                <li><a href="#subsection3-1">Vérifier le domain_id des deux machines virtuelles</a></li>
+                                <li><a href="#subsection3-2">Lancer TurtleSim</a></li>
+                                <li><a href="#subsection3-3">Lancer la télécommande</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#section4">Annexes</a></li>
+
+                    </ul>
+                </div>
+
+                <section id="section1">
+                    <h3>Introduction</h3>
+                    <p>Bienvenue dans ce tutoriel dédié à l'exploration du fonctionnement des <strong>domain_id</strong> de ROS 2 en utilisant TurtleSim et sa télécommande sur deux ordinateurs distincts. Dans le domaine de la robotique distribuée, la capacité à contrôler et à coordonner efficacement plusieurs robots simultanément est essentielle. ROS 2, le système d'exploitation pour robots de dernière génération, offre une fonctionnalité puissante appelée <strong>domain_id</strong> qui permet de regrouper les nœuds et les topics en environnements de communication distincts au sein du même réseau. </p>
+
+                    <p>Dans ce tutoriel, nous allons non seulement explorer comment les <strong>domain_id</strong> facilitent la communication entre les nœuds de TurtleSim sur deux ordinateurs différents, mais aussi comment contrôler simultanément les mouvements de plusieurs tortues virtuelles à l'aide d'une télécommande partageant le même <strong>domain_id</strong>. Suivez les étapes détaillées de ce guide pour comprendre en profondeur comment exploiter cette fonctionnalité puissante de ROS 2 dans vos propres projets de robotique distribuée.</p>
+
+                    <p>Voici un rappel du fonctionnement de ROS2 et une explication sur les <strong>domain_id</strong> :</p>
+
+                    <ul>
+                        <li>
+                            <p><strong>ROS2</strong> : ROS2 est une nouvelle version de ROS, comportant à peu près les mêmes composants, mais dont l'architecture change fondamentalement. ROS2, tout comme ROS, possède une architecture basée sur le principe de systèmes en temps réel distribués/répartis. Cela signifie que l'architecture est composée de nœuds qui se chargent d'effectuer des calculs ou des opérations simples, reliés entre eux par un réseau en temps réel.</p>
+
+                            <p>La différence entre les deux vient du protocole réseau utilisé. ROS2 utilise un protocole réseau DDS (Data Distribution Service), qui a pour but de simplifier la programmation réseau. Chaque nœud créé avec ce protocole est à la fois un Publisher et un Subscriber (voir la partie suivante pour plus de détails sur ce que sont les Publishers et Subscribers ), et est automatiquement créé sur une fraction du sous-réseau auquel ROS2 a accès. </p>
+
+                            <p>Cette fraction est appelée domaine, et tous les nœuds d'un domaine sont connectés entre eux lors de leurs créations. Cela rend à la fois la connexion à un réseau ROS2 plus facile, et plus sécuritaire, car la simple création d'un nœud sur le réseau permet d'avoir accès à l'ensemble du réseau, mais il faut connaître à l'avance le sous-réseau ainsi que le domaine sur lequel le réseau est situé.</p>
+                        </li>
+                        <li><p><strong>Domain_id</strong> : Dans ROS 2 (Robot Operating System 2), les <strong>domain_id</strong> sont des identifiants utilisés pour grouper les nœuds et les topics en domaines distincts. Ces domaines sont essentiellement des environnements virtuels où les nœuds peuvent communiquer les uns avec les autres via des topics spécifiques à ce domaine.</p>
+
+                            <p>Imaginons que vous ayez plusieurs robots dans un même réseau. Chacun de ces robots peut fonctionner dans son propre "domaine". Ainsi, les nœuds d'un robot ne communiqueront qu'avec les nœuds de leur propre domaine, à moins qu'ils ne soient explicitement configurés pour communiquer avec d'autres domaines.</p>
+
+                            <p>En utilisant des <strong>domain_id</strong>, vous pouvez organiser votre réseau de robots en plusieurs groupes indépendants, ce qui facilite la gestion et la communication entre différents sous-systèmes.</p>
+
+                            <p>En résumé, les <strong>domain_id</strong> dans ROS 2 sont des identifiants qui vous permettent de créer des environnements de communication virtuels distincts, ce qui simplifie la communication et la gestion des différents nœuds au sein de votre système robotique global.</p>
+                        </li>
+                    </ul>
+
+                </section>
+
+                <section id="section2">
+                    <h3>Comprendre les domain_id avec TurtleSim</h3>
+                    <p>Dans cette partie, nous allons explorer comment les fonctionnalités des <code>domain_id</code> permettent d'observer les différents topics de TurtleSim, lancés sur une première machine virtuelle (VM1), depuis une seconde machine virtuelle (VM2). Cela nous permettra de comprendre comment ces identifiants facilitent la visualisation des données entre différents environnements virtuels, ouvrant la voie à une communication transparente entre les nœuds de différentes machines virtuelles.</p>
+
+                    <section id="subsection2-1">
+                        <h3>Essai sans spécification de domain_id</h3>
+                        <ol>
+                            <li>
+                                <p>Lancez vos deux machines virtuelles connectées au même réseau (Utilisez les ordinateurs d'une même salle de cours à l'INSA).
+                                    <br>Rappel : user: insa / pass: insa.</p>
+                            </li>
+                            <li>
+                                <p> Observez la structure de la ligne de code à ajouter aux fichiers <code>.bashrc</code> afin de spécifier un certain <code>domain_id</code> :</p>
+                                <div class="code-block" style="background-color: lightgray;">
+<pre id="code1" class="code-content">
+export ROS_DOMAIN_ID=&lt;ID_number&gt;
+</pre>
+                                </div>
+                            </li>
+                            <li>
+                                <p>Ouvrez un terminal dans les deux machines virtuelles et vérifiez que vous êtes dans le répertoire principal <code>~/</code> :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code2')">Copier</button>
+<pre id="code2" class="code-content">
+cd ~/
+</pre>
+                                </div>
+                            </li>
+                            <li>
+                                <p>Ouvrez le fichier <code>.bashrc</code> avec l'éditeur de code nano dans les deux VM :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code3')">Copier</button>
+<pre id="code3" class="code-content">
+sudo nano .bashrc
+</pre>
+                                </div>
+                            </li>
+                            <li>
+                                <p>Descendez à la fin du fichier .bashrc et vérifiez qu'aucune ligne de code correspondant à la spécification d'un domain_id n'est écrite. La fin de votre fichier .bashrc devrait ressembler à cela :</p>
+                                <img src="images/tuto_3/Images/bashrc.png" style="width: 400px;">
+                            </li>
+                            <li>
+                                <p>Enregistrez le fichier sur les deux machines virtuelles. Fermez tous les terminaux des deux machines virtuelles pour les mettre à jour.</p>
+                            </li>
+                            <li>
+                                <p>Choisissez la machine virtuelle qui sera par la suite la VM1. L'autre sera la VM2.</p>
+                            </li>
+                            <li>
+                                <p>Visualisez les topics actifs visibles par chacune des machines virtuelles. Tapez, dans les 2 VM, la commande ci-dessous. Vous devrez obtenir la même liste sur les deux machines virtuelles :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code4')">Copier</button>
+<pre id="code4" class="code-content">
+ros2 topic list
+</pre>
+                                </div>
+                                <ul>
+                                    <li>
+                                        <p>Pour la VM1 :</p>
+                                        <img src="images/tuto_3/Images 1/ros2 topic list vide VM1.png" style="width: 300px;">
+                                    </li>
+                                    <li>
+                                        <p>Pour la VM2 :</p>
+                                        <img src="images/tuto_3/Images 1/ros2 topic list vide VM2.png" style="width: 300px;">
+                                    </li>
+                                </ul>
+                                <p>Ces topics correspondent juste aux topics de fonctionnement de ROS2.</p>
+                            </li>
+                            
+                            <li>
+                                <p>Lancez, maintenant, TurtleSim dans la VM1. Visualisez ensuite la liste des topics actifs sur cette même VM (VM1).</p>
+                                <div class="code-block" style="background-color: #eaa88e;">
+<button class="copy-button" onclick="copyCode('code5')" style="background-color: brown;">Copier</button>
+<pre id="code5" class="code-content">
+ros2 run turtlesim turtlesim_node 
+</pre>
+                                </div>
+                                <div class="code-block" style="background-color: #eaa88e;">
+<button class="copy-button" onclick="copyCode('code6')" style="background-color: brown;">Copier</button>
+<pre id="code6" class="code-content">
+ros2 topic list
+</pre>
+                                </div>
+                                <p>Vous devriez obtenir :</p>
+                                <img src="images/tuto_3/Images 1/ros2 topic list turtlesim VM1.png" style="width: 550px;">
+                            </li>
+                            <li>
+                                <p>Visualisez ensuite la liste des topics actifs sur la VM2. Vous pouvez constater que vous arrivez à voir les topics de TurtleSim sur la VM2 :</p>
+                                <div class="code-block" style="background-color: lightpink;">
+<button class="copy-button" onclick="copyCode('code7')" style="background-color: darkmagenta;">Copier</button>
+<pre id="code7" class="code-content">
+ros2 topic list
+</pre>
+                                </div>
+                                <img src="images/tuto_3/Images 1/ros2 topic list turtle VM2.png" style="width: 300px;">
+            
+                                <p>Cela vient directement du fait que lorsque vous ne spécifiez aucun domain_id, le domain_id par défaut est le 0. Les deux VM étant sur le domain_id par défaut, elles sont donc sûr le même domaine et peuvent donc communiquer. Ce qui implique que tous les noeuds des deux VM peuvent se "voir".</p>
+                            </li>
+                        </ol>
+                    </section>
+
+
+                    <section id="subsection2-2">
+                        <h3>Essai avec spécification de domain_id différents</h3>
+                        <ol>
+                            <li>
+                                <p>Ouvrez un terminal dans les deux machines virtuelles et vérifiez que vous êtes dans le répertoire principal ~/ :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code8')">Copier</button>
+<pre id="code8" class="code-content">
+cd ~/
+</pre>
+                                </div>
+                            </li>
+                            <li>
+                                <p>Ouvrez le fichier <code>.bashrc</code> avec l'éditeur de code nano :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code9')">Copier</button>
+<pre id="code9" class="code-content">
+sudo nano .bashrc
+</pre>
+                                </div>
+                            </li>
+                            <li>
+                                <p>Descendez à la fin du fichier .bashrc et ajoutez la ligne de code correspondant à la spécification d'un <code>domaine_id</code>. Choisissez par exemple <code>ID=1</code> pour la VM1 et <code>ID=2</code> pour la VM2 :</p>
+                                
+                                <p>Vous devriez avoir cela pour la VM1 :</p>
+                                <div class="code-block" style="background-color: #eaa88e;">
+<button class="copy-button" onclick="copyCode('code10')" style="background-color: brown;">Copier</button>
+<pre id="code10" class="code-content">
+export ROS_DOMAIN_ID=1
+</pre>
+                                </div>
+                                <img src="images/tuto_3/Images/bashrc id VM1.png" style="width: 400px;">
+                                <p>Vous devriez avoir cela pour la VM2 :</p>
+                                <div class="code-block" style="background-color: lightpink;">
+<button class="copy-button" onclick="copyCode('code11')" style="background-color: darkmagenta;">Copier</button>
+<pre id="code11" class="code-content">
+export ROS_DOMAIN_ID=2
+</pre>
+                                </div>
+                                <img src="images/tuto_3/Images/bashrc id diff VM2.png" style="width: 400px;">
+                            </li>
+                            <li>
+                                <p>Enregistrez le fichier sur les deux machines virtuelles. Fermez tous les terminaux des deux machines virtuelles pour les mettre à jour.</p>
+                            </li>
+                            <li>
+                                <p>Visualisez les topics actifs visibles par chacune des machines virtuelles :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code12')">Copier</button>
+<pre id="code12" class="code-content">
+ros2 topic list
+</pre>
+                                </div>
+                                <p>Vous devrez obtenir la même liste sur les deux machines virtuelles :</p>
+                                <img src="images/tuto_3/Images/ros2 topic list vide.png" style="width: 165px;">
+                                <p>Ces topics correspondent juste aux topics de fonctionnement de ROS2.</p>
+                            </li>
+                            <li>
+                                <p>Lancez, maintenant, TurtleSim dans la VM1. Visualisez ensuite la liste des topics actifs sur cette même VM (VM1). Vous devriez obtenir :</p>
+                                <div class="code-block" style="background-color: #eaa88e;">
+<button class="copy-button" onclick="copyCode('code13')" style="background-color: brown;">Copier</button>
+<pre id="code13" class="code-content">
+ros2 run turtlesim turtlesim_node 
+</pre>
+                                </div>
+                                <div class="code-block" style="background-color: #eaa88e;">
+<button class="copy-button" onclick="copyCode('code14')" style="background-color: brown;">Copier</button>
+<pre id="code14" class="code-content">
+ros2 topic list
+</pre>
+                                </div>
+                                <p>Vous devriez obtenir :</p>
+                                <img src="images/tuto_3/Images 1/ros2 topic list turtlesim VM1.png" style="width: 600px;">
+                            </li>
+                            <li>
+                                <p>Visualisez ensuite la liste des topics actifs sur la VM2. Vous pouvez constater que vous n'arrivez pas à voir les topics de TurtleSim sur la VM2 :</p>
+                                <div class="code-block" style="background-color: lightpink;">
+<button class="copy-button" onclick="copyCode('code15')" style="background-color:darkmagenta;">Copier</button>
+<pre id="code15" class="code-content">
+ros2 topic list
+</pre>
+                                </div>
+                                <img src="images/tuto_3/Images 1/ros2 topic list vide VM2 diff.png" style="width: 325px;">
+                                <p>Cela vient directement du fait que lorsque vous spécifiez un <code>domain_id</code> différents pour deux systèmes, les noeuds de ces systèmes ne peuvent pas communiquer car il ne serons pas sûr le même sous-réseaux et ne peuvent donc pas se détecter (la VM1 est sur le sous réseau d'ID 1 et la VM2 est sur le sous réseau d'ID 2).</p>
+                            </li>
+                        </ol>
+
+                    </section>
+
+                    <section id="subsection2-3">
+                        <h3>Essai avec spécification de domain_id identiques</h3>
+                        <ol>
+                            <li>
+                                <p>Ouvrez un terminal dans les deux machines virtuelles et vérifiez que vous êtes dans le répertoire principal ~/ puis ouvrez le fichier <code>.bashrc</code> avec l'éditeur de code nano :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code16')">Copier</button>
+<pre id="code16" class="code-content">
+cd ~/
+sudo nano .bashrc
+</pre>
+                                </div>
+                            </li>
+                            <li>
+                                <p>Descendez à la fin du fichier <code>.bashrc</code> et ajoutez la ligne de code correspondant à la spécification d'un <code>domain_id</code>. Choisissez par exemple le même ID (ID=1) pour la VM1 et aussi pour la VM2.</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code17')">Copier</button>
+<pre id="code17" class="code-content">
+export ROS_DOMAIN_ID=1
+</pre>
+                                </div>
+                                <p>Vous devriez avoir cela pour la VM1 :</p>
+                                <img src="images/tuto_3/Images/bashrc id VM1.png" style="width: 450px;">
+                                <p>Vous devriez avoir cela pour la VM2 :</p>
+                                <img src="images/tuto_3/Images/bashrc id ident VM2.png" style="width: 450px;">
+                            </li>
+                            <li>
+                                <p>Enregistrez le fichier sur les deux machines virtuelles. Fermez tous les terminaux des deux machines virtuelles pour les mettre à jour</p>
+                            </li>
+                            <li>
+                                <p>Visualisez les topics actifs visibles par chacune des machines virtuelles :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code18')">Copier</button>
+<pre id="code18" class="code-content">
+ros2 topic list
+</pre>
+                                </div>
+                                <p>Vous devrez obtenir la même liste sur les deux machines virtuelles :</p>
+                                <img src="images/tuto_3/Images/ros2 topic list vide.png" style="width: 175px;">
+                                <p>Ces topics correspondent juste aux topics de fonctionnement de ROS2.</p>
+                            </li>
+                            <li>
+                                <p>Lancez, maintenant, TurtleSim dans la VM1. Visualisez ensuite la liste des topics actifs sur cette même VM (VM1) :</p>
+                                <div class="code-block" style="background-color: #eaa88e;">
+<button class="copy-button" onclick="copyCode('code19')" style="background-color: brown;">Copier</button>
+<pre id="code19" class="code-content">
+ros2 run turtlesim turtlesim_node 
+</pre>
+                                </div>
+                                <div class="code-block" style="background-color: #eaa88e;">
+<button class="copy-button" onclick="copyCode('code20')" style="background-color: brown;">Copier</button>
+<pre id="code20" class="code-content">
+ros2 topic list
+</pre>
+                                </div>
+                                <p>Vous devriez obtenir :</p>
+                                <img src="images/tuto_3/Images 1/ros2 topic list turtlesim VM1.png" style="width: 600px;">
+                            </li>
+                            <li>
+                                <p>Visualisez ensuite la liste des topics actifs sur la VM2. Vous pouvez constater que vous arrivez de nouveau à voir les topics de TurtleSim sur la VM2 :</p>
+                                <div class="code-block" style="background-color: lightpink;">
+<button class="copy-button" onclick="copyCode('code21')" style="background-color:darkmagenta;">Copier</button>
+<pre id="code21" class="code-content">
+ros2 topic list
+</pre>
+                                </div>
+                                <img src="images/tuto_3/Images 1/ros2 topic list turtle VM2.png" style="width: 350px;">
+                            </li>
+                            <p>Cela vient directement du fait que lorsque vous spécifiez un domain\_id identiques pour deux systèmes, les noeuds de ces systèmes peuvent communiquer car ils sont sûr le même sous-réseaux et peuvent donc se détecter (Les deux VM sont sûr le même sous-réseau ID=1).</p>
+                        </ol>
+                        
+                    </section>
+
+                </section>
+
+                <section id="section2">
+                    <h3>Comprendre les domain_id avec TurtleSim et sa télécommande</h3>
+                    <p>Dans cette partie vous allez voir qu'il est possible de faire bouger la tortue "/turtle1" de TurtleSim sur la VM1, avec la télécommande "teleop_key" sur la VM2.</p>
+
+                    <section id="subsection3-1">
+                        <h3>Vérifier le domain_id des deux machines virtuelles</h3>
+                        <ol>
+                            <li>
+                                <p>Ouvrez un terminal dans les deux machines virtuelles et vérifiez que vous êtes dans le répertoire principal ~/ puis ouvrez le fichier <code>.bashrc</code> avec l'éditeur de code nano :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code22')">Copier</button>
+<pre id="code22" class="code-content">
+cd ~/
+sudo nano .bashrc
+</pre>
+                                </div>
+                            </li>
+                            <li>
+                                <p>Descendez à la fin du fichier <code>.bashrc</code> et ajoutez la ligne de code correspondant à la spécification d'un domain_id. Choisissez par exemple le même ID (ID=1) pour la VM1 et aussi pour la VM2.</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code23')">Copier</button>
+<pre id="code23" class="code-content">
+export ROS_DOMAIN_ID=1
+</pre>
+                                </div>
+                            <li>
+                                <p>Enregistrez le fichier sur les deux machines virtuelles. Fermez tous les terminaux des deux machines virtuelles pour les mettre à jour</p>
+                            </li>
+                            <li>
+                                <p>Visualisez les topics actifs visibles par chacune des machines virtuelles :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code24')">Copier</button>
+<pre id="code24" class="code-content">
+ros2 topic list
+</pre>
+                                </div>
+                                <p>Vous devrez obtenir la même liste sur les deux machines virtuelles :</p>
+                            </li>
+                        </ol>
+                        
+                    </section>
+
+                    <section id="subsection3-2">
+                        <h3>Lancer TurtleSim</h3>
+                        <ol>
+                            <li>
+                                <p>Lancez, maintenant, TurtleSim dans la VM1. Visualisez ensuite la liste des topics actifs sur cette même VM (VM1). Vous devriez obtenir :</p>
+                                <img src="images/tuto_3/Images 1/ros2 topic list turtlesim VM1.png" style="width: 600px;">
+                            </li>
+                            <li>
+                                <p>Visualisez ensuite la liste des topics actifs sur la VM2. Vous pouvez constater que vous arrivez de nouveau à voir les topics de TurtleSim sur la VM2 :</p>
+                                <img src="images/tuto_3/Images 1/ros2 topic list turtle VM2.png" style="width: 300px;">
+                            </li>
+                            <li>
+                                <p>Cela vient directement du fait que lorsque vous spécifiez un domain_id identiques pour deux systèmes, les noeuds de ces systèmes peuvent communiquer car ils seront sûr le même sous-réseaux et peuvent donc se détecter (Les deux VM sûr le sous-réseau ID=1).</p>
+                            </li>
+                        </ol>
+                    </section>
+
+                    <section id="subsection3-3">
+                        <h3>Lancer sa télécommande</h3>
+                        <ol>
+                            <li>
+                                <p>Ouvrez un second terminal, dans la machine virtuelle VM2, et lancez la télécommande "teleop_key" :</p>
+                                <div class="code-block" style="background-color: lightpink;">
+<button class="copy-button" onclick="copyCode('code25')" style="background-color: darkmagenta;">Copier</button>
+<pre id="code25" class="code-content">
+ros2 run turtlesim turtle_teleop_key
+</pre>
+                                </div>
+                            </li>
+                            <li>
+                                <p>Utilisez les flèches pour faire bouger la tortue "/turtle1". Vous pourrez voir la tortue bouger dans la VM1 !</p>
+                            </li>
+                            <li>
+                                <p><strong><em>Bonus</em></strong> : Utilisez le code python <code>draw_circle</code> (vu dans le <a href="/ROS2/tuto_2_packages_python_cpp.html">Tutoriel : Création de packages Python et C++</a>) dans la VM2 pour faire bouger la tortue "/turtle1" dans la VM1.</p>
+                                <p>Tapez la commande suivante :</p>
+                                <div class="code-block" style="background-color: lightpink;">
+<button class="copy-button" onclick="copyCode('code60')" style="background-color: darkmagenta;">Copier</button>
+<pre id="code60" class="code-content">
+ros2 run my_turtle_controller draw_circle
+</pre>
+                                </div>
+                                <p>Vous devriez voir la tortue bouger dans la VM1 :</p>
+                                <img src="images/tuto_2/section7/Images/TurtleSim.png" width="300px">
+                            </li>
+                        </ol>
+                    </section>
+
             </article>
             <!-- Ajoutez d'autres articles pour chaque tutoriel -->
         </section>
