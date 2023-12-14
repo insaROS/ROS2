@@ -63,7 +63,6 @@
                                 <li><a href="#subsection3-3">Lancer la télécommande</a></li>
                             </ul>
                         </li>
-                        <li><a href="#section4">Annexes</a></li>
 
                     </ul>
                 </div>
@@ -360,7 +359,7 @@ ros2 topic list
 
                 </section>
 
-                <section id="section2">
+                <section id="section3">
                     <h3>Comprendre les domain_id avec TurtleSim et sa télécommande</h3>
                     <p>Dans cette partie vous allez voir qu'il est possible de faire bouger la tortue "/turtle1" de TurtleSim sur la VM1, avec la télécommande "teleop_key" sur la VM2.</p>
 
@@ -406,11 +405,30 @@ ros2 topic list
                         <h3>Lancer TurtleSim</h3>
                         <ol>
                             <li>
-                                <p>Lancez, maintenant, TurtleSim dans la VM1. Visualisez ensuite la liste des topics actifs sur cette même VM (VM1). Vous devriez obtenir :</p>
+                                <p>Lancez, maintenant, TurtleSim dans la VM1. Visualisez ensuite la liste des topics actifs sur cette même VM (VM1) :</p>
+                                <div class="code-block" style="background-color: #eaa88e;">
+<button class="copy-button" onclick="copyCode('code24.1')" style="background-color: brown;">Copier</button>
+<pre id="code24.1" class="code-content">
+ros2 run turtlesim turtlesim_node 
+</pre>
+                                </div>
+                                <div class="code-block" style="background-color: #eaa88e;">
+<button class="copy-button" onclick="copyCode('code24.2')" style="background-color: brown;">Copier</button>
+<pre id="code24.2" class="code-content">
+ros2 topic list
+</pre>
+                                </div>
+                                <p>Vous devriez obtenir :</p>
                                 <img src="images/tuto_3/Images 1/ros2 topic list turtlesim VM1.png" style="width: 600px;">
                             </li>
                             <li>
                                 <p>Visualisez ensuite la liste des topics actifs sur la VM2. Vous pouvez constater que vous arrivez de nouveau à voir les topics de TurtleSim sur la VM2 :</p>
+                                <div class="code-block" style="background-color: lightpink;">
+<button class="copy-button" onclick="copyCode('code24.3')" style="background-color:darkmagenta;">Copier</button>
+<pre id="code24.3" class="code-content">
+ros2 topic list
+</pre>
+                                </div>
                                 <img src="images/tuto_3/Images 1/ros2 topic list turtle VM2.png" style="width: 300px;">
                             </li>
                             <li>
