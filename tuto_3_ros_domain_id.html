@@ -100,7 +100,7 @@
                     <p>Dans cette partie, nous allons explorer comment les fonctionnalités des <code>domain_id</code> permettent d'observer les différents topics de TurtleSim, lancés sur une première machine virtuelle (VM1), depuis une seconde machine virtuelle (VM2). Cela nous permettra de comprendre comment ces identifiants facilitent la visualisation des données entre différents environnements virtuels, ouvrant la voie à une communication transparente entre les nœuds de différentes machines virtuelles.</p>
 
                     <section id="subsection2-1">
-                        <h3>Essai sans spécification de domain_id</h3>
+                        <h4>Essai sans spécification de domain_id</h4>
                         <ol>
                             <li>
                                 <p>Lancez vos deux machines virtuelles connectées au même réseau (Utilisez les ordinateurs d'une même salle de cours à l'INSA).
@@ -197,7 +197,7 @@ ros2 topic list
 
 
                     <section id="subsection2-2">
-                        <h3>Essai avec spécification de domain_id différents</h3>
+                        <h4>Essai avec spécification de domain_id différents</h4>
                         <ol>
                             <li>
                                 <p>Ouvrez un terminal dans les deux machines virtuelles et vérifiez que vous êtes dans le répertoire principal ~/ :</p>
@@ -285,7 +285,7 @@ ros2 topic list
                     </section>
 
                     <section id="subsection2-3">
-                        <h3>Essai avec spécification de domain_id identiques</h3>
+                        <h4>Essai avec spécification de domain_id identiques</h4>
                         <ol>
                             <li>
                                 <p>Ouvrez un terminal dans les deux machines virtuelles et vérifiez que vous êtes dans le répertoire principal ~/ puis ouvrez le fichier <code>.bashrc</code> avec l'éditeur de code nano :</p>
@@ -364,7 +364,7 @@ ros2 topic list
                     <p>Dans cette partie vous allez voir qu'il est possible de faire bouger la tortue "/turtle1" de TurtleSim sur la VM1, avec la télécommande "teleop_key" sur la VM2.</p>
 
                     <section id="subsection3-1">
-                        <h3>Vérifier le domain_id des deux machines virtuelles</h3>
+                        <h4>Vérifier le domain_id des deux machines virtuelles</h4>
                         <ol>
                             <li>
                                 <p>Ouvrez un terminal dans les deux machines virtuelles et vérifiez que vous êtes dans le répertoire principal ~/ puis ouvrez le fichier <code>.bashrc</code> avec l'éditeur de code nano :</p>
@@ -402,7 +402,7 @@ ros2 topic list
                     </section>
 
                     <section id="subsection3-2">
-                        <h3>Lancer TurtleSim</h3>
+                        <h4>Lancer TurtleSim</h4>
                         <ol>
                             <li>
                                 <p>Lancez, maintenant, TurtleSim dans la VM1. Visualisez ensuite la liste des topics actifs sur cette même VM (VM1) :</p>
@@ -438,7 +438,7 @@ ros2 topic list
                     </section>
 
                     <section id="subsection3-3">
-                        <h3>Lancer sa télécommande</h3>
+                        <h4>Lancer sa télécommande</h4>
                         <ol>
                             <li>
                                 <p>Ouvrez un second terminal, dans la machine virtuelle VM2, et lancez la télécommande "teleop_key" :</p>
