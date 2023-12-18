@@ -44,7 +44,1078 @@
         <section>
             <article>
                 <h2>Tutoriel : Utiliser ROS2 via Matlab</h2>
-                <p>Contenu du tutoriel en construction...</p>
+                
+                <div class="table-of-contents">
+                    <h3>Table des matières</h3>
+                    <ul>
+                        <li><a href="#section1">Introduction</a></li>
+                        <li><a href="#section2">Connecter Matlab à un réseau ROS2</a></li>
+                        <li><a href="#section3">Utiliser le service /kill avec Matlab</a></li>
+                        <li><a href="#section4">Utiliser le service /spawn avec Matlab</a></li>
+                        <li><a href="#section5">Créer un Publisher et un Subscriber</a></li>
+                        <li><a href="#section6">Echanger des données en continu avec le réseau ROS2</a></li>
+                        <li><a href="#section7">Créer et utiliser une action</a></li>
+                        <li><a href="#section8">Créer un Publisher et un Subscriber sur Simulink</a></li>
+                        <li><a href="#section9">Annexes</a></li>
+                    </ul>
+                </div>
+
+                <section id="section1">
+                    <h3>Introduction</h3>
+                    <p>Ce tutoriel vise à mettre en pratique les connaissances acquises lors du tutoriel précédent en intégrant ROS2 et turtlesim de manière cohérente avec Matlab. Pour ce faire, nous allons revoir les concepts de ROS2 et de turtlesim, ainsi que présenter Matlab et Simulink.</p>
+                    <ul>
+                        <li><p><strong>ROS2</strong> : ROS (Robot Operating System) est un middleware qui agit comme une interface entre les applications et les bases de données ou les systèmes d'exploitation. ROS2, la nouvelle version de ROS, partage des composants similaires à sa version précédente, mais avec une architecture fondamentalement différente. Basé sur des systèmes distribués en temps réel, ROS2 consiste en des nœuds effectuant divers calculs ou opérations simples, connectés en réseau temps réel. Contrairement à ROS, ROS2 utilise le protocole réseau DDS (Data Distribution Service) pour simplifier la programmation réseau. Chaque nœud créé sous ce protocole, agit en tant que Publisher et Subscriber et est automatiquement créé sur un sous-réseau spécifique appelé domaine, permettant une connexion réseau plus simple et sécurisée.</p></li>
+                        <li><p><strong>TurtleSim</strong> : Turtlesim sert d'outil d'apprentissage pour ROS et ROS2, offrant une approche pratique des concepts associés. Cet outil simule un espace où plusieurs tortues peuvent se déplacer, permettant l'accès à différents topics, services et actions pour contrôler ces tortues et collecter les données disponibles. Bien que simple en apparence, turtlesim constitue une première introduction aux concepts de ROS et ROS2, sans risquer de perturber un système réel.</p></li>
+                        <li><p><strong>Matlab/Simulink</strong>: Matlab est une plateforme de calcul numérique et de programmation, offrant diverses bibliothèques appelées toolboxs pour une utilisation dans des domaines tels que l'ingénierie, les sciences et l'économie. Elle propose notamment une toolbox ROS qui sera utilisée dans ce tutoriel. D'autre part, Simulink est une plateforme de simulation et de modélisation de systèmes dynamiques, présentée comme un environnement de schémas en blocs, étroitement associée à Matlab pour simplifier la programmation des systèmes dynamiques à modéliser. Bien que non utilisé dans ce tutoriel (Simulink pas encore compatible à 100% avec ROS2), il sera abordé à la fin.</p></li>
+                    </ul>
+
+                </section>
+
+
+                <section id="section2">
+                    <h3>Connecter Matlab à un réseau ROS2</h3>
+                    <p>Avant de débuter ce guide, si vous rencontrez un problème avec l'une des commandes utilisées ici, il est probable que l'installation des prérequis pour l'utilisation de Matlab avec ROS2 n'ait pas été correctement effectuée. Dans ce cas, il vous suffit de consulter le tutoriel intitulé « Tuto installation des prérequis à l'utilisation de Matlab avec ROS2 ».</p>
+                    <p>ROS2 opère via un protocole réseau appelé DDS (Data Distribution Service). Ce protocole crée des domaines distincts au sein d'un même sous-réseau, chacun étant identifié par un ID différent. Ces domaines ne sont pas interconnectés et ne peuvent pas échanger de données entre eux.</p>
+                    <p>Contrairement à ROS, ROS2 ne possède pas de ROS Master ; les nœuds établissent automatiquement des connexions entre eux s'ils se trouvent dans le même sous-réseau et le même domaine. Afin de connecter Matlab à un réseau ROS2, il suffit de créer un nouveau nœud depuis Matlab dans le même sous-réseau et le même domaine, et la connexion s'établira automatiquement entre les deux.</p>
+
+                    <section id="subsection2-1">
+                        <h4>Vérifier le domaine ROS2 dans le fichier .bashrc</h4>
+                        <ol>
+                            <li>
+                                <p>Lancez un premier terminal dans la machine virtuelle ROS2 et modifiez le fichier <code>.bashrc</code> :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code1')">Copier</button>
+<pre id="code1" class="code-content">
+sudo nano .bashrc
+</pre>
+                                </div>
+                            </li>
+                            <li>
+                                <p>Vérifiez qu'il existe un domaine ROS2 de défini à la fin du fichier avec la ligne suivante : </p>
+                                <img src="images/tuto_4/section2/nano bashrc id_domain.png" width="400px">
+                                <ul>
+                                    <li>
+                                        <p>Si ce n'est pas le cas, ajoutez cette ligne en choisissant un ID qui n'est pas encore utilisé par une autre personne sur le même sous-réseau.</p>
+                                    </li>
+                                    <li>
+                                        <p>Si cette ligne existe déjà, retenez l'ID qui y est écrit.</p>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li>
+                                <p>Vous pouvez alors quitter le fichier .bashrc avec la commande <code class="code-content">ctrl+X</code> et enregistrer les changements si vous avez dû ajouter la définition du domaine.</p>
+                            </li>
+                        </ol>
+                        
+                    </section>
+
+                    <section id="subsection2-2">
+                        <h4>Ouvrir Matlab et créer un premier nœud sur le bon domaine</h4>
+                        <ol>
+                            <li>
+                                <p>Ouvrez alors Matlab.</p>
+                            </li>
+                            <li>
+                                <p>Observez la structure de la commande <code>setenv</code>. Cette commande permet de définir le domaine sur lequel sera connecté Matlab. Voici la structure de la commande :</p>
+                                <img src="images/tuto_4/section2/structure setenv().png" width="175px">
+                            </li>
+                            <li>
+                                <p>Utilisez cette commande en choisissant le même domaine que la VM ROS2 :</p>
+                                <div class="code-block" style="background-color:#eaa88e;">
+<button class="copy-button" onclick="copyCode('code2')" style="background-color: brown;">Copier</button>
+<pre id="code2" class="code-content">
+setenv("ROS_DOMAIN_ID","0")
+</pre>
+                                </div>
+                                <img src="images/tuto_4/section2/setenv domain 0.png" width="200px"></img>
+                                <p>S'il n'y a pas d'erreur, Matlab doit maintenant avoir accès au bon domaine ROS2 et il nous reste plus qu'à tester tout ceci.</p>
+                            </li>
+                        </ol>
+                    </section>
+
+                    <section id="subsection2-3">
+                        <h4>Lancer turtlesim et vérifier que Matlab se connecte bien au réseau ROS2</h4>
+                        <ol>
+                            <li>
+                                <p>Commencez par lancer turtlesim dans un terminal avec la commande suivante :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code3')">Copier</button>
+<pre id="code3" class="code-content">
+ros2 run turtlesim turtlesim_node
+</pre>
+                                </div>
+                                <img src="images/tuto_4/section2/turtlesim.png" width="500px">
+                            </li>
+                            <li>
+                                <p>Observez la structure de la commande <code>ros2node</code>. cette commande permet de créer un nœud grâce à Matlab, ce qui nous permettra de nous connecter au réseau ROS2 et de le découvrir. Voici la structure de la commande :</p>
+                                <img src="images/tuto_4/section2/ros2node().png" width="175px">
+                            </li>
+                            <li>
+                                <p>Créez alors un nœud "/default_Node" comme suit :</p>
+                                <div class="code-block" style="background-color:#eaa88e;">
+<button class="copy-button" onclick="copyCode('code4')" style="background-color: brown;">Copier</button>
+<pre id="code4" class="code-content">
+defaultNode = ros2node("/default_Node")
+</pre>
+                                </div>
+                                <img src="images/tuto_4/section2/ros2node(default_node).png" width="325px">
+                                <p>Vérifiez alors que l'ID correspond bien à l'ID du domaine qui a été défini plus haut.</p>
+                            </li>
+                            <li>
+                                <p>Visualisez les noeuds ROS2 depuis Matlab pour vérifier que Matlab soit bien connecté au réseau ROS2. On peut alors dresser une liste des nœuds ROS2 depuis Matlab, et vérifier que turtlesim s'y trouve bien. On utilise alors la commande suivante :</p>
+                                <div class="code-block" style="background-color:#eaa88e;">
+<button class="copy-button" onclick="copyCode('code5')" style="background-color: brown;">Copier</button>
+<pre id="code5" class="code-content">
+ros2 node list
+</pre>
+                                </div>
+                                <img src="images/tuto_4/section2/ros2 node list matlab.png" width="165px">
+                                <p>On observe bien que turtlesim apparait dans la liste des nœuds. <strong>Matlab est donc bien connecté au réseau ROS2.</strong></p>
+                            </li>
+                        </ol>
+                    </section>
+
+                </section>
+
+                <section id="section3">
+                    <h3>Utiliser le service /kill avec Matlab</h3>
+                    <p>Dans la présente section, nous allons examiner les services et étudier leur utilisation avec Matlab. Nous débuterons par répertorier les services accessibles sur turtlesim à partir de Matlab.</p>
+
+                    <section id="subsection3-1">
+                        <h4>Trouver le type de ce service sur Matlab</h4>
+                        <ol>
+                            <li>
+                                <p>Utilisez la commande suivante, pour voir la liste des services actifs :</p>
+                                <div class="code-block" style="background-color:#eaa88e;">
+<button class="copy-button" onclick="copyCode('code6')" style="background-color: brown;">Copier</button>
+<pre id="code6" class="code-content">
+ros2 service list
+</pre>
+                                </div>
+                                <img src="images/tuto_4/section3/ros2 list version 2.png" width="350px">
+                                <p>On observe alors que les 6 premiers services sont pour Matlab, et que les autres sont ceux que nous avons déjà vu dans les précédents tutoriels. Ce sont donc ces derniers qui vont nous intéresser.</p>
+                            </li>
+                            <li>
+                                <p>Pour faire disparaître la tortue, il faut utiliser le service <code>/kill</code>. Pour se connecter à un service ROS2, il faut créer un client de service. Or, pour crée un client de service, on doit d'abord connaître le type du service que nous voulons utiliser.</p>
+                            </li>
+                            <li>
+                                <p>Tapez la commande suivante dans Matlab :</p>
+                                <div class="code-block" style="background-color:#eaa88e;">
+<button class="copy-button" onclick="copyCode('code7')" style="background-color: brown;">Copier</button>
+<pre id="code7" class="code-content">
+ros2 msg list
+</pre>
+                                </div>
+                                <img src="images/tuto_4/section3/cmd ros2 msg list.png" width="175px">
+                            </li>
+                            <li>
+                                <p>Vérifiez que les messages suivants sont disponibles :</p>
+                                <img src="images/tuto_4/section3/ros2 msg list.png" width="350px">
+                                <ul>
+                                    <li>
+                                        <p>Si ces commandes sont présentes, vous pouvez passer à la suite.</p>
+                                    </li>
+                                    <li>
+                                        <p>Si ce n'est pas le cas, reprenez le tutoriel Tutoriel : <a href="/ROS2/tuto_installation_prerequis_matlab.html">Installation des prérequis à l'utilisation de Matlab avec ROS2</a>.</p>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <p>Observez la liste précédente, et vous pourrez voir :</p>
+                                <img src="images/tuto_4/section3/turtlesim killrequest type.png" width="200px">
+                                <p>Malheureusement, Matlab a des règles particulières en termes de notation, et lors de l'appel à un service, il va rajouter lui-même le terme "<code>Request</code>" à la fin du type de service. Le type de service, correspondant au service "<code>/kill</code>", à envoyer sera donc "<code>turtlesim/Kill</code>".</p>
+                            </li>
+                        </ol>
+                        
+                    </section>
+
+                    <section id="subsection3-2">
+                        <h4>Lancer le client de ce service</h4>
+                        <ol>
+                            <li>
+                                <p>Retournez dans Matlab et observez la commande <code>ros2svcclient</code> pour créer un client de service :</p>
+                                <img src="images/tuto_4/section3/structure ros2svcclient.png" width="400px">
+                            </li>
+                            <li>
+                                <p>Utilisez la commande <code>ros2svcclient</code> pour créer notre client de service :</p>
+                                <div class="code-block" style="background-color:#eaa88e;">
+<button class="copy-button" onclick="copyCode('code8')" style="background-color: brown;">Copier</button>
+<pre id="code8" class="code-content">
+client = ros2svcclient(defaultNode,"/kill","turtlesim/Kill")
+</pre>
+                                </div>
+                                <img src="images/tuto_4/section3/ros2svcclient.png" width="450px">
+                                <p>Notre client de service est maintenant créé. Passons donc à la création du message à envoyer au service.</p>
+                            </li>
+                        </ol>
+                        
+                    </section>
+
+                    <section id="subsection3-3">
+                        <h4>Créer le message à envoyer au service</h4>
+                        <p>Pour cela nous allons utiliser une des capacités de Matlab qui est de créer directement un message de type adapté à un client de service.</p>
+                        <ol>
+                            <li>
+                                <p>Observez la structure de la commande suivante :</p>
+                                <img src="images/tuto_4/section3/structure ros2message().png" width="200px">
+                                <p>Elle permet de renvoyer différentes informations sur le type de message de client.</p>
+                            </li>
+                            <li>
+                                <p>Tapez la commande suivante :</p>
+                                <div class="code-block" style="background-color:#eaa88e;">
+<button class="copy-button" onclick="copyCode('code9')" style="background-color: brown;">Copier</button>
+<pre id="code9" class="code-content">
+message = ros2message(client)
+</pre>
+                                </div>
+                                <img src="images/tuto_4/section3/ros2message().png" width="325px">
+                                <p>On voit bien que le message est bien du type voulu, mais que le name est vide. Pour cela, nous allons donner le nom de la tortue que nous voulons faire disparaître, qui est "turtle1".</p>
+                            </li>
+                            <li>
+                                <p>Nous pouvons donc utiliser la commande suivante pour lui attribuer le nom <code>turtle1</code> :</p>
+                                <div class="code-block" style="background-color:#eaa88e;">
+<button class="copy-button" onclick="copyCode('code10')" style="background-color: brown;">Copier</button>
+<pre id="code10" class="code-content">
+message.name = 'turtle1'
+</pre>
+                                </div>
+                                <img src="images/tuto_4/section3/message.name.png" width="325px">
+                                <p>Le message possède maintenant le nom de notre tortue.</p>
+                            </li>
+                        </ol>
+                    </section>
+
+                    <section id="subsection3-4">
+                        <h4>Envoyer le message au service</h4>
+                        <ol>
+                            <li>
+                                <p>Envoyez ce message via le client créé plus tôt. Pour cela, nous allons utiliser la commande <code>call</code>. Observez la structure de la commande suivante :</p>
+                                <img src="images/tuto_4/section3/structure call().png" width="300px">
+                            </li>
+                            <li>
+                                <p>Utilisez cette fonction <code>call</code> :</p>
+                                <div class="code-block" style="background-color:#eaa88e;">
+<button class="copy-button" onclick="copyCode('code11')" style="background-color: brown;">Copier</button>
+<pre id="code11" class="code-content">
+call(client,message)
+</pre>
+                                </div>
+                                <img src="images/tuto_4/section3/call().png" width="300px">
+                            </li>
+                            <li>
+                                <p>Observez la fenêtre TurtleSim. La tortue a bien disparu :</p>
+                                <img src="images/tuto_4/section3/turtlesim vide.png" width="250px">
+                            </li>
+                        </ol>
+                        
+                    </section>
+
+                </section>
+
+                <section id="section4">
+                    <h3>Utiliser le service /spawn avec Matlab</h3>
+                    <p>Nous allons maintenant reprendre les mêmes étapes mais cette fois-ci pour recréer notre tortue avec le service <code>/spawn</code>.</p>
+
+                    <section id="subsection4-1">
+                        <h4>Trouver le type de ce service sur Matlab</h4>
+                        <ol>
+                            <li>
+                                <p>Vous pouvez voir ce service dans la liste des services :</p>
+                                <div class="code-block" style="background-color:#eaa88e;">
+<button class="copy-button" onclick="copyCode('code12')" style="background-color: brown;">Copier</button>
+<pre id="code12" class="code-content">
+ros2 service list
+</pre>
+                                </div>
+                                <img src="images/tuto_4/section3/ros2 service list.png" width="450px">
+                            </li>
+                            <li>
+                                <p>Cherchez le type de ce service dans la liste services et type. Vous devriez trouver ce type :</p>
+                                <img src="images/tuto_4/section4/spawnRequest.png" width="165px">
+                            </li>
+                        </ol>
+                        
+                    </section>
+
+                    <section id="subsection4-2">
+                        <h4>Lancer le client de ce service</h4>
+                        <p>Créez le client de service avec la commande suivante : </p>
+                        <div class="code-block" style="background-color:#eaa88e;">
+<button class="copy-button" onclick="copyCode('code12.1')" style="background-color: brown;">Copier</button>
+<pre id="code12.1" class="code-content">
+client2 = ros2svcclient(defaultNode,"/spawn","turtlesim/Spawn")
+</pre>
+                        </div>
+                        <img src="images/tuto_4/section4/ros2svcclient.png" width="450px">
+                    </section>
+
+                    <section id="subsection4-3">
+                        <h4>Créer le message à envoyer au service</h4>
+                        <p>Pour cela nous allons utiliser une des capacités de Matlab qui est de créer directement un message de type adapté à un client de service.</p>
+                        <ol>
+                            <li>
+                                <p>Créez le message correspondant à ce service avec la commande suivante :</p>
+                                <div class="code-block" style="background-color:#eaa88e;">
+<button class="copy-button" onclick="copyCode('code13')" style="background-color: brown;">Copier</button>
+<pre id="code13" class="code-content">
+message2 = ros2message(client2)
+</pre>
+                                </div>
+                                <img src="images/tuto_4/section4/ros2message.png" width="300px">
+                                <p>En plus du nom, nous allons donner une position de base à notre tortue. Le centre de l'image se trouve à la position <code>(x,y,theta) = (5.54,5.54,0)</code>, nous allons donc faire apparaître notre tortue ici. Comme le type demandé est un <code>single</code> et que Matlab crée automatiquement des nombres de type <code>double</code>, il faudra préciser <code>single</code> lors du paramétrage de la position.</p>
+                            </li>
+                            
+                            <li>
+                                <p>Fournissez les trois commandes suivantes pour paramétrer le message :</p>
+                                <div class="code-block" style="background-color:#eaa88e;">
+<button class="copy-button" onclick="copyCode('code14')" style="background-color: brown;">Copier</button>
+<pre id="code14" class="code-content">
+message2.x = single(5.54)
+</pre>
+                                </div>
+                                <div class="code-block" style="background-color:#eaa88e;">
+<button class="copy-button" onclick="copyCode('code15')" style="background-color: brown;">Copier</button>
+<pre id="code15" class="code-content">
+message2.y = single(5.54)
+</pre>
+                                </div>
+                                <div class="code-block" style="background-color:#eaa88e;">
+<button class="copy-button" onclick="copyCode('code16')" style="background-color: brown;">Copier</button>
+<pre id="code16" class="code-content">
+message2.name = 'turtle1'
+</pre>
+                                </div>
+                                <img src="images/tuto_4/section4/single x.png" width="300px">
+                                <img src="images/tuto_4/section4/single y.png" width="300px">
+                                <img src="images/tuto_4/section4/message name.png" width="297px">
+                            </li>
+                            
+                            <li>
+                                <p>Vous obtiendrez donc dans la console le récapitulatif du message construit :</p>
+                                <img src="images/tuto_4/section4/message 2 fini.png" width="300px">
+                            </li>
+                        </ol>
+                        
+                    </section>
+
+                    <section id="subsection4-4">
+                        <h4>Envoyer le message au service</h4>
+                        <ol>
+                            <li>
+                                <p>Envoyez ce message via le client, créé plus tôt. Utilisez la fonction <code>call</code> :</p>
+                                <div class="code-block" style="background-color:#eaa88e;">
+<button class="copy-button" onclick="copyCode('code17')" style="background-color: brown;">Copier</button>
+<pre id="code17" class="code-content">
+call(client2,message2)
+</pre>
+                                </div>
+                                <img src="images/tuto_4/section4/call().png" width="300px">
+                            </li>
+                            
+                            <li>
+                                <p>Observez la fenêtre TurtleSim. La tortue a bien apparu :</p>
+                                <img src="images/tuto_4/section4/turtlesim.png" width="300px">
+                            </li>
+                        </ol>
+                        
+                    </section>
+
+                </section>
+
+                <section id="section5">
+                    <h3>Créer un Publisher et un Subscriber</h3>
+                    <p>Regardons maintenant comment marchent les Publishers et Subscriber avec Matlab. Les Publishers et Subscriber ont besoin de topics pour fonctionner, et chacun des topic possède un ou plusieurs types de messages qui peuvent être utilisés.</p>
+                    
+                    <section id="subsection5-1">
+                        <h4>Vérifier la liste des topics</h4>
+                        <ol>
+                            <li>
+                                <p>Vérifier que TurtleSim est toujours lancé dans la machine virtuelle. Si ce n'est pas le cas, ouvrez un terminal et tapez la commande :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code18')">Copier</button>
+<pre id="code18" class="code-content">
+ros2 run turtlesim turtlesim_node
+</pre>
+                                </div>
+                            </li>
+                        
+                            <li>
+                                <p>La liste des topics peut être vue en utilisant la commande suivante dans Matlab :</p>
+                                <div class="code-block" style="background-color:#eaa88e;">
+<button class="copy-button" onclick="copyCode('code19')" style="background-color: brown;">Copier</button>
+<pre id="code19" class="code-content">
+ros2 topic list
+</pre>
+                                </div>
+                                <img src="images/tuto_4/section5/ros2 topic list.png" width="300px">
+                            </li>
+                        
+                            <li>
+                                <p>De plus, les types de messages qui peuvent être utilisés sont visibles grâce à la commande suivante dans Matlab:</p>
+                                <div class="code-block" style="background-color:#eaa88e;">
+<button class="copy-button" onclick="copyCode('code20')" style="background-color: brown;">Copier</button>
+<pre id="code20" class="code-content">
+ros2 msg list
+</pre>
+                                </div>
+                                <img src="images/tuto_4/section5/ros2 msg list.png" width="175px">
+                            </li>
+                        </ol>
+                        
+                    </section>
+
+                    <section id="subsection5-2">
+                        <h4>Créer le message</h4>
+                        <p>Dans cette première partie, nous allons créer deux messages qui serviront à l'envoi et à la réception de messages pour communiquer entre Matlab et turtlesim.</p>
+                        
+                        <ol>
+                            <li>
+                                <p>Créez un message qui s'appellera "<code>twist</code>" et qui sera de type "<code>geometry_msgs/Twist</code>". Pour cela, nous allons utiliser la commande <code>ros2 message</code> mais cette fois en utilisant directement le type "<code>geometry_msgs/Twist</code>" :</p>
+                                <div class="code-block" style="background-color:#eaa88e;">
+<button class="copy-button" onclick="copyCode('code20')" style="background-color: brown;">Copier</button>
+<pre id="code20" class="code-content">
+twist = ros2message("geometry_msgs/Twist")
+</pre>
+                                </div>
+                                <img src="images/tuto_4/section5/ros2message.png" width="300px">
+                            </li>
+                        
+                            <li id="modif_msg_twist">
+                                <p>Assignez au moins une valeur à ce message. Nous allons lui donner <code>2</code> comme vitesse linéaire selon x et la valeur <code>1.58</code> comme vitesse angulaire selon z. Pour cela, nous allons utiliser les commandes suivantes :</p>
+                                <div class="code-block" style="background-color:#eaa88e;">
+<button class="copy-button" onclick="copyCode('code21')" style="background-color: brown;">Copier</button>
+<pre id="code21" class="code-content">
+twist.linear.x = 2
+</pre>
+                                </div>
+                                <div class="code-block" style="background-color:#eaa88e;">
+<button class="copy-button" onclick="copyCode('code22')" style="background-color: brown;">Copier</button>
+<pre id="code22" class="code-content">
+twit.angular.z = 1.58
+</pre>
+                                </div>
+                                <img src="images/tuto_4/section5/twist.linear.png" width="160px">
+                                <img src="images/tuto_4/section5/twist.angular.png" width="200px">
+                            </li>
+                        
+                            <li>
+                                <p>Créez un second message, que nous appellerons "<code>pose</code>" et qui lui sera de type "<code>turtlesim/Pose</code>". La commande à utiliser est donc la suivante :</p>
+                                <div class="code-block" style="background-color:#eaa88e;">
+<button class="copy-button" onclick="copyCode('code23')" style="background-color: brown;">Copier</button>
+<pre id="code23" class="code-content">
+pose = ros2message("turtlesim/Pose")
+</pre>
+                                </div>
+                                <img src="images/tuto_4/section5/ros2message pose.png" width="300px">
+                                <p>Ce message servira à récupérer la position de la tortue. Nous n'avons donc pas besoin de lui assigner de valeur.</p>
+                            </li>
+                        </ol>
+                        
+                    
+                    </section>
+
+                    <section id="subsection5-3">
+                        <h4>Créer un publisher</h4>
+                        <p>Afin d'envoyer un message sur un topic, nous aurons besoin d'un Publisher. Nous allons donc en créer un. Nous avons vu dans le premier tutoriel que le topic sur lequel il faut publier des messages de façon à faire bouger la tortue est "<code>turtle1/cmd_vel</code>" et que les messages reçus doivent être de type <code>geometry_msgs/Twist</code>. On va alors créer un Publisher qui se connecte au bon topic avec le bon type de données</p>
+                        <ol>
+                            <li>
+                                <p>Créez un publisher avec la commande <code>ros2publisher</code>. Observez la structure de la commande :</p>
+                                <img src="images/tuto_4/section5/structure ros2publisher.png" width="275px">
+                            </li>
+                        
+                            <li>
+                                <p>Utilisez cette commande pour créer le publisher :</p>
+                                <div class="code-block" style="background-color:#eaa88e;">
+<button class="copy-button" onclick="copyCode('code24')" style="background-color: brown;">Copier</button>
+<pre id="code24" class="code-content">
+Pub = ros2publisher(defaultNode,"turtle1/cmd_vel","geometry_msgs/Twist")
+</pre>
+                                </div>
+                                <img src="images/tuto_4/section5/ros2publisher.png" width="500px">
+                                <p>Nous disposons maintenant d'un nœud defaultNode qui devrait avoir accès au topic <code>turtle1/cmd_vel</code> pour publier des données.</p>
+                            </li>
+                        
+                            <li>
+                                <p>Vérifiez la création de votre publisher en ouvrant un terminal dans la machine virtuelle et en lançant <code>rqt_graph</code> :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code25')">Copier</button>
+<pre id="code25" class="code-content">
+rqt_graph
+</pre>
+                                </div>
+                            </li>
+                        
+                            <li>
+                                <p>Vous obtenez alors le graphique suivant :</p>
+                                <img src="images/tuto_4/section5/graphique rqt graph.png" width="400px">
+                                <p>Vérifiez que le nœud <code>default_Node</code> a maintenant accès au topic <code>turtle1/cmd_vel</code>.</p>
+                            </li>
+                        </ol>
+                        
+                    </section>
+
+                    <section id="subsection5-4">
+                        <h4>Créer un subscriber</h4>
+                        <p>Maintenant, nous voulons créer un Subscriber car nous voulons récupérer la position de notre tortue. Pour cela, nous allons le connecter au topic "<code>turtle1/pose</code>".</p>
+                        <ol>
+                            <li>
+                                <p>Créez un subscriber avec la commande <code>ros2subscriber</code>. Observez la structure de la commande :</p>
+                                <img src="images/tuto_4/section5/structure ros2subscriber.png" width="250px">
+                            </li>
+                        
+                            <li>
+                                <p>Utilisez cette commande pour créer le subscriber :</p>
+                                <div class="code-block" style="background-color:#eaa88e;">
+<button class="copy-button" onclick="copyCode('code26')" style="background-color: brown;">Copier</button>
+<pre id="code26" class="code-content">
+Sub = ros2subscriber(defaultNode,"/turtle1/pose")
+</pre>
+                                </div>
+                                <img src="images/tuto_4/section5/ros2subscriber.png" width="350px">
+                            </li>
+                                
+                            <li>
+                                <p>Mettez à jour la fenêtre <code>rqt_graph</code>. Si votre subscriber a bien été créé, vous devriez pouvoir le voir :</p>
+                                <img src="images/tuto_4/section5/graphique rqt graph 2.png" width="475px">
+                                <p>On observe bien que notre nœud <code>/default_Node</code> peut maintenant récupérer des données provenant du topic <code>turtle1/pose</code>.</p>
+                            </li>
+                            <p>Nous avons alors tout ce dont nous avons besoin pour commencer à échanger des messages entre Matlab et turtlesim.</p>
+                        </ol>
+                        
+
+                    </section>
+
+                </section>
+
+                <section id="section6">
+                    <h3>Echanger des données en continu avec le réseau ROS2</h3>
+
+                    <section id="subsection6-1">
+                        <h4>Envoyer des données à un réseau ROS2</h4>
+                        <p>Nous allons commencer par envoyer le message <code>twist</code> que nous avions précédemment via le Publisher <code>Pub</code>. </p>
+                        <ol>
+                            <li>
+                                <p> Observez la structure de la commande pour envoyez un message :</p>
+                                <img src="images/tuto_4/section6/Images/structure send.png" width="100px">
+                            </li>
+                        
+                            <li>
+                                <p>Utilisez cette commande pour créer le subscriber :</p>
+                                <div class="code-block" style="background-color:#eaa88e;">
+<button class="copy-button" onclick="copyCode('code26')" style="background-color: brown;">Copier</button>
+<pre id="code26" class="code-content">
+send(Pub,twist)
+</pre>
+                                </div>
+                                <img src="images/tuto_4/section6/Images/send.png" width="175px">
+                            </li>
+                        
+                            <li>
+                                <p>Observez la fenêtre TurtleSim. Vous devriez voir la tortue bouger sous la forme d'un arc de cercle (mouvement typique d'une vitesse linéaire selon x et angulaire selon z) :</p>
+                                <img src="images/tuto_4/section6/Images/TurtleSim.png" width="250px">
+                                <p>Afin de vérifier que tout se passe correctement lors de l'envoi de messages, vous pouvez <a href="#modif_msg_twist">modifier les valeurs</a> de <code>twist</code> et le renvoyer grâce à la commande <code>send()</code>, ci-dessus, pour observer les différents mouvements de la tortue. (Rappel : Les seules vitesses valables pour la tortue sont les vitesses : linéaires sur x et y et angulaire sur z)</p>
+                            </li>
+                        </ol>
+                        
+                    </section>
+
+                    <section id="subsection6-2">
+                        <h4>Récuperer des données depuis un réseau ROS2</h4>
+                        <p>Nous allons maintenant essayer de récupérer la position de notre tortue. Pour cela, nous utiliser le Subscriber <code>Sub</code> et mettre la valeur qu'il va renvoyer dans le message <code>pose</code>.</p>
+                        <ol>
+                            <li>
+                                <p>Récupérez les données avec la commande <code>receive</code>. Observez la structure de la commande :</p>
+                                <img src="images/tuto_4/section6/Images/structure receive.png" width="150x">
+                            </li>
+                        
+                            <li>
+                                <p>Utilisez cette commande pour récupérer les données :</p>
+                                <div class="code-block" style="background-color:#eaa88e;">
+<button class="copy-button" onclick="copyCode('code27')" style="background-color: brown;">Copier</button>
+<pre id="code27" class="code-content">
+pose = receive(Sub)
+</pre>
+                                </div>
+                                <img src="images/tuto_4/section6/Images/receive.png" width="300px">
+                            </li>
+                        
+                            <p>On peut alors observer la position de notre tortue, qui a les coordonnées suivantes :</p>
+                            <p><code>x=6.7935, y=6.8538 et avec un angle θ=1.5926 rad</code></p>
+                            <p>De plus, comme notre tortue est à l'arrêt, ses vitesses linéaire et angulaire sont nulles.</p>
+                        </ol>
+                        
+                    </section>
+
+                    <section id="subsection6-3">
+                        <h4>Envoyer et recevoir les infos en continu avec des scripts Matlab</h4>
+                        <p>Nous avons donc réussi à échanger des messages entre Matlab et ROS2, mais l'envoi et la réception de données depuis le terminal Matlab prend ne permet pas une application réelle. Nous allons donc faire en sorte d'envoyer et recevoir en continu des messages entre les deux.</p>
+                        <ol>
+                            <li>
+                                <p>Commencez par créer un script Matlab avec l'icône situé dans le coin supérieur gauche :</p>
+                                <img src="images/tuto_4/section6/Images 2/creer new script.png" width="150px">
+                            </li>
+                        
+                            <li id="code_send_receive.m">
+                                <p>Commencez à créer le programme. Pour cela, nous allons reprendre les éléments que nous avons utilisé dans le terminal et les organiser en ajoutant une boucle « infinie ». Le programme à écrire se présentera donc comme suit (Vous trouverez le code en <a href="#annexe1">Annexe 1</a> ):</p>
+                                <img src="images/tuto_4/section6/Images 2/script 1.png" width="450px">
+                                
+                                <p><span style="color: red;">Il faut bien penser à ne pas mettre de point-virgule à la ligne 14, comme nous souhaitons que la valeur de pose soit affichée dans le terminal.</span></p>
+                                
+                                <p><strong>Explication du programme :</strong></p>
+                                <ul style="list-style-type: circle;">
+                                    <li>Le <code>clear</code> ajouté au début (ligne 1) permet de nettoyer/effacer les autres variables qui peuvent avoir été créées.</li>
+                                    <li>Un nœud qui permet d'établir la connexion avec ROS2 est créé (ligne 3).</li>
+                                    <li>Les messages <code>twist</code> et <code>pose</code> sont créés (ligne 5 et 6), et on attribut les différentes valeurs à <code>twist</code> (lignes 7 et 8).</li>
+                                    <li>Le Publisher et le Subscriber sont créés (lignes 10 et 11).</li>
+                                    <li>Boucle infinie où on récupère la position, on attend 0.3 seconde, et on envoie notre message (lignes 13-17).</li>
+                                </ul>
+                            </li>
+                        
+                            <li>
+                                <p>Lancez le programme en appuyant sur la touche "<code>F5</code>" ou en appuyant sur la flèche verte en haut de l'écran. On devrait normalement observer que la tortue se met à bouger et sa position est écrite dans le terminal toutes les 0.3 seconde :</p>
+                                <img src="images/tuto_4/section6/Images 2/resultat.png" width="600px">
+                                
+                                <p><span style="color: red;">Pour arrêter le programme, il faut utiliser le carré rouge situé en haut à droite ou bien utiliser la commande « Maj+F5 ».</span></p>
+                            </li>
+                        </ol>
+                        
+                    </section>
+
+                </section>
+
+                <section id="section7">
+                    <h3>Créer et utiliser une action</h3>
+                    <p>Tout comme pour ROS, les actions sont disponibles sur ROS2 comme vue dans le premier tutoriel. Cependant, leur implémentation à l'aide de Matlab nécessiterait un tutoriel supplémentaire car leur création est séparée en deux parties : les serveurs d'actions et les clients d'actions. La partie serveur d'action n'existant que depuis la dernière version de Matlab, les exemples ne sont pas très variés, et la documentation est limitée à celle fournie par Mathworks. Nous nous contenterons donc de créer un client d'action et de le lier à l'action <code>rotate_absolute</code> de turtlesim comme vu dans le tutoriel 1. </p>
+                    
+                    <section id="subsection7-1">
+                        <h4>Créer le client d'action</h4>
+                        <ol>
+                            <li><p>Fermez tous vos terminaux dans la VM et relancez un seul terminal dans lequel vous allez lancer turtlesim. (Rappel : <code>$ ros2 run turtlesim turtlesim_node</code>)</p></li>
+                        
+                            <li>
+                                <p>Regardez la liste des actions accessibles pour turtlesim. Pour cela, nous allons utiliser la commande suivante :</p>
+                                <div class="code-block" style="background-color:#eaa88e;">
+<button class="copy-button" onclick="copyCode('code28')" style="background-color: brown;">Copier</button>
+<pre id="code28" class="code-content">
+ros2 action list
+</pre>
+                                </div>
+                                <img src="images/tuto_4/section7/ros2 action list.png" width="200px">
+                                <p>On remarque qu'il n'y a qu'une seule action de disponible.</p>
+                            </li>
+                        
+                            <li>
+                                <p>Trouvez maintenant le type de message de cette action. Utilisez la commande :</p>
+                                <div class="code-block" style="background-color:#eaa88e;">
+<button class="copy-button" onclick="copyCode('code29')" style="background-color: brown;">Copier</button>
+<pre id="code29" class="code-content">
+ros2 msg list
+</pre>
+                                </div>
+                                <img src="images/tuto_4/section7/ros2 msg list.png" width="175px">
+                                <p>Vous obtiendrez :</p>
+                                <img src="images/tuto_4/section7/list types messages.png" width="250px">
+                                <p>Puisque le seul type de message qui correspond à un serveur d'action est le <code>Goal</code>, nous allons utiliser la partie centrale du type de message. Cependant, à l'instar des services, Matlab ajoute automatiquement le terme <code>Goal</code> à la fin du type de message, nous aurons donc simplement à spécifier le début du type de message.</p>
+                            </li>
+                        
+                            <li>
+                                <p>Créez notre client d'action avec la commande <code>ros2actionclient</code>. Observez la structure de la commande :</p>
+                                <img src="images/tuto_4/section7/structure ros2actionclient.png" width="250px">
+                            </li>
+                        
+                            <li>
+                                <p>Utilisez cette commande :</p>
+                                <div class="code-block" style="background-color:#eaa88e;">
+<button class="copy-button" onclick="copyCode('code30')" style="background-color: brown;">Copier</button>
+<pre id="code30" class="code-content">
+client_act = ros2actionclient(defaultNode,"/turtle1/rotate_absolute","turtlesim/RotateAbsolute")
+</pre>
+                                </div>
+                                <img src="images/tuto_4/section7/ros2actionclient.png" width="600px">
+                            </li>
+                        
+                            <li>
+                                <p>Créez le message :</p>
+                                <div class="code-block" style="background-color:#eaa88e;">
+<button class="copy-button" onclick="copyCode('code31')" style="background-color: brown;">Copier</button>
+<pre id="code31" class="code-content">
+action = ros2message(client_act)
+</pre>
+                                </div>
+                                <img src="images/tuto_4/section7/ros2message.png" width="300px">
+                                <p>On remarque bien que le message est du type voulu.</p>
+                            </li>
+                        
+                            <li>
+                                <p>Donnez une valeur à theta, par exemple 1.57. theta est de type single, il ne faut donc pas oublier de le préciser dans le paramétrage du message avec la fonction <code>single()</code> :</p>
+                                <div class="code-block" style="background-color:#eaa88e;">
+<button class="copy-button" onclick="copyCode('code32')" style="background-color: brown;">Copier</button>
+<pre id="code32" class="code-content">
+action.theta = single(1.57)
+</pre>
+                                </div>
+                                <img src="images/tuto_4/section7/action.theta.png" width="300px">
+                            </li>
+                        </ol>
+                        
+                    </section>
+
+                    <section id="subsection7-2">
+                        <h4>Récupérer le feedback et le résultat de l'action</h4>
+                        <p>Récupérez le feedback et le résultat de l'action. Pour cela nous allons créer deux fonctions qui serviront à afficher l'avancée d'une action et le résultat.</p>
+                        <ol>
+                            <li>
+                                <p>Ouvrez deux nouveaux scripts vierges. Cliquez sur ce bouton :</p>
+                                <img src="images/tuto_4/section6/Images 2/creer new script.png" width="150px">
+                            </li>
+                            <li id="function_printFeedback.m">
+                                <p>Ecrivez le premier script (Vous trouverez ce script en <a href="#annexe2">Annexe 2</a>) :</p>
+                                <img src="images/tuto_4/section7/script1.png" width="500px">
+                                <p>Enregistrez-le sous le nom "<code>printFeedback</code>".</p>
+                            </li>
+                        
+                            <li id="function_printResult.m">
+                                <p>Ecrivez le second script (Vous trouverez ce script en <a href="#annexe3">Annexe 3</a>):</p>
+                                <img src="images/tuto_4/section7/script2.png" width="500px">
+                                <p>Enregistrez-le sous le nom "<code>printResult</code>".</p>
+                            </li>
+                        </ol>
+                        
+                    
+                    </section>
+
+                    <section id="subsection7-3">
+                        <h4>Réaliser une action</h4>
+                        <ol>
+                            <li>
+                                <p>Observez la commande suivante pour définir les options de l'action :</p>
+                                <img src="images/tuto_4/section7/structure ros2actionsendgoaloptions.png" width="300px">
+                            </li>
+                        
+                            <li>
+                                <p>Utilisez cette commande :</p>
+                                <div class="code-block" style="background-color:#eaa88e;">
+<button class="copy-button" onclick="copyCode('code33')" style="background-color: brown;">Copier</button>
+<pre id="code33" class="code-content">
+callbackOpts = ros2ActionSendGoalOptions(FeedbackFcn=@printFeedback,ResultFcn=@printResult)
+</pre>
+                                </div>
+                                <img src="images/tuto_4/section7/ros2actionsendgoaloptions.png" width="500px">
+                            </li>
+                        
+                            <li>
+                                <p>Observez la commande « sendGoal » pour envoyer l'action :</p>
+                                <img src="images/tuto_4/section7/structure sendgoal.png" width="185px">
+                            </li>
+                        
+                            <li>
+                                <p>Utilisez cette commande :</p>
+                                <div class="code-block" style="background-color:#eaa88e;">
+<button class="copy-button" onclick="copyCode('code34')" style="background-color: brown;">Copier</button>
+<pre id="code34" class="code-content">
+Retour = sendGoal(client_act,action,callbackOpts)
+</pre>
+                                </div>
+                                <img src="images/tuto_4/section7/sendgoal.png" width="350px">
+                            </li>
+                        
+                            <li>
+                                <p>Vérifiez que le résultat obtenu est une suite de Feedback qui comporte la rotation restante à effectuer, et un résultat qui indique la rotation totale de la tortue :</p>
+                                <img src="images/tuto_4/section7/resultat matlab.png" width="500px">
+                            </li>
+                        
+                            <li>
+                                <p>Observez la fenêtre turtlesim. La tortue a bougée, et elle est maintenant dans cette position :</p>
+                                <img src="images/tuto_4/section7/turtlesim.png" width="250px">
+                            </li>
+                        
+                            <p>Vous venez donc d'envoyer un message sur un client d'action via Matlab.</p>
+                        </ol>
+                        
+                    </section>
+
+                </section>
+
+                <section id="section8">
+                    <h3>Créer un Publisher et un Subscriber sur Simulink</h3>
+                    <p>L'utilisation des Subscribers est actuellement compliquée car "<code>turtlesim/Pose</code>" est un type de message qui doit être ajouté manuellement à la bibliothèque Matlab.</p>
+                    
+                    <section id="subsection8-1">
+                        <h4>Ouvrir un nouveau projet Simulink</h4>
+                        <ol>
+                            <li>
+                                <p>Avant de commencer, utilisez la commande <code>clear</code> dans le terminal Matlab pour nettoyer/effacer les variables :</p>
+                                <div class="code-block" style="background-color:#eaa88e;">
+<button class="copy-button" onclick="copyCode('code35')" style="background-color: brown;">Copier</button>
+<pre id="code35" class="code-content">
+clear
+</pre>
+                                </div>
+                                <img src="images/tuto_4/section8/clear.png" width="100px">
+                            </li>
+                        
+                            <li>
+                                <p>Fermez ensuite tous les terminaux ROS2 dans la VM et ouvrez en un nouveau, dans lequel vous lancerez turtlesim :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code36')">Copier</button>
+<pre id="code36" class="code-content">
+ros2 run turtlesim turtlesim_node
+</pre>
+                                </div>
+                            </li>
+                        
+                            <li>
+                                <p>Lancez alors Simulink grâce au bouton "Simulink" dans le menu "Home" de Matlab :</p>
+                                <img src="images/tuto_4/section8/simulink bouton.png" width="400px">
+                            </li>
+                        
+                            <li>
+                                <p>Choisissez ensuite un "Blank Model" (i.e. modèle vide) :</p>
+                                <img src="images/tuto_4/section8/blank modele.png" width="400px">
+                            </li>
+                        
+                            <li>
+                                <p>Relancez un nœud dans le terminal Matlab afin de recréer la communication avec le réseau ROS2 :</p>
+                                <div class="code-block" style="background-color:#eaa88e;">
+<button class="copy-button" onclick="copyCode('code37')" style="background-color: brown;">Copier</button>
+<pre id="code37" class="code-content">
+defaultNode = ros2node("/default_Node")
+</pre>
+                                </div>
+                                <img src="images/tuto_4/section8/lancer default node.png" width="200px">
+                            </li>
+                        </ol>
+                        
+                    </section>
+
+                    <section id="subsection8-2">
+                        <h4>Créer le schéma bloc sur Simulink</h4>
+                        <ol>
+                            <li>
+                                <p>Retournez sur la fenêtre Simulink et ouvrez le gestionnaire de bibliothèques. Cliquez sur :</p>
+                                <img src="images/tuto_4/section8/library browser bouton.png" width="50px">
+                            </li>
+                        
+                            <li>
+                                <p>Allez dans le répertoire ROS Toolbox puis ROS 2 :</p>
+                                <img src="images/tuto_4/section8/chemin ros toolbox ros2.png" width="85px">
+                            </li>
+                        
+                            <li>
+                                <p>Récupérez un bloc "Blank Message" et un bloc "Publish" :</p>
+                                <img src="images/tuto_4/section8/bloc blank message.png" width="100px">
+                                <img src="images/tuto_4/section8/bloc publish.png" width="100px">
+                                <p>Vous pouvez utiliser la méthode "drag and drop" depuis le gestionnaire de bibliothèques jusqu'à votre page Simulink.</p>
+                            </li>
+                        
+                            <li>
+                                <p>Ajoutez un bloc "Bus Assignment". Il est possible d'utiliser la barre de recherche de l'onglet "Library Browser" pour rechercher des blocs. Utilisez cette barre de recherche pour chercher ce bloc :</p>
+                                <img src="images/tuto_4/section8/bloc bus assignment.png" width="250px">
+                                <p>Faites un drag and drop pour ajouter le bloc.</p>
+                            </li>
+                        
+                            <li>
+                                <p>Ajoutez 2 blocs "Constant". Faites la recherche pour le bloc "Constant" et placez-en deux :</p>
+                                <img src="images/tuto_4/section8/bloc constant.png" width="250px">
+                            </li>
+                        </ol>
+                        
+                    </section>
+
+                    <section id="subsection8-3">
+                        <h4>Paramétrer les différents blocs</h4>
+                        <ol>
+                            <li>
+                                <p>Paramétrez les blocs "Blank Message" et "Publish". Commençons par le bloc "Blank Message". Double-cliquez dessus, une fenêtre "Block Parameters" va s'ouvrir et modifiez en mettant les paramètres suivants :</p>
+                                <img src="images/tuto_4/section8/parametre blank message.png" width="300px">
+                                <p>Enregistrez les modifications en appuyant sur "Apply" puis fermez la fenêtre de paramètres en cliquant sur "OK".</p>
+                                <p>Modifiez les paramètres du bloc "Publish" et enregistrez les modifications :</p>
+                                <img src="images/tuto_4/section8/parametre publish.png" width="300px">
+                            </li>
+                        
+                            <li>
+                                <p>Modifiez la valeurs des blocs "Constant" en leur donnant respectivement 1.58 et 2 comme valeur.</p>
+                            </li>
+                        
+                            <li>
+                                <p>Paramétrez le bloc "Bus Assignment" comme ci-dessous :</p>
+                                <img src="images/tuto_4/section8/parametre bus assignment.png" width="400px">
+                                <p>Vous pourrez voir que le bloc à changé. C'est à dire qu'en entrée vous avez les valeurs <code>linear.x</code> et <code>angular.z</code> qui sont apparu. Cela nous permettra de donner une valeur au message de type <code>geometry_msgs/Twist</code> que nous enverrons sur le topic <code>/turtle1/cmd_vel</code> pour faire bouger la tortue.</p>
+                            </li>
+                        
+                            <li>
+                                <p>Reliez les blocs blocs entre eux et vous devriez obtenir ce montage :</p>
+                                <img src="images/tuto_4/section8/montage.png" width="500px">
+                            </li>
+                        </ol>
+                        
+                    </section>
+
+                    <section id="subsection8-4">
+                        <h4>Envoyer les messages via Simulink</h4>
+                        <ol>
+                            <li>
+                                <p>Appuyez sur le bouton "Run" en haut de la fenêtre Simulink. Cela enverra le message que vous venez de créer sur le topic <code>/turtle1/cmd_vel</code> de la tortue et l'a fera bouger :</p>
+                                <img src="images/tuto_4/section8/bouton run.png" width="50px">
+                            </li>
+                        
+                            <li>
+                                <p>Vous devriez voir la tortue bouger dans la fenêtre TurtleSim (Dans la VM ROS2) :</p>
+                                <img src="images/tuto_4/section8/turtlesim.png" width="300px">
+                                <p>Ceci conclut donc cette partie Publisher depuis Simulink.</p>
+                            </li>
+                        </ol>
+                        
+                    </section>
+
+                    <section id="subsection8-5">
+                        <h4>Ajouter le subscriber sur schéma bloc de Simulink</h4>
+                        <ol>
+                            <li>
+                                <p>Retournez sur la fenêtre Simulink et ouvrez à nouveau le gestionnaire de bibliothèques avec :</p>
+                                <img src="images/tuto_4/section8/library browser bouton.png" width="50px">
+                            </li>
+                        
+                            <li>
+                                <p>Allez dans le répertoire ROS Toolbox puis ROS 2 :</p>
+                                <img src="images/tuto_4/section8/chemin ros toolbox ros2.png" width="85px">
+                            </li>
+                        
+                            <li>
+                                <p>Récupérez un bloc "Subscribe" :</p>
+                                <img src="images/tuto_4/section8/bloc subscribe.PNG" width="125px">
+                                <p>Vous pouvez utiliser la méthode "drag and drop" depuis le gestionnaire de bibliothèques jusqu'à votre page Simulink.</p>
+                            </li>
+                        
+                            <li>
+                                <p>Ajoutez un bloc "Bus Assignment". Il est possible d'utiliser la barre de recherche de l'onglet "Library Browser" pour rechercher des blocs. Utilisez cette barre de recherche pour chercher ce bloc :</p>
+                                <img src="images/tuto_4/section8/bloc bus assignment.png" width="250px">
+                            </li>
+                        
+                            <li>
+                                <p>Avec cette même barre de recherche, ajoutez un bloc XY Graph :</p>
+                                <img src="images/tuto_4/section8/bloc xy graph.PNG" width="75px">
+                                <p>Nous pouvons maintenant passer au paramétrage des blocs.</p>
+                            </li>
+                        </ol>
+                        
+                    </section>
+
+                    <section id="subsection8-6">
+                        <h4>Paramétrer les blocs de la partie subscriber</h4>
+                        <ol>
+                            <li>
+                                <p>Paramétrez les blocs "Subscribe" et le "Bus selector". Commençons par le bloc "Subscribe". Double-cliquez dessus, une fenêtre "Block Parameters" va s'ouvrir et modifiez en mettant les paramètres suivants :</p>
+                                <img src="images/tuto_4/section8/parametre subscribe.PNG" width="350px">
+                                <p>Ces paramètres font que ce bloc va aller subscribe des données sur le topic <code>/turtle1/pose</code>. On indique aussi que les message de ce topic sont du type <code>/turtlesim/Pose</code>. De plus le paramètres "Sample time" correspond à la fréquence à laquelle le bloc va aller récupérer les données sur le topic.</p>
+                                <p>Enregistrez les modifications en appuyant sur "Apply" puis fermez la fenêtre de paramètres en cliquant sur "OK".</p>
+                                <p>Une fois le bloc "Subscribe" paramétré, mettez en place le schéma suivant pour pouvoir continuer :</p>
+                                <img src="images/tuto_4/section8/montage subscribe.PNG" width="350px">
+                            </li>
+                        
+                            <li>
+                                <p>Modifiez ensuite les paramètres du bloc "Bus selector" et enregistrez les modifications :</p>
+                                <img src="images/tuto_4/section8/parametre bus selector.PNG" width="350px">
+                            </li>
+                        
+                            <li>
+                                <p>Finir alors le montage précédent comme suit :</p>
+                                <img src="images/tuto_4/section8/montage subscriber.PNG" width="350px">
+                                <p>Les liaisons entre le "Bus selector" et le "XY Graph" doivent normalement porter les noms des deux axes.</p>
+                                <p>Le montage est alors opérationnel.</p>
+                            </li>
+                        </ol>
+                        
+                    </section>
+
+                    <section id="subsection8-7">
+                        <h4>Recevoir les messages via Simulink</h4>
+                        <ol>
+                            <li>
+                                <p>Appuyez sur le bouton "Run" en haut de la fenêtre Simulink. Cela récupérera les messages du topic <code>/turtle1/pose</code> de la tortue et affichera sa position dans le "XY Graph" :</p>
+                                <img src="images/tuto_4/section8/bouton run.png" width="50px">
+                            </li>
+                        
+                            <li>
+                                <p>Vous devriez voir la tortue bouger dans la fenêtre TurtleSim (Dans la VM ROS2) et le graphique se remplir d'un cercle ou d'un arc de cercle selon la durée de votre simulation :</p>
+                                <img src="images/tuto_4/section8/graph.PNG" width="600px">
+                                <p>Ceci conclut notre tutoriel sur Matlab et Simulink.</p>
+                            </li>
+                        </ol>
+                        
+                    </section>
+
+                </section>
+
+
+
+                <section id="section9">
+                    <h3>Annexes</h3>
+                    
+                    <section id="annexe1">
+                        <h4>Annexe 1 : Script pour envoyer et recevoir les infos en continu avec des scripts Matlab</h4>
+                        <p>Revenez <a href="#code_send_receive.m">au bon endroit</a> dans le tuto !</p>
+                        <div class="code-block" style="background-color:#eaa88e;">
+<button class="copy-button" onclick="copyCode('codeannexe1')" style="background-color: brown;">Copier</button>
+<pre id="codeannexe1" class="code-content">
+clear;
+
+defaultNode = ros2node("/default_Node");
+
+twist = ros2message("geometry_msgs/Twist")
+pose = ros2message("turtlesim/Pose");
+twist.linear.x = 2;
+twist.angular.z = 1.58;
+
+Pub = ros2publisher(defaultNode,"/turtle1/cmd_vel","geometry_msgs/Twist");
+Sub = ros2subscriber(defaultNode,"/turtle1/pose");
+
+while(true)
+    pose = receive(Sub)
+    pause(0.3);
+    send(Pub,twist);
+end
+</pre>
+                        </div>
+                    </section>
+
+                    <section id="annexe2">
+                        <h4>Annexe 2 : Script "printFeedback"</h4>
+                        <p>Revenez <a href="#function_printFeedback.m">au bon endroit</a> dans le tuto !</p>
+
+                        <div class="code-block" style="background-color:#eaa88e;">
+<button class="copy-button" onclick="copyCode('codeannexe2')" style="background-color: brown;">Copier</button>
+<pre id="codeannexe2" class="code-content">
+function printFeedback(goalHandle,resp)
+    theta = resp.remaining
+    fprintf("[Client] Feeback: Rotation absolue restante pour l'objectif %s est :[", goalHandle.GoalUUID);
+        fprintf(" %d",theta(1));
+    fprint(" ]\n")
+end
+</pre>
+                        </div>
+                    </section>
+
+                    <section id="annexe3">
+                        <h4>Annexe 3 : Script "printResult"</h4>
+                        <p>Revenez <a href="#function_printResult.m">au bon endroit</a> dans le tuto !</p>
+
+
+                        <div class="code-block" style="background-color:#eaa88e;">
+<button class="copy-button" onclick="copyCode('codeannexe3')" style="background-color: brown;">Copier</button>
+<pre id="codeannexe3" class="code-content">
+function printResult(goalHandle,resp)
+    theta = resp.result.delta;
+    fprintf("[Client] Result: Rotation absolue totale pour l'objectif %s est :[", goalHandle.GoalUUID);
+        fprintf(" %d",theta(1));
+    fprint(" ]\n")
+end
+</pre>
+                        </div>
+                    </section>
+
+                </section>
             </article>
             <!-- Ajoutez d'autres articles pour chaque tutoriel -->
         </section>
