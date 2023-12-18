@@ -61,8 +61,9 @@
 
                 <section id="section1">
                     <h3>Introduction</h3>
-                    
-
+                    <p>Bienvenue dans ce guide pratique dédié à l'exploration passionnante de la robotique avec le TurtleBot3 et ROS2. Au cours de ce tutoriel, nous plongerons dans les étapes cruciales de configuration, depuis l'installation de l'OS Ubuntu 22.04 sur la carte Raspberry Pi jusqu'à la mise en place du code spécifique sur la carte OpenCR du TurtleBot3. Une fois la configuration accomplie, nous passerons à l'étape cruciale : tester en temps réel le fonctionnement de votre TurtleBot3 dans un environnement ROS2 dynamique. Puis pour finir, nous utiliserons un ordinateur (dit de contrôle) pour commander le TurtleBot3 et faire le mapping d'une pièce.</p>
+                    <p><strong>TurtleBot3</strong>: Le TurtleBot3 est un robot mobile polyvalent conçu pour l'apprentissage, l'enseignement et la recherche en robotique. Créé par ROBOTIS, il est compact, abordable et équipé de capteurs essentiels tels que des caméras et des capteurs de distance. Son châssis modulaire permet une personnalisation facile, et il est largement utilisé dans le cadre de projets éducatifs et de développement robotique en raison de sa facilité d'utilisation et de son intégration avec le middleware Robot Operating System (ROS).</p>
+                    <p><strong>Communication Raspberry Pi &lt;-&gt; OpenCR</strong>: ROS (ROS1) utilise le package rosserial pour créer la communication entre la Raspberry Pi et l'OpenCR d'un TurtleBot3. Dans ROS2, l'architecture de communication à été modifiée et de ce fait la communication entre la Raspberry Pi et l'OpenCR se fait avec Micro-ROS. </p>
 
                 </section>
 
@@ -72,33 +73,298 @@
 
                     <section id="subsection2-1">
                         <h4>Télécharger Raspberry Pi Imager</h4>
-                    
+                        <ol>
+                            <li>
+                                <p>Vous pouvez télécharger, sur votre ordinateur, Raspberry Pi Imager directement depuis le site officiel de <a href="https://www.raspberrypi.com/software/" target="_blank">Raspberry Pi</a>.</p>
+                            </li>
+                        
+                            <li>
+                                <p>Choisissez l'installation pour l'OS de votre ordinateur:</p>
+                                <img src="images/tuto_6/section2/telechargement RPi imager.png" width="500px">
+                            </li>
+                        </ol>
+                        
                     </section>
 
                     <section id="subsection2-2">
                         <h4>Flasher l'OS sur la carte SD</h4>
-                    
+                        <ol>
+                            <li><p>Ouvrez Raspberry Pi Imager</p></li>
+                        
+                            <li>
+                                <p>Nous allons donc maintenant choisir l'OS que nous souhaitons mettre dans la Raspberry Pi.</p>
+                                <p>Cliquez sur le bouton "Choisir l'OS" &gt; "Other general-purpose OS" &gt; "Ubuntu" &gt; "Ubuntu Server 22.04.03 LTS (64-bits)".
+                                <br>On utilisera une Raspberry Pi 4 car les 1Gb de RAM de la Rapsberry Pi 3 ne suffisent pas ! (Nous avions eu ce soucis et nous sommes passés sur une RPi4!)</p>
+                                <p>Il est possible par la suite d'<a href="https://askubuntu.com/questions/322122/switching-from-server-to-desktop" target="_blank">upgrade Ubuntu Server vers un Ubuntu Desktop</a>.</p>
+                            </li>
+                        
+                            <li><p>Choisissez le stockage en sélectionnant la carte SD (la carte SD doit être formatée au format FAT32).</p></li>
+                        
+                            <li>
+                                <p>Cliquez sur la "roue dentée" pour ouvrir les paramètres.</p>
+                                <ul>
+                                    <li><p>Cochez et modifiez le "Nom d'hôte" pour avoir "ubuntu.local".</p></li>
+                                    <li><p>Cochez la case "Activer SSH" et sélectionnez "Utiliser un mot de passe pour l'authentification".</p></li>
+                                    <li>
+                                        <p>Cochez la case "Définir nom d'utilisateur et mot de passe" comme suit :</p>
+                                        <ul>
+                                            <li><p>Nom d'utilisateur : <i>ubuntu</i></p></li>
+                                            <li><p>Mot de passe : <i>turtlebot</i></p></li>
+                                        </ul>
+                                    </li>
+                                    <li><p>Cochez la case "Configurer le Wi-Fi". Choisissez votre wifi (Ne pas cocher "SSID caché").</p></li>
+                                    <li><p>Modifiez le fuseau horaire et le type de clavier pour avoir respectivement "Europe/Paris" et "fr".</p></li>
+                                </ul>
+                            </li>
+                        
+                            <li><p>Enregistrez les paramètres.</p></li>
+                        
+                            <li>
+                                <p>Cliquez maintenant sur le bouton rouge "Ecrire" pour que l'application créée sur la carte SD l'OS avec les différents paramètres. Cette étape est relativement longue car l'application doit écrire sur la carte SD puis il y a une étape de vérification de l'écriture.</p>
+                                <p>Si un problème arrive comme par exemple un problème lors de la vérification, recommencez la procédure d'écriture de l'OS.</p>
+                            </li>
+                        </ol>
+                        
                     </section>
 
                     <section id="subsection2-3">
                         <h4>Paramétrer la Raspberry Pi</h4>
-                    
-                    </section>
+                        <ol>
+                            <li>
+                                <p>Vérifiez que vous êtes bien connecté à votre wifi. Pour ce faire ouvrez le fichier "50-cloud-init.yaml" avec la commande suivante :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code1')">Copier</button>
+<pre id="code1" class="code-content">
+sudo nano /etc/netplan/50-cloud-init.yaml
+</pre>
+                                </div>
+                                
+                                <p id="subsec:wifi">Vérifiez que dans ce fichier le nom et le mot de passe de votre wifi sont juste :</p>
+                                <img src="images/tuto_6/section2/fichier networkd.png" width="300px">
+                                
+                                <p><strong>/!\</strong> Le WIFI_SSID et le WIFI_PASSWORD doivent être entre guillemets. Vous devriez donc avoir "WIFI_SSID" et "WIFI_PASSWORD"</p>
+                                <p>Sauvegardez le fichier et quittez.</p>
+                                <p>Dans le cas où votre user (ici ubuntu) n'est pas dans les utilisateurs administrateurs, il faut passer en mode root et il faudra ensuite l'ajouter dans la liste des utilisateurs administrateurs :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code2')">Copier</button>
+<pre id="code2" class="code-content">
+su -
+adduser ubuntu sudo
+exit
+</pre>
+                                </div>
+                                
+                                <p><strong>Faites un redémarrage de votre machine virtuelle pour qu'elle prenne en compte le changement d'utilisateur.</strong></p>
+                                <p>Si le wifi ne se connecte pas, reprenez l'étape ci-dessus!</p>
+                            </li>
+                        
+                            <li>
+                                <p>Tapez la commande suivante pour ouvrir un fichier de paramètres :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code3')">Copier</button>
+<pre id="code3" class="code-content">
+sudo nano /etc/apt/apt.conf.d/20auto-upgrades
+</pre>
+                                </div>
 
+                                <p>Le fichier va s'ouvrir et modifiez le code pour modifier les paramètres suivants :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code4')">Copier</button>
+<pre id="code4" class="code-content">
+APT::Periodic::Update-Package-Lists "0";
+APT::Periodic::Unattended-Upgrade "0";
+</pre>
+                                </div>
+                            </li>
+                        
+                            <li>
+                                <p>Paramétrez le processus systemd pour éviter tout retard au démarrage, même s'il n'y a pas de réseau au moment de la mise en route. Exécutez la commande ci-dessous pour masquer le processus systemd à l'aide de la commande suivante :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code5')">Copier</button>
+<pre id="code5" class="code-content">
+systemctl mask systemd-networkd-wait-online.service
+</pre>
+                                </div>
+                                
+                            </li>
+                        
+                            <li>
+                                <p>Désactivez la mise en veille et l'hibernation :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code6')">Copier</button>
+<pre id="code6" class="code-content">
+sudo systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target
+</pre>
+                                </div>
+                                
+                            </li>
+                        
+                            <li>
+                                <p>Redémarrez la Raspberry Pi :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code7')">Copier</button>
+<pre id="code7" class="code-content">
+reboot
+</pre>
+                                </div>
+                                
+                            </li>
+                        
+                            <li>
+                                <p>Tapez la commande suivante pour installer le package de la commande ifconfig (permet de voir l'adresse IP et l'adresse MAC de la Raspberry Pi) :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code8')">Copier</button>
+<pre id="code8" class="code-content">
+sudo apt install net-tools
+</pre>
+                                </div>
+                                
+                                <p>Utilisez alors la commande suivante pour voir l'adresse IP et MAC de votre RPi:</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code9')">Copier</button>
+<pre id="code9" class="code-content">
+ifconfig
+</pre>
+                               </div>
+                                
+                            </li>
+                        
+                            <li>
+                                <p>Si vous souhaitez travailler à partir du PC distant en utilisant une communication SSH, utilisez la commande ci-dessous à partir du terminal du PC distant. Assurez-vous d'utiliser ensuite le mot de passe que vous avez défini dans ce tutoriel :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code10')">Copier</button>
+<pre id="code10" class="code-content">
+ssh ubuntu@{IP Address of Raspberry PI}
+</pre>
+                                </div>
+                                
+                            </li>
+                        </ol>
+                    </section>
                 </section>
 
 
                 <section id="section3">
                     <h3>Installer ROS2 Humble sur la Raspberry Pi</h3>
-
+                    <p>Votre OS Ubuntu 22.04 Server est maintenant installé correctement. Nous devons à présent y installer ROS2.</p>
+                    
                     <section id="subsection3-1">
                         <h4>Configurer le système pour l'installation de ROS2</h4>
-                    
+                        <ol>
+                            <li>
+                                <p>Définir les paramètres linguistiques :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code11')">Copier</button>
+<pre id="code11" class="code-content">
+locale  # check for UTF-8
+                        
+sudo apt update && sudo apt install locales
+sudo locale-gen en_US en_US.UTF-8
+sudo update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
+export LANG=en_US.UTF-8
+    
+locale  # verify settings
+</pre>
+                                </div>
+
+                            </li>
+                        
+                            <li>
+                                <p>Rendre actif les répertoires requis :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code13')">Copier</button>
+<pre id="code13" class="code-content">
+sudo apt install software-properties-common
+sudo add-apt-repository universe
+</pre>
+                                </div>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code14')">Copier</button>
+<pre id="code14" class="code-content">
+sudo apt update && sudo apt install curl -y
+sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
+</pre>
+                                </div>
+
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code15')">Copier</button>
+<pre id="code15" class="code-content">
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
+</pre>
+
+                            </li>
+                        
+                            <li>
+                                <p>Installations d'outils de développement (optionnel) :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code16')">Copier</button>
+<pre id="code16" class="code-content">
+sudo apt update
+sudo apt install ros-dev-tools
+</pre>
+                                </div>
+
+                            </li>
+                        </ol>
+                        
                     </section>
 
                     <section id="subsection3-2">
                         <h4>Installer ROS2</h4>
-                    
+                        <ol>
+                            <li>
+                                <p>Mise à jour système :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code17')">Copier</button>
+<pre id="code17" class="code-content">
+sudo apt update
+sudo apt upgrade
+</pre>
+                                </div>
+
+                            </li>
+                        
+                            <li>
+                                <p>Installation de ROS2 sans desktop <i>(Cette opération peut durer plusieurs minutes)</i> :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code18')">Copier</button>
+<pre id="code18" class="code-content">
+sudo apt install ros-humble-ros-base
+</pre>
+                                </div>
+
+                                <p>Cette version de ROS2 est une version qui n'a pas d'interface graphique. Ce qui n'est pas nécessaire sur la RPi du Turtlebot car lorsqu'il roulera on ne pourra pas avoir d'écran branché sur lui.</p>
+                        
+                                <p>Si vous souhaitez avoir une interface graphique sur la Raspberry Pi, il vous faut upgrader votre Ubuntu Server 22.04 vers un Ubuntu Desktop 22.04 <i>(Cette étape est assez longue 10-15min)</i> :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code19')">Copier</button>
+<pre id="code19" class="code-content">
+sudo apt-get install ubuntu-desktop
+</pre>
+                                </div>
+
+                                <p>Ensuite, vous devrez installer la version de ROS2 avec des interfaces graphiques :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code20')">Copier</button>
+<pre id="code20" class="code-content">
+sudo apt install ros-humble-desktop
+</pre>
+                                </div>
+                            </li>
+
+                            <li>
+                                <p>Mettez à jour la source de ROS2 (d'avantage d'explications dans le "Tutoriel Installation ROS2") :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code21')">Copier</button>
+<pre id="code21" class="code-content">
+echo 'source /opt/ros/humble/setup.bash' >> ~/.bashrc
+source ~/.bashrc
+</pre>
+                                </div>
+
+                            </li>
+                        </ol>
+                        
                     </section>
 
                 </section>
@@ -109,22 +375,118 @@
 
                     <section id="subsection4-1">
                         <h4>Installer et contruire les packages pour le TurtleBot3 dans un workspace</h4>
-                    
+                        <ol>
+                            <li>
+                                <p>Tapez les commandes suivantes pour installer les packages :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code22')">Copier</button>
+<pre id="code22" class="code-content">
+sudo apt install python3-argcomplete python3-colcon-common-extensions libboost-system-dev build-essential
+sudo apt install ros-humble-hls-lfcd-lds-driver
+sudo apt install ros-humble-turtlebot3-msgs
+sudo apt install ros-humble-dynamixel-sdk
+sudo apt install libudev-dev
+</pre>
+                                </div>
+                            </li>
+                        
+                            <li>
+                                <p>Créer un workspace pour le turtlebot3 :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code23')">Copier</button>
+<pre id="code23" class="code-content">
+mkdir -p ~/turtlebot3_ws/src && cd ~/turtlebot3_ws/src
+git clone -b humble-devel https://github.com/ROBOTIS-GIT/turtlebot3.git
+git clone -b ros2-devel https://github.com/ROBOTIS-GIT/ld08_driver.git
+cd ~/turtlebot3_ws/src/turtlebot3
+rm -r turtlebot3_cartographer turtlebot3_navigation2
+cd ~/turtlebot3_ws/
+</pre>
+                                </div>
+                                <p>La commande git clone permet ici de cloner l'ensemble des fichiers des github de ROBOTIS pour le TurtleBot3 et pour les drivers.</p>
+                                <p>La commande rm -r permet d'effacer (remove) des fichiers ou même d'effacer un répertoire. Comme le TurtleBot3 ne pourra pas afficher d'interface graphique lorsqu'il roulera, il n'est pas nécessaire de garder les packages permettant de visualiser le mapping qu'il est en train de réaliser avec son LIDAR (les packages : turtlebot3_cartographer et turtlebot3_navigation2). On utilisera ces packages uniquement depuis l'ordinateur qui contrôlera à distance le TurtleBot3. Nous n'avons donc pas besoin de les garder sur le TurtleBot3.</p>
+                            </li>
+                        
+                            <li>
+                                <p>Construire le workspace du turtlebot3 <i>(Cette opération peut durer plusieurs minutes)</i>:</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code24')">Copier</button>
+<pre id="code24" class="code-content">
+colcon build --symlink-install --parallel-workers 1
+</pre>
+                                </div>
+                                <p>Le paramètre <code>--parallel-workers 1</code> signifie au constructeur des packages de ne construire qu'un seul fichier après l'autre. Sans ce paramètre dans la commande, le constructeur commencerait à construire tous les packages en parallèle.</p>
+                            </li>
+                        
+                            <li>
+                                <p>Mettre la source du workspace du turtlebot dans le fichier .bashrc et actualiser la source du fichier .bashrc (ici, nous devons ajouter l'overlay au fichier bashrc pour pouvoir utiliser ces packages que nous avons nous-mêmes build) :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code25')">Copier</button>
+<pre id="code25" class="code-content">
+echo 'source ~/turtlebot3_ws/install/setup.bash' >> ~/.bashrc
+source ~/.bashrc
+</pre>
+                                </div>
+                            </li>
+                        </ol>
+                        
                     </section>
 
                     <section id="subsection4-2">
                         <h4>Configurer les paramètres du port USB de l'OpenCR</h4>
-                    
+                        <p>Tapez les commandes suivantes :</p>
+                        <div class="code-block">
+<button class="copy-button" onclick="copyCode('code26')">Copier</button>
+<pre id="code26" class="code-content">
+sudo cp `ros2 pkg prefix turtlebot3_bringup`/share/turtlebot3_bringup/script/99-turtlebot3-cdc.rules /etc/udev/rules.d/
+sudo udevadm control --reload-rules
+sudo udevadm trigger
+</pre>
+                        </div>
                     </section>
 
                     <section id="subsection4-3">
                         <h4>Configurer le ROS_DOMAIN_ID du TurtleBot 3</h4>
-                    
+                        <p>Tapez les commandes suivantes :</p>
+                        <div class="code-block">
+<button class="copy-button" onclick="copyCode('code27')">Copier</button>
+<pre id="code27" class="code-content">
+echo 'export ROS_DOMAIN_ID=30 #TURTLEBOT3' >> ~/.bashrc
+source ~/.bashrc
+</pre>
+                        </div>
                     </section>
 
                     <section id="subsection4-4">
                         <h4>Configurer les paramètres du LIDAR</h4>
-                    
+                        <p>Le Lidar du TurtleBot3 a été mis à jour vers le LDS-02 depuis 2022. Si vous possédez unTurtleBot3 après 2022, veuillez utiliser LDS-02 pour le <code>LDS_MODEL</code>. Voici les deux modèles de Lidar :</p>
+                        <ul>
+                            <li>
+                                <p>Modèle LDS-01 :</p>
+                                <img src="images/tuto_6/section4/LDS-01.png" width="150px">
+                            </li>
+                            <li>
+                                <p>Modèle LDS-02 :</p>
+                                <img src="images/tuto_6/section4/LDS-02.png" width="150px">
+                            </li>
+                        </ul>
+                        
+                       
+
+                        <p>Selon le modèle de votre LDS, utilisez LDS-01 ou LDS-02. Dans notre cas nous avons un Lidar LDS-01. Tapez les commandes suivantes :</p>
+                        <div class="code-block">
+<button class="copy-button" onclick="copyCode('code28')">Copier</button>
+<pre id="code28" class="code-content">
+echo 'export LDS_MODEL=LDS-01' >> ~/.bashrc
+source ~/.bashrc
+</pre>
+                        </div>
+                        <div class="code-block">
+<button class="copy-button" onclick="copyCode('code29')">Copier</button>
+<pre id="code29" class="code-content">
+sudo apt-get install ros-humble-cartographer-ros
+</pre>
+                        </div>
                     </section>
 
                 </section>
@@ -136,13 +498,100 @@
                         <h4>Setup de la carte OpenCR en cmd lines directement sur la Raspberry</h4>
                         
                         <section id="subsubsection5-1-1">
-                            <h5>Setup de la carte OpenCR en cmd lines directement sur la Raspberry</h5>
+                            <h5>Setup</h5>
+                            <ol>
+                                <li><p>Connectez l'OpenCR au Rasbperry Pi à l'aide du câble micro USB.</p></li>
+                                
+                                <li>
+                                    <p>Installez les packages nécessaires sur le Raspberry Pi pour télécharger le firmware OpenCR avec les commandes :</p>
+                                    <div class="code-block">
+<button class="copy-button" onclick="copyCode('code30')">Copier</button>
+<pre id="code30" class="code-content">
+cd ~/
+sudo dpkg --add-architecture armhf
+sudo apt update
+sudo apt install libc6:armhf
+</pre>
+                                    </div>
+                                </li>
+                                
+                                <li>
+                                    <p>Utilisez soit <i>burger</i> soit <i>waffle</i> pour le nom OPENCR_MODEL, selon le modèle de votre TurtleBot3 :</p>
+                                    <div class="code-block">
+<button class="copy-button" onclick="copyCode('code31')">Copier</button>
+<pre id="code31" class="code-content">
+export OPENCR_PORT=/dev/ttyACM0
+export OPENCR_MODEL=burger
+rm -rf ./opencr_update.tar.bz2
+</pre>
+                                    </div>
+                                </li>
+                                
+                                <li>
+                                    <p>Téléchargez le firmware et le loader, puis vous devez extraire le fichier :</p>
+                                    <div class="code-block">
+<button class="copy-button" onclick="copyCode('code32')">Copier</button>
+<pre id="code32" class="code-content">
+wget https://github.com/ROBOTIS-GIT/OpenCR-Binaries/raw/master/turtlebot3/ROS2/latest/opencr_update.tar.bz2
+tar -xvf ./opencr_update.tar.bz2
+</pre>
+                                    </div>
+                                </li>
+                                
+                                <li>
+                                    <p>Téléversez le firmware sur l'OpenCR :</p>
+                                    <div class="code-block">
+<button class="copy-button" onclick="copyCode('code33')">Copier</button>
+<pre id="code33" class="code-content">
+cd ~/opencr_update
+./update.sh $OPENCR_PORT $OPENCR_MODEL.opencr
+</pre>
+                                    </div>
+                                </li>
+                                
+                                <li>
+                                    <p>Un téléversement réussi du firmware pour TurtleBot3 Burger ressemblera à ce qui suit :</p>
+                                    <img src="images/tuto_6/section5/upload firmware 1.png" width="500px">
+                                </li>
+                                <li>
+                                    <p>Si le téléversement du firmware échoue, essayez de le téléverser avec le mode de dépannage. La séquence ci-dessous active le mode de dépannage de l'OpenCR. En mode de dépannage, le voyant STATUS de l'OpenCR clignotera périodiquement.</p>
+                                    <p>Suivez les étapes suivantes :</p>
+                                    <ul>
+                                        <li><p>Maintenez le bouton PUSH SW2 enfoncé.</p></li>
+                                        <li><p>Appuyez sur le bouton Reset.</p></li>
+                                        <li><p>Relâchez le bouton Reset.</p></li>
+                                        <li><p>Relâchez le bouton PUSH SW2.</p></li>
+                                    </ul>
+                                    <img src="images/tuto_6/section5/Recovery mode bouton.png" width="400px">
+                                </li>
+                            </ol>
                             
                         </section>
 
                         <section id="subsubsection5-1-2">
-                            <h5>Setup de la carte OpenCR en cmd lines directement sur la Raspberry</h5>
+                            <h5>Test</h5>
+                            <p>Vous pouvez utiliser les boutons PUSH SW 1 et PUSH SW 2 pour vérifier si votre robot a été correctement assemblé. Ce processus permet de tester les DYNAMIXEL gauche et droit ainsi que la carte OpenCR. </p>
+                            <img src="images/tuto_6/section5/test1.png" width="400px">
                             
+                            <ul style="list-style-type: circle;">
+                                <li>
+                                    <p>Après avoir assemblé le TurtleBot3, connectez l'alimentation à l'OpenCR et allumez l'interrupteur d'alimentation de l'OpenCR. La LED rouge d'alimentation devrait s'allumer.</p>
+                                </li>
+                                
+                                <li>
+                                    <p>Placez le robot sur un sol plat dans une zone largement ouverte. Pour le test, un rayon de sécurité de 1 mètre (40 pouces) est recommandé.</p>
+                                </li>
+                                
+                                <li>
+                                    <p>Appuyez sur PUSH SW 1 pendant quelques secondes pour ordonner au robot d'avancer de 30 centimètres (environ 12 pouces).</p>
+                                </li>
+                                
+                                <li>
+                                    <p>Appuyez sur PUSH SW 2 pendant quelques secondes pour commander au robot une rotation de 180 degrés sur place.</p>
+                                </li>
+                            </ul>
+                            
+                        
                         </section>
                     </section>
 
@@ -150,13 +599,91 @@
                         <h4>Setup de la carte OpenCR via l'IDE Arduino d'un PC</h4>
                         
                         <section id="subsubsection5-2-1">
-                            <h5>Setup de la carte OpenCR en cmd lines directement sur la Raspberry</h5>
+                            <h5>Setup</h5>
+                            <p style="color: red;">
+                                Veuillez noter que le gestionnaire de carte OpenCR ne supporte pas l'IDE Arduino sur les SBC basés sur ARM tels que Raspberry Pi ou NVidia Jetson.
+                                Afin de télécharger le firmware OpenCR à l'aide d'Arduino IDE, veuillez suivre les instructions ci-dessous sur votre PC.
+                            </p>
+
+                            <ol>
+                                <li>
+                                    <p>Installer l'IDE Arduino sur votre PC personnel : <a href="https://www.arduino.cc/en/software">Download the latest Arduino IDE</a></p>
+                                </li>
+                                <li>
+                                    <p>Une fois l'installation terminée, lancez l'IDE Arduino.</p>
+                                </li>
+                                <li>
+                                    <p>Ouvrez le menu Préférences (Fichier &gt; Préférences).</p>
+                                </li>
+                                <li>
+                                    <p>Saisir l'adresse ci-dessous dans la section URL du gestionnaire de cartes additionnelles :</p>
+                                    <div class="code-block">
+<button class="copy-button" onclick="copyCode('code34')">Copier</button>
+<pre id="code34" class="code-content">
+https://raw.githubusercontent.com/ROBOTIS-GIT/OpenCR/master/arduino/opencr_release/package_opencr_index.json
+</pre>
+                                    </div>
+                                    <img src="images/tuto_6/section5/menu pref.png" width="200px">
+                                </li>
+                                <li>
+                                    <p>Ouvrez le firmware TurtleBot3. En fonction de votre type de TurtleBot3, sélectionnez le bon firmware. Pour ce faire allez dans :</p>
+                                    <ol type="a">
+                                        <li>
+                                            <p><strong>Burger</strong> : Fichier &gt; Exemples &gt; TurtleBot3 &gt; turtlebot3_burger &gt; turtlebot3_core</p>
+                                            <img src="images/tuto_6/section5/turtlebot3 burger core.png" width="400px">
+                                        </li>
+                                        <li>
+                                            <p><strong>Waffle/Waffle Pi</strong> : Fichier &gt; Exemples &gt; TurtleBot3 &gt; turtlebot3_waffle &gt; turtlebot3_core</p>
+                                            <img src="images/tuto_6/section5/turtlebot3 waffle core.png" width="400px">
+                                        </li>
+                                    </ol>
+                                </li>
+                                <li>
+                                    <p>Connectez l'OpenCR au PC avec un câble micro-USB (côté OpenCR) &lt;-&gt; USB (côté PC) et sélectionnez la carte OpenCR :</p>
+                                    <img src="" width="50px">
+                                </li>
+                                <li>
+                                    <p>Téléversez le code du firmware TurtleBot3 en cliquant sur le bouton téléversement.</p>
+                                </li>
+                                <li>
+                                    <p>Vous devriez obtenir un message similaire à celui-ci dans la console de l'IDE Arduino pour vous dire que le firmware a bien été téléversé :</p>
+                                    <img src="" width="50px">
+                                    <p>Si le téléversement du firmware échoue, essayez de le téléverser avec le mode de récupération. La séquence ci-dessous active le mode de dépannage de l'OpenCR. En mode de dépannage, le voyant STATUS de l'OpenCR clignote périodiquement.</p>
+                                    <ul>
+                                        <li><p>Maintenez le bouton PUSH SW2 enfoncé.</p></li>
+                                        <li><p>Appuyez sur le bouton Reset.</p></li>
+                                        <li><p>Relâchez le bouton Reset.</p></li>
+                                        <li><p>Relâchez le bouton PUSH SW2.</p></li>
+                                    </ul>
+                                    <img src="images/tuto_6/section5/Recovery mode bouton.png" width="400px">
+                                </li>
+                            </ol>
                             
+
                         </section>
 
                         <section id="subsubsection5-2-2">
-                            <h5>Setup de la carte OpenCR en cmd lines directement sur la Raspberry</h5>
+                            <h5>Test</h5>
+                            <p>Vous pouvez utiliser les boutons PUSH SW 1 et PUSH SW 2 pour vérifier si votre robot a été correctement assemblé. Ce processus permet de tester les DYNAMIXEL gauche et droit ainsi que la carte OpenCR. </p>
+                            <img src="images/tuto_6/section5/test1.png" width="400px">
                             
+                            <ul style="list-style-type: circle;">
+                                <li>
+                                    <p>Après avoir assemblé le TurtleBot3, connectez l'alimentation à l'OpenCR et allumez l'interrupteur d'alimentation de l'OpenCR. La LED rouge d'alimentation devrait s'allumer.</p>
+                                </li>
+                                
+                                <li>
+                                    <p>Placez le robot sur un sol plat dans une zone largement ouverte. Pour le test, un rayon de sécurité de 1 mètre (40 pouces) est recommandé.</p>
+                                </li>
+                                
+                                <li>
+                                    <p>Appuyez sur PUSH SW 1 pendant quelques secondes pour ordonner au robot d'avancer de 30 centimètres (environ 12 pouces).</p>
+                                </li>
+                                
+                                <li>
+                                    <p>Appuyez sur PUSH SW 2 pendant quelques secondes pour commander au robot une rotation de 180 degrés sur place.</p>
+                                </li>
+                            </ul>
                         </section>
                     </section>
                     
@@ -168,22 +695,140 @@
 
                     <section id="subsection6-1">
                         <h4>Bringup du TurtleBot3</h4>
+                        <p>Le Bringup du TurtleBot3 consiste à lancer les packages de base pour démarrer les programmes TurtleBot3. </p>
                     
+                        <ol>
+                            <li>
+                                <p>Ouvrez un nouveau terminal sur votre PC personnel (qui est connecté sur le même wifi que le TurtleBot3).</p>
+                            </li>
+                            <li>
+                                <p>Connectez-vous en SSH à la Raspberry Pi du TurtleBot3 avec la commande suivante :</p>
+                                <div class="code-block" style="background-color: lightgray;">
+<pre id="code35" class="code-content">
+ssh ubuntu@{IP_ADRESS_OF_RASPBERRY_PI}
+</pre>
+                                </div>
+
+                                <p>Exemple :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code36')">Copier</button>
+<pre id="code36" class="code-content">
+ssh ubuntu@172.20.10.9
+</pre>
+                                </div>
+                                <p>Le mot de passe est ensuite demandé (Mot de passe : <em>turtlebot</em>).</p>
+                                <p>Pour connaître l'adresse IP de la Raspberry :</p>
+                                <ul>
+                                    <li>Utiliser la commande "ifconfig" sur la Raspberry Pi du TurtleBot3.</li>
+                                    <li>Utiliser un scanner d'adresse IP depuis votre PC personnel. Ce scanner permettra de scanner et de trouver l'adresse IP de tous les appareils connectés à votre wifi. En déduire l'IP de la RPi.</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <p>Indiquez à ce terminal le type de votre TurtleBot3. Choisissez le bon modèle parmi : <em>burger</em>, <em>waffle</em> et <em>waffle_pi</em>. Tapez alors la commande suivante en modifiant en fonction de votre modèle :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code36')">Copier</button>
+<pre id="code36" class="code-content">
+export TURTLEBOT3_MODEL=burger
+</pre>
+                                </div>
+                            </li>
+                            <li>
+                                <p>Lancez alors le bringup du TurtleBot3 en arrière-plan avec la commande :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code37')">Copier</button>
+<pre id="code37" class="code-content">
+ros2 launch turtlebot3_bringup robot.launch.py &amp;
+</pre>
+                                </div>
+                                <p>Votre terminal devrait ressembler à l'image ci-dessous avec comme dernier message <strong><em>Run!</em></strong> :</p>
+                                <img src="images/tuto_6/section6/roslaunch bringup.png" width="550px">
+                                <p>Appuyez sur la touche "Entrer". Vous pourrez alors renvoyer des commandes dans ce terminal !</p>
+                            </li>
+                        </ol>
+                        
                     </section>
 
                     <section id="subsection6-2">
                         <h4>Vérifier la liste des topics actifs</h4>
-                    
+                        <p>Vous pouvez vérifier que le bringup du TurtleBot3 à bien été lancé correctement en affichant la liste des topics actifs sur le ROS_DOMAIN_ID=30 (correspondant au sous réseau sur lequel le TurtleBot3 est connecté).</p>
+                        <ol>
+                            <li>
+                                <p>Tapez la commande :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code38')">Copier</button>
+<pre id="code38" class="code-content">
+ros2 launch turtlebot3_bringup robot.launch.py &amp;
+</pre>
+                                </div>
+                            </li>
+                            <li>
+                                <p>Vous devriez obtenir la liste des topics actifs suivante :</p>
+                                <img src="" width="50px">
+                            </li>
+                        </ol>
+                        
                     </section>
 
                     <section id="subsection6-3">
                         <h4>Faire bouger le TurtleBot3 avec la télécommande</h4>
-                    
+                        <ol>
+                            <li>
+                                <p>Ouvrez un second terminal sur votre PC personnel.</p>
+                            </li>
+                            <li>
+                                <p>Connectez-vous à nouveau en ssh au TurtleBot3.</p>
+                                <div class="code-block" style="background-color: lightgray;">
+<pre id="code39" class="code-content">
+ssh ubuntu@{IP_ADRESS_OF_RASPBERRY_PI}
+</pre>
+                                </div>
+                            </li>
+                            <li>
+                                <p>Tapez ensuite la commande pour lancer la télécommande consacré au TurtleBot :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code40')">Copier</button>
+<pre id="code40" class="code-content">
+ros2 run turtlebot3_teleop teleop_keyboard
+</pre>
+                                </div>
+                            </li>
+                            <li>
+                                <p>Vous pourrez alors contrôler le déplacement du TurtleBot grâce aux touches de votre PC personnel. Suivez les instructions affichées sur le terminal de la télécommande.</p>
+                                <img src="images/tuto_6/section6/telecommande qwerty.png" width="550px">
+                            </li>
+                            <li>
+                                <p>Problème, cette télécommande est à la base prévue pour les claviers Qwerty. Nous allons donc créer une télécommande pour clavier Azerty avec un package Python dans la sous-section <a href="#subsection6-5">Bonus : Créer votre propre télécommande en python pour le TurtleBot3</a>.</p>
+                            </li>
+                        </ol>
+                        
                     </section>
 
                     <section id="subsection6-4">
                         <h4>Faire bouger le TurtleBot3 en publiant directement un message sur le topic /cmd_vel</h4>
-                    
+                        <ol>
+                            <li>
+                                <p>Faites "ctrl+C" dans le terminal de la télécommande pour l'arrêter.</p>
+                            </li>
+                            <li>
+                                <p>Tapez alors la commande permettant de publier un message sur le topic /cmd\_vel du TurtleBot3 (Rappel : les messages des topics /cmd\_vel sont du type geometry\_msgs/Twist) :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code41')">Copier</button>
+<pre id="code41" class="code-content">
+ros2 topic pub /cmd_vel geometry_msgs/Twist "{linear: {x: 2.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 2.0}}"
+</pre>
+                                </div>
+                            </li>
+                            <li>
+                                <p>Votre TurtleBot3 devrait bouger. Pour l'arrêter, renvoyez un message avec toutes les composantes à 0.0 :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code42')">Copier</button>
+<pre id="code42" class="code-content">
+ros2 topic pub /cmd_vel geometry_msgs/Twist "{linear: {x: 0.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 0.0}}"
+</pre>
+                                </div>
+                            </li>
+                        </ol>
+                        
                     </section>
 
                     <section id="subsection6-5">
@@ -191,81 +836,678 @@
                     
                         <section id="subsection6-5-1">
                             <h5>Créer le package de la télécommande</h5>
-                        
+                            <ol>
+                                <li>
+                                    <p>Arrêtez le bringup du TurtleBot3 et vérifiez que les topics du TurtleBot3 ne sont plus accessibles (vérifiez avec la commande <code>$ ros2 topic list</code>).</p>
+                                </li>
+                                <li>
+                                    <p>Rendez-vous dans le répertoire "/src" du workspace ros\_ws :</p>
+                                    <div class="code-block">
+<button class="copy-button" onclick="copyCode('code42.1')">Copier</button>
+<pre id="code42.1" class="code-content">
+cd ~/ros_ws/src
+</pre>
+                                    </div>
+                                </li>
+                                <li>
+                                    <p>Utilisez la commande pour créer un nouveau package python. Vous nommerez le package turtlebot3\_teleop\_fr :</p>
+                                    <div class="code-block">
+<button class="copy-button" onclick="copyCode('code42.2')">Copier</button>
+<pre id="code42.2" class="code-content">
+ros2 pkg create --build-type ament_python turtlebot3_teleop_fr
+</pre>
+                                    </div>
+                                </li>
+                                <li>
+                                    <p>Rendez-vous dans le répertoire :</p>
+                                    <div class="code-block">
+<button class="copy-button" onclick="copyCode('code43')">Copier</button>
+<pre id="code43" class="code-content">
+cd ~/ros_ws/turtlebot3_teleop_fr/turtlebot3_teleop_fr
+</pre>
+                                    </div>
+                                </li>
+                                <li>
+                                    <p>Créez un fichier "turtlebot3\_teleop\_fr.py"</p>
+                                    <div class="code-block">
+<button class="copy-button" onclick="copyCode('code44')">Copier</button>
+<pre id="code44" class="code-content">
+sudo nano turtlebot3_teleop_fr.py
+</pre>
+                                    </div>
+                                </li>
+                                <li id="code_turtle_teleop_fr">
+                                    <p>Ajoutez le code python de <a href="#annexe1">l'annexe 1</a> dans ce fichier. Ce code vient directement de ce <a href="https://github.com/ros2/teleop_twist_keyboard">github</a> et nous l'avons modifié pour qu'il soit adapté à un clavier Azerty ! Sauvegardez le fichier et fermez le.</p>
+                                </li>
+                                <li>
+                                    <p>Rendez-vous dans le répertoire :</p>
+                                    <div class="code-block">
+<button class="copy-button" onclick="copyCode('code45')">Copier</button>
+<pre id="code45" class="code-content">
+cd ~/ros_ws/turtlebot3_teleop_fr
+</pre>
+                                    </div>
+                                </li>
+                                <li>
+                                    <p>Ouvrez le fichier package.xml :</p>
+                                    <div class="code-block">
+<button class="copy-button" onclick="copyCode('code46')">Copier</button>
+<pre id="code46" class="code-content">
+sudo nano package.xml
+</pre>
+                                    </div>
+                                </li>
+                                <li id="code_package.xml">
+                                    <p>Modifiez ce fichier en reprenant le code python de <a href="#annexe2">l'annexe 2</a> dans ce fichier. Vous pourrez modifier sans problème les sections : <em>description</em>, <em>maintainer</em> et <em>license</em>. <strong>Les autres sections de ce fichier ne sont pas à modifier !</strong> Sauvegardez le fichier et fermez le.</p>
+                                </li>
+                                <li>
+                                    <p>Ouvrez le fichier setup.py en étant dans le même répertoire que précédemment (<code>~/ros_ws/turtlebot3_teleop_fr</code>) :</p>
+                                    <div class="code-block">
+<button class="copy-button" onclick="copyCode('code47')">Copier</button>
+<pre id="code47" class="code-content">
+sudo nano setup.py
+</pre>
+                                    </div>
+                                </li>
+                                <li id="code_setup.py">
+                                    <p>Modifiez ce fichier en reprenant le code python de <a href="#annexe3">l'annexe 3</a> dans ce fichier. Vous pourrez modifier sans problème les sections : <em>maintainer_email</em>, <em>description</em> et <em>license</em>. <strong>Les autres sections de ce fichier ne sont pas à modifier !</strong> Sauvegardez le fichier et fermez le.</p>
+                                </li>
+                                <li id="code_setup.cfg">
+                                    <p>Ouvrez le fichier setup.cfg et vérifiez qu'il est identique à celui de <a href="#annexe4">l'annexe 4</a></p>
+                                </li>
+                            </ol>
+                            
                         </section>
 
                         <section id="subsection6-5-2">
                             <h5>Vérifier les dépendances nécessaire au package</h5>
-                        
+                            <ol>
+                                <li>
+                                    <p>Revenez à la racine de votre workspace :</p>
+                                    <div class="code-block">
+<button class="copy-button" onclick="copyCode('code48')">Copier</button>
+<pre id="code48" class="code-content">
+cd ~/ros_ws
+</pre>
+                                    </div>
+                                </li>
+                                <li>
+                                    <p>Tapez la commande suivante. (Les prochaines commandes sont très longues et peuvent prendre jusqu'à 20 minutes au total) :</p>
+                                    <div class="code-block">
+<button class="copy-button" onclick="copyCode('code49')">Copier</button>
+<pre id="code49" class="code-content">
+sudo rosdep init
+</pre>
+                                    </div>
+                                    <p>Si un message d'erreur apparaît cela vient sûrement du fait que vous avez déjà utilisé au moins une fois cette commande. Passez aux commandes suivantes :</p>
+                                    <div class="code-block">
+<button class="copy-button" onclick="copyCode('code50')">Copier</button>
+<pre id="code50" class="code-content">
+rosdep update
+rosdep install -i --from-path src --rosdistro humble -y
+</pre>
+                                    </div>
+                                    <p>Vous devriez obtenir un message <em>"All required rosdeps installed successfully"</em>. Vous pouvez alors passer à la construction du package.</p>
+                                </li>
+                            </ol>
+                            
                         </section>
 
                         <section id="subsection6-5-3">
                             <h5>Build le package</h5>
-                        
+                            <ol>
+                                <li>
+                                    <div class="code-block">
+<button class="copy-button" onclick="copyCode('code51')">Copier</button>
+<pre id="code51" class="code-content">
+cd ~/ros_ws
+</pre>
+                                    </div>
+                                </li>
+                                <li>
+                                    <p>Tapez la commande suivante pour build votre workspace en entier (les commandes pour build qu'un seul package sont dans le "Tutoriel ROS2 : Partie 2") :</p>
+                                    <div class="code-block">
+<button class="copy-button" onclick="copyCode('code52')">Copier</button>
+<pre id="code52" class="code-content">
+colcon build
+</pre>
+                                    </div>
+                                </li>
+                            </ol>
+                            
+                            <p>Si tous les packages ont bien été construit vous devriez pouvoir voir dans le terminal que le package turtlebot3_teleop_fr à bien été build !</p>
                         </section>
 
                         <section id="subsection6-5-4">
                             <h5>Utiliser le package</h5>
-                        
+                            <ol>
+                                <li>
+                                    <p>Restez encore à la racine de votre workspace :</p>
+                                    <div class="code-block">
+<button class="copy-button" onclick="copyCode('code53')">Copier</button>
+<pre id="code53" class="code-content">
+cd ~/ros_ws
+</pre>
+                                    </div>
+                                </li>
+                                <li>
+                                    <p>Écrivez la source de votre workspace dans le terminal (Rappel : on a sourcé ROS2 dans le fichier .bashrc en tant qu'underlay et maintenant nous allons sourcé par-dessus votre workspace en tant qu'overlay pour avoir accès aux packages que vous avez dans votre workspace) :</p>
+                                    <div class="code-block">
+<button class="copy-button" onclick="copyCode('code54')">Copier</button>
+<pre id="code54" class="code-content">
+source install/setup.bash
+</pre>
+                                    </div>
+                                </li>
+                                <li>
+                                    <p>Ecrivez la commande pour lancer la télécommande :</p>
+                                    <div class="code-block">
+<button class="copy-button" onclick="copyCode('code55')">Copier</button>
+<pre id="code55" class="code-content">
+ros2 run turtlebot3_teleop_fr turtlebot3_teleop_fr
+</pre>
+                                    </div>
+                                
+                                    <p>Vous devriez obtenir la télécommande suivante :</p>
+                                    <div>
+                                        <img src="images/tuto_6/section6/telecommande.png" width="400px">
+                                    </div>
+                                </li>
+                                <li>
+                                    <p>Ouvrez <code>rqt_graph</code> dans un nouveau terminal. Vous pouvez voir que le nœud de la télécommande peut publier des messages sur le topic <code>/cmd_vel</code>.</p>
+                                </li>
+                                <li>
+                                    <div class="code-block">
+<button class="copy-button" onclick="copyCode('code56')">Copier</button>
+<pre id="code56" class="code-content">
+ros2 topic echo /cmd_vel
+</pre>
+                                    </div>
+                                </li>
+                                <li>
+                                    <p>Cliquez sur le terminal de la télécommande et utilisez les touches de la télécommande. Vous pourrez voir les messages qui transitent par le topic /cmd_vel !</p>
+                                </li>
+                                <li>
+                                    <div class="code-block">
+<button class="copy-button" onclick="copyCode('code57')">Copier</button>
+<pre id="code57" class="code-content">
+export TURTLEBOT3_MODEL=burger
+ros2 launch turtlebot3_bringup robot.launch.py
+</pre>
+                                    </div>
+                                </li>
+                                <li>
+                                    <p>Vous pouvez maintenant contrôler le TurtleBot3 à l'aide de la télécommande dans le premier terminal.</p>
+                                </li>
+                                <li>
+                                    <p>Ouvrez <code>rqt_graph</code> pour voir le lien entre le TurtleBot3 et la télécommande.</p>
+                                </li>
+                            </ol>
+                            
                         </section>
-    
                     </section>
-
                 </section>
 
 
                 <section id="section7">
                     <h3>Utiliser le LIDAR du Turtlebot</h3>
-
+                    <p>Dans cette section nous ne pouvons pas utiliser une simple communication ssh avec le TurtleBot. Nous avons besoin d'un ordinateur linux Ubuntu 22.04 (ou une machine virtuelle) ayant ROS2 pour pouvoir utiliser une application de mapping SLAM (une appliation de mapping avec une interface graphique).</p>
+                    
                     <section id="subsection7-1">
                         <h4>Installer les packages nécessaires pour le contrôle du TurtleBot3 et du LIDAR sur une machine virtuelle</h4>
-                    
+                        <ol>
+                            <li><p>Créez une machine virtuelle avec Ubuntu 22.04 (Suivez le tutoriel : <a href="/ROS2/tuto_installation_ros2.html" target="_blank">Installation de ROS2</a> )</p></li>
+                            <li><p>Lancez votre machine virtuelle Ubuntu 22.04 et installez ROS2 (Suivez le même tutoriel : <a href="/ROS2/tuto_installation_ros2.html" target="_blank">Installation de ROS2</a>)</p></li>
+                            <li><p>Vérifiez que vous êtes bien connecté au même wifi avec cette VM et le TurtleBot3</p></li>
+                            <li><p>Ouvrez un terminal dans votre VM et mettez la source de ROS2 dans le fichier .bashrc :</p></li>
+                            <div class="code-block">
+<button class="copy-button" onclick="copyCode('code58')">Copier</button>
+<pre id="code58" class="code-content">
+echo 'source /opt/ros/humble/setup.bash' >> ~/.bashrc
+</pre>
+                            </div>
+                            <li><p>Actualisez la source du fichier .bashrc</p></li>
+                            <div class="code-block">
+<button class="copy-button" onclick="copyCode('code59')">Copier</button>
+<pre id="code59" class="code-content">
+source ~/.bashrc
+</pre>
+                            </div>
+                            <li><p>Tapez les commandes suivantes pour installer les packages ROS2 sur votre VM :</p></li>
+                            <div class="code-block">
+<button class="copy-button" onclick="copyCode('code60')">Copier</button>
+<pre id="code60" class="code-content">
+sudo apt-get update
+sudo apt-get upgrade
+
+sudo apt install ros-humble-gazebo-*
+sudo apt install ros-humble-cartographer ros-humble-cartographer-ros
+sudo apt install ros-humble-navigation2 ros-humble-nav2-bringup
+</pre>
+                            </div>
+                            <li><p>Tapez ensuite les commandes pour installer les packages TurtleBot3 sur la VM:</p></li>
+                            <div class="code-block">
+<button class="copy-button" onclick="copyCode('code61')">Copier</button>
+<pre id="code61" class="code-content">
+sudo apt install ros-humble-dynamixel-sdk
+sudo apt install ros-humble-turtlebot3-msgs
+sudo apt install ros-humble-turtlebot3
+</pre>
+                            </div>
+                            <li><p>Ajoutez au fichier <code>.bashrc</code> le <code>ROS_DOMAIN_ID</code> de votre VM pour qu'il soit identique à celui du TurtleBot3 :</p></li>
+                            <div class="code-block">
+<button class="copy-button" onclick="copyCode('code62')">Copier</button>
+<pre id="code62" class="code-content">
+echo 'export ROS_DOMAIN_ID=30 #TURTLEBOT3' >> ~/.bashrc
+source ~/.bashrc
+</pre>
+                            </div>
+                        </ol>
+                        
                     </section>
 
                     <section id="subsection7-2">
                         <h4>Lancer le bringup du Turtlebot</h4>
-                    
+                        <ol>
+                            <li>
+                                <p>Ouvrez un nouveau terminal dans la VM et suivez les commandes pour lancer le bringup du TurtleBot3 en ssh :</p>
+                                <div class="code-block" style="background-color: lightgray;">
+<pre id="code63" class="code-content">
+ssh ubuntu@{IP_ADRESS_OF_RASPBERRY_PI}
+</pre>
+                                </div>
+                            </li>
+                            <li>
+                                <p>Tapez le mot de passe puis entrez les commandes :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code64')">Copier</button>
+<pre id="code64" class="code-content">
+ros2 launch turtlebot3_bringup robot.launch.py
+</pre>
+                                </div>
+                            </li>
+                        </ol>
+                        
                     </section>
 
                     <section id="subsection7-3">
                         <h4>Lancez l'application SLAM</h4>
-                    
+                        <ol>
+                            <li>
+                                <p>Ouvrez un nouveau terminal dans votre VM et lancez la commande suivante pour démarrer l'application SLAM :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code65')">Copier</button>
+<pre id="code65" class="code-content">
+ros2 launch turtlebot3_cartographer cartographer.launch.py
+</pre>
+                                </div>
+                            </li>
+                            <li>
+                                <p>Le démarrage de l'application est assez long mais vous devriez obtenir ceci :</p>
+                                <img src="images/tuto_6/section7/rviz1.png" width="500px">
+                                <p>L'application SLAM fait appel à RVIZ pour pouvoir afficher ce type d'image. SLAM permet aussi de faire du mapping. Pour ce faire, nous devons utiliser une télécommande pour faire bouger le TurtleBot3.</p>
+                            </li>
+                        </ol>
+                        
                     </section>
 
                     <section id="subsection7-4">
                         <h4>Lancez la télécommande</h4>
-                    
+                        <ol>
+                            <li>
+                                <p>Ouvrez un nouveau terminal et tapez les commandes suivantes pour lancer la télécommande :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code66')">Copier</button>
+<pre id="code66" class="code-content">
+cd ~/ros_ws/
+source install/setup.bash
+</pre>
+                                </div>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code66.1')">Copier</button>
+<pre id="code66.1" class="code-content">
+ros2 run turtlebot3_teleop_fr turtlebot3_teleop_fr
+</pre>
+                                </div>
+                            </li>
+                            <li>
+                                <p>Vous devriez obtenir la télécommande que vous avez construite en python précédemment :</p>
+                                <img src="images/tuto_6/section6/telecommande.png" width="400px">
+                            </li>
+                        </ol>
+                        
                     </section>
 
                     <section id="subsection7-5">
                         <h4>Faites le mapping de votre pièce</h4>
-    
-                    </section>
+                        <p>Utilisez la télécommande pour faire bouger le TurtleBot3 et regardez l'évolution du mapping dans la fenêtre RVIZ.</p>
+                        <p>Voici l'évolution du mapping :</p>
+                        <ol>
+                            <li>
+                                <p><i>Démarrage :</i></p>
+                                <img src="images/tuto_6/section7/rviz11.png" width="400px">
+                            </li>
+                            <li>
+                                <p><i>En cours de route :</i></p>
+                                <img src="images/tuto_6/section7/rviz2.png" width="400px">
+                            </li>
+                            <li>
+                                <p><i>A son arrivé :</i></p>
+                                <img src="images/tuto_6/section7/rviz3.png" width="400px">
+                            </li>
+                        </ol>
 
+                    </section>
+                    <p>Le tutoriel est fini ! Vous avez donc appris à configurer le TurtleBot3 (partie Raspberry Pi et partie OpenCR) puis à le faire fonctionner. Vous avez aussi appris a créez une télécommande pour le TurtleBot3 en python. </p>
                 </section>
 
 
                 <section id="section8">
                     <h3>Annexes</h3>
                     
-                    <section id="subsection8-1">
+                    <section id="annexe1">
                         <h4>Annexe 1 : Code python turtlebot3_teleop_fr du package "turtlebot3_teleop_fr"</h4>
+                        <p>Revenez <a href="#code_turtle_teleop_fr">au bon endroit</a> dans le tuto !</p>
+
+                        <div class="code-block">
+<button class="copy-button" onclick="copyCode('code67')">Copier</button>
+<pre id="code68" class="code-content">
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Nov 27 21:54:30 2023
+
+@author: bouille arthur
+INSA Strasbourg GE5
+"""
+
+import sys
+import threading
+
+import geometry_msgs.msg
+import rclpy
+
+if sys.platform == 'win32':
+    import msvcrt
+else:
+    import termios
+    import tty
+
+msg1 = """
+Ce noeud prend les touches du clavier et les publie sous forme 
+de messages Twist/TwistStamped.
+"""
+
+msg = """
+---------------------------
+Se déplacer :        Réglages vitesses :
+    a    z    e       t/y : +/- 0.01 linéaire et +/- 0.05 angulaire
+    q    s    d       g/h : +/- 0.01 linéaire
+    w    x    c       b/n : +/- 0.05 angulaire
+                        r : reset vitesses (0.1 et 1.0)
+
+Autres touches : stop !
+
+---------------------------
+
+Ctrl-C pour fermer
+"""
+
+moveBindings = {
+    'z': (1, 0, 0, 0),
+    'e': (1, 0, 0, -1),
+    'q': (0, 0, 0, 1),
+    'd': (0, 0, 0, -1),
+    'a': (1, 0, 0, 1),
+    'x': (-1, 0, 0, 0),
+    'w': (-1, 0, 0, -1),
+    'c': (-1, 0, 0, 1),
+}
+
+speedBindings = {
+    'r': (0.1, 1.0), # Reset vitesses
+    't': (0.01, 0.05),
+    'y': (-0.01, -0.05),
+    'g': (0.01, 0),
+    'h': (-0.01, 0),
+    'b': (0, 0.05),
+    'n': (0, -0.05),
+
+}
+
+def getKey(settings):
+    if sys.platform == 'win32':
+        # getwch() returns a string on Windows
+        key = msvcrt.getwch()
+    else:
+        tty.setraw(sys.stdin.fileno())
+        # sys.stdin.read() returns a string on Linux
+        key = sys.stdin.read(1)
+        termios.tcsetattr(sys.stdin, termios.TCSADRAIN, settings)
+    return key
+
+
+def saveTerminalSettings():
+    if sys.platform == 'win32':
+        return None
+    return termios.tcgetattr(sys.stdin)
+
+
+def restoreTerminalSettings(old_settings):
+    if sys.platform == 'win32':
+        return
+    termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_settings)
+
+
+def vels(speed, turn):
+    return 'Actuellement :\tLinear_vel = %s\tAngular_vel = %s ' % (speed, turn)
+
+
+def main():
+    settings = saveTerminalSettings()
+
+    rclpy.init()
+
+    node = rclpy.create_node('teleop_keyboard_fr')
+
+    # parameters
+    stamped = node.declare_parameter('stamped', False).value
+    frame_id = node.declare_parameter('frame_id', '').value
+    if not stamped and frame_id:
+        raise Exception("'frame_id' can only be set when 'stamped' is True")
+
+    if stamped:
+        TwistMsg = geometry_msgs.msg.TwistStamped
+    else:
+        TwistMsg = geometry_msgs.msg.Twist
+
+    pub = node.create_publisher(TwistMsg, 'cmd_vel', 10)
+
+    spinner = threading.Thread(target=rclpy.spin, args=(node,))
+    spinner.start()
+
+    speed = 0.1
+    turn = 1.0
+    x = 0.0
+    y = 0.0
+    z = 0.0
+    th = 0.0
+    status = 0.0
+
+    twist_msg = TwistMsg()
+
+    if stamped:
+        twist = twist_msg.twist
+        twist_msg.header.stamp = node.get_clock().now().to_msg()
+        twist_msg.header.frame_id = frame_id
+    else:
+        twist = twist_msg
+
+    try:
+        print(msg1)
+        print(msg)
+        print(vels(speed, turn))
+        while True:
+            key = getKey(settings)
+            if key in moveBindings.keys():
+                x = moveBindings[key][0]
+                y = moveBindings[key][1]
+                z = moveBindings[key][2]
+                th = moveBindings[key][3]
+                
+            elif key in speedBindings.keys():
+                if key != 'r': # Si pas reset on modifie les valeurs de vitesses 
+                    speed = round(speed + speedBindings[key][0],2)
+                    turn = round(turn + speedBindings[key][1],2)
+                    # Vérification par rapport au valeur de vitesse max pour le turtlebot burger
+                    # 0.22 en linéaire et 2.84 en angulaire
+                    if speed &gt; 0.22:
+                        speed = 0.22
+                        print("Vitesse linéaire 0.22 maximum !")
+                    elif speed &lt; -0.22:
+                        speed = -0.22
+                        print("Vitesse linéaire -0.22 minimum !")
+                    if turn &gt; 2.84:
+                        turn = 2.84
+                        print("Vitesse angulaire 2.84 maximum !")
+                    elif turn &lt; -2.84:
+                        turn = -2.84
+                        print("Vitesse angulaire -2.84 minimum !")
+
+                else:          # On reset les valeurs des vitesses si 'r'
+                    speed = 0.1
+                    turn = 1.0
+
+                print(vels(speed, turn))
+
+                if (status == 14):
+                    print(msg)
+                status = (status + 1) % 15    
                     
+
+            else:
+                x = 0.0
+                y = 0.0
+                z = 0.0
+                th = 0.0
+                if (key == '\x03'):
+                    break
+
+            if stamped:
+                twist_msg.header.stamp = node.get_clock().now().to_msg()
+
+            twist.linear.x = x * speed
+            twist.linear.y = y * speed
+            twist.linear.z = z * speed
+            twist.angular.x = 0.0
+            twist.angular.y = 0.0
+            twist.angular.z = th * turn
+            pub.publish(twist_msg)
+
+    except Exception as e:
+        print(e)
+
+    finally:
+        if stamped:
+            twist_msg.header.stamp = node.get_clock().now().to_msg()
+
+        twist.linear.x = 0.0
+        twist.linear.y = 0.0
+        twist.linear.z = 0.0
+        twist.angular.x = 0.0
+        twist.angular.y = 0.0
+        twist.angular.z = 0.0
+        pub.publish(twist_msg)
+        rclpy.shutdown()
+        spinner.join()
+
+        restoreTerminalSettings(settings)
+
+
+if __name__ == '__main__':
+    main()
+</pre>
+                        </div>
                     </section>
 
-                    <section id="subsection8-2">
+                    <section id="annexe2">
                         <h4>Annexe 2 : Code python package.xml du package "turtlebot3_teleop_fr"</h4>
-                    
+                        <p>Revenez <a href="#code_package.xml">au bon endroit</a> dans le tuto !</p>
+
+                        <div class="code-block">
+<button class="copy-button" onclick="copyCode('code68')">Copier</button>
+<pre id="code68" class="code-content">
+&lt;?xml version="1.0"?&gt;
+&lt;package format="3"&gt;
+    &lt;name&gt;turtlebot3_teleop_fr&lt;/name&gt;
+    &lt;version&gt;1.0.0&lt;/version&gt;
+    &lt;description&gt;Télécommande ROS2 pour TurtleBot3&lt;/description&gt;
+    &lt;maintainer email="arthur.bouille@insa-strasbourg.fr"&gt;insa&lt;/maintainer&gt;
+    &lt;license&gt;TODO: License declaration&lt;/license&gt;
+
+    &lt;exec_depend&gt;geometry_msgs&lt;/exec_depend&gt;
+    &lt;exec_depend&gt;rclpy&lt;/exec_depend&gt;
+
+    &lt;test_depend&gt;ament_copyright&lt;/test_depend&gt;
+    &lt;test_depend&gt;ament_flake8&lt;/test_depend&gt;
+    &lt;test_depend&gt;ament_pep257&lt;/test_depend&gt;
+    
+    &lt;export&gt;
+    &lt;build_type&gt;ament_python&lt;/build_type&gt;
+    &lt;/export&gt;
+&lt;/package&gt;
+</pre>
+                        </div>
                     </section>
 
-                    <section id="subsection8-3">
+                    <section id="annexe3">
                         <h4>Annexe 3 : Code python setup.py du package "turtlebot3_teleop_fr"</h4>
-                    
+                        <p>Revenez <a href="#code_setup.py">au bon endroit</a> dans le tuto !</p>
+
+                        <div class="code-block">
+<button class="copy-button" onclick="copyCode('code69')">Copier</button>
+<pre id="code69" class="code-content">
+from setuptools import find_packages, setup
+
+package_name = 'turtlebot3_teleop_fr'
+
+setup(
+    name=package_name,
+    version='1.0.0',
+    packages=find_packages(exclude=['test']),
+    data_files=[
+        ('share/ament_index/resource_index/packages',
+            ['resource/' + package_name]),
+        ('share/' + package_name, ['package.xml']),
+    ],
+    install_requires=['setuptools'],
+    zip_safe=True,
+    maintainer='insa',
+    maintainer_email='arthur.bouille@insa-strasbourg.fr',
+    description='Télécommande ROS2 pour TurtleBot3',
+    license='TODO: License declaration',
+    tests_require=['pytest'],
+    entry_points={
+        'console_scripts': [
+            'turtlebot3_teleop_fr = turtlebot3_teleop_fr.turtlebot3_teleop_fr:main'
+        ],
+    },
+)
+</pre>
+                        </div>
                     </section>
 
-                    <section id="subsection8-4">
+                    <section id="annexe4">
                         <h4>Annexe 4 : Code python setup.cfg du package "turtlebot3_teleop_fr"</h4>
-                    
+                        <p>Revenez <a href="#code_setup.cfg">au bon endroit</a> dans le tuto !</p>
+                        <div class="code-block">
+<button class="copy-button" onclick="copyCode('code70')">Copier</button>
+<pre id="code70" class="code-content">
+[develop]
+script_dir=$base/lib/turtlebot3_teleop_fr
+[install]
+install_scripts=$base/lib/turtlebot3_teleop_fr
+</pre>
+                        </div>
                     </section>
                 </section>
 
