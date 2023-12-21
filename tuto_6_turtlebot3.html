@@ -140,19 +140,24 @@ sudo nano /etc/netplan/50-cloud-init.yaml
                                 </div>
                                 
                                 <p id="subsec:wifi">Vérifiez que dans ce fichier le nom et le mot de passe de votre wifi sont juste :</p>
-                                <img src="images/tuto_6/section2/fichier networkd.png" width="300px">
+                                <img src="images/tuto_6/section2/fichier networkd.png" width="500px">
                                 
-                                <p><strong>/!\</strong> Le WIFI_SSID et le WIFI_PASSWORD doivent être entre guillemets. Vous devriez donc avoir "WIFI_SSID" et "WIFI_PASSWORD"</p>
+                                <p><strong>/!\</strong> Le WIFI_SSID doit être entre guillemets. Vous devriez donc avoir "WIFI_SSID" et WIFI_PASSWORD comme sur la capture d'écran !</p>
                                 <p>Sauvegardez le fichier et quittez.</p>
                                 <p>Dans le cas où votre user (ici ubuntu) n'est pas dans les utilisateurs administrateurs, il faut passer en mode root et il faudra ensuite l'ajouter dans la liste des utilisateurs administrateurs :</p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code2')">Copier</button>
 <pre id="code2" class="code-content">
-su -
+sudo -i
+</pre>
+                                </div>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code2.1')">Copier</button>
+<pre id="code2.1" class="code-content">
 adduser ubuntu sudo
 exit
 </pre>
-                                </div>
+                              </div>
                                 
                                 <p><strong>Faites un redémarrage de votre machine virtuelle pour qu'elle prenne en compte le changement d'utilisateur.</strong></p>
                                 <p>Si le wifi ne se connecte pas, reprenez l'étape ci-dessus!</p>
@@ -707,7 +712,7 @@ ssh ubuntu@{IP_ADRESS_OF_RASPBERRY_PI}
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code36')">Copier</button>
 <pre id="code36" class="code-content">
-ssh ubuntu@172.20.10.9
+ssh ubuntu@10.173.20.207
 </pre>
                                 </div>
                                 <p>Le mot de passe est ensuite demandé (Mot de passe : <em>turtlebot</em>).</p>
@@ -1056,22 +1061,31 @@ ros2 launch turtlebot3_bringup robot.launch.py
 
                 <section id="section7">
                     <h3>Utiliser le LIDAR du Turtlebot</h3>
-                    <p>Dans cette section nous ne pouvons pas utiliser une simple communication ssh avec le TurtleBot. Nous avons besoin d'un ordinateur linux Ubuntu 22.04 (ou une machine virtuelle) ayant ROS2 pour pouvoir utiliser une application de mapping SLAM (une appliation de mapping avec une interface graphique).</p>
+                    <p>Dans cette section nous ne pouvons pas utiliser une simple communication ssh avec le TurtleBot. Nous avons besoin d'un ordinateur linux Ubuntu 22.04 (ou une machine virtuelle) ayant ROS2 pour pouvoir utiliser une application de mapping SLAM (une appliation de mapping avec une interface graphique).</p> 
+                    <p>De plus cet ordinateur et le TurtleBot devrons être connectés à un même réseau wifi sans passerelles. (Par exemple, pour le moment, nous avons un problème de ports de communications sur la passerelle entre le réseau INSA-IoT (wifi) et le réseau filaire des ordinateurs des salles informatiques T.041 et L.112. De ce fait nous ne pouvons pas encore faire communiquer le Turtlebot (wifi: INSA-IoT) avec les ordinateurs des salles informatiques). C'est pour cela que dans la suite de ce tutoriel, il est demandé de se connecter à un réseau wifi simple comme par exemple le partage de connection d'un téléphone portable.</p>
                     
                     <section id="subsection7-1">
                         <h4>Installer les packages nécessaires pour le contrôle du TurtleBot3 et du LIDAR sur une machine virtuelle</h4>
                         <ol>
                             <li><p>Créez une machine virtuelle avec Ubuntu 22.04 (Suivez le tutoriel : <a href="/ROS2/tuto_installation_ros2.html" target="_blank">Installation de ROS2</a> )</p></li>
                             <li><p>Lancez votre machine virtuelle Ubuntu 22.04 et installez ROS2 (Suivez le même tutoriel : <a href="/ROS2/tuto_installation_ros2.html" target="_blank">Installation de ROS2</a>)</p></li>
-                            <li><p>Vérifiez que vous êtes bien connecté au même wifi avec cette VM et le TurtleBot3</p></li>
-                            <li><p>Ouvrez un terminal dans votre VM et mettez la source de ROS2 dans le fichier .bashrc :</p></li>
+                            <li>
+                                <p>Vérifiez que vous êtes bien connecté au même wifi avec cette VM et le TurtleBot3. Pour rappel, le wifi peut se changer dans le fichier <code>/etc/netplan/50-cloud-init.yaml</code> :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code58.0')">Copier</button>
+<pre id="code58.0" class="code-content">
+sudo nano /etc/netplan/50-cloud-init.yaml
+</pre>
+                                </div>
+                            </li>
+                            <li><p>Ouvrez un terminal dans votre VM et mettez la source de ROS2 dans le fichier <code>.bashrc</code> :</p></li>
                             <div class="code-block">
 <button class="copy-button" onclick="copyCode('code58')">Copier</button>
 <pre id="code58" class="code-content">
 echo 'source /opt/ros/humble/setup.bash' >> ~/.bashrc
 </pre>
                             </div>
-                            <li><p>Actualisez la source du fichier .bashrc</p></li>
+                            <li><p>Actualisez la source du fichier <code>.bashrc</code> :</p></li>
                             <div class="code-block">
 <button class="copy-button" onclick="copyCode('code59')">Copier</button>
 <pre id="code59" class="code-content">
@@ -1090,7 +1104,7 @@ sudo apt install ros-humble-cartographer ros-humble-cartographer-ros
 sudo apt install ros-humble-navigation2 ros-humble-nav2-bringup
 </pre>
                             </div>
-                            <li><p>Tapez ensuite les commandes pour installer les packages TurtleBot3 sur la VM:</p></li>
+                            <li><p>Tapez ensuite les commandes pour installer les packages TurtleBot3 sur la VM :</p></li>
                             <div class="code-block">
 <button class="copy-button" onclick="copyCode('code61')">Copier</button>
 <pre id="code61" class="code-content">
