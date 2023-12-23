@@ -131,7 +131,7 @@
                         <h4>Paramétrer la Raspberry Pi</h4>
                         <ol>
                             <li>
-                                <p>Vérifiez que vous êtes bien connecté à votre wifi. Pour ce faire ouvrez le fichier "50-cloud-init.yaml" avec la commande suivante :</p>
+                                <p>Vérifiez que vous êtes bien connecté à votre wifi. Pour ce faire ouvrez le fichier <code>/etc/netplan/50-cloud-init.yaml</code> avec la commande suivante :</p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code1')">Copier</button>
 <pre id="code1" class="code-content">
@@ -142,7 +142,7 @@ sudo nano /etc/netplan/50-cloud-init.yaml
                                 <p id="subsec:wifi">Vérifiez que dans ce fichier le nom et le mot de passe de votre wifi sont juste :</p>
                                 <img src="images/tuto_6/section2/fichier networkd.png" width="500px">
                                 
-                                <p><strong>/!\</strong> Le WIFI_SSID doit être entre guillemets. Vous devriez donc avoir "WIFI_SSID" et WIFI_PASSWORD comme sur la capture d'écran !</p>
+                                <p><strong>/!\</strong> Le SSID_WIFI doit être entre guillemets. Vous devriez donc remplacer SSID_WIFI par le nom de votre wifi dans "SSID_WIFI" et WIFI_PASSWORD par le mot de passe de votre wifi comme sur la capture d'écran !</p>
                                 <p>Sauvegardez le fichier et quittez.</p>
                                 <p>Dans le cas où votre user (ici ubuntu) n'est pas dans les utilisateurs administrateurs, il faut passer en mode root et il faudra ensuite l'ajouter dans la liste des utilisateurs administrateurs :</p>
                                 <div class="code-block">
@@ -692,36 +692,40 @@ https://raw.githubusercontent.com/ROBOTIS-GIT/OpenCR/master/arduino/opencr_relea
                 <section id="section6">
                     <h3>Faire bouger le Turtlebot3</h3>
 
+                    <p>Dans cette partie, le Turtlebot sera sur batterie et ne sera donc pas relié à un écran. Pour ce faire, nous allons utiliser un ordinateur qui est connecté au même réseau wifi que le Turtlebot. Nous allons nous connecter en SSH à la Raspberry Pi du TurtleBot afin de pouvoir lancer les différentes commandes à distance.</p>
+                    <ol>
+                        <li>
+                            <p>Ouvrez un nouveau terminal sur votre PC personnel (qui est connecté sur le même wifi que le TurtleBot3).</p>
+                        </li>
+                        <li>
+                            <p>Connectez-vous en SSH à la Raspberry Pi du TurtleBot3 avec la commande suivante :</p>
+                            <div class="code-block" style="background-color: lightgray;">
+<pre id="code35" class="code-content">
+ssh ubuntu@{IP_ADRESS_OF_RASPBERRY_PI}
+</pre>
+                            </div>
+
+                            <p>Exemple :</p>
+                            <div class="code-block">
+<button class="copy-button" onclick="copyCode('code36')">Copier</button>
+<pre id="code36" class="code-content">
+ssh ubuntu@10.173.20.207
+</pre>
+                            </div>
+                            <p>Le mot de passe est ensuite demandé (Mot de passe : <em>turtlebot</em>).</p>
+                            <p>Pour connaître l'adresse IP de la Raspberry :</p>
+                            <ul>
+                                <li>Utiliser la commande "ifconfig" sur la Raspberry Pi du TurtleBot3.</li>
+                                <li>Utiliser un scanner d'adresse IP depuis votre PC personnel. Ce scanner permettra de scanner et de trouver l'adresse IP de tous les appareils connectés à votre wifi. En déduire l'IP de la RPi.</li>
+                            </ul>
+                        </li>
+                    </ol>
+
                     <section id="subsection6-1">
                         <h4>Bringup du TurtleBot3</h4>
                         <p>Le Bringup du TurtleBot3 consiste à lancer les packages de base pour démarrer les programmes TurtleBot3. </p>
                     
                         <ol>
-                            <li>
-                                <p>Ouvrez un nouveau terminal sur votre PC personnel (qui est connecté sur le même wifi que le TurtleBot3).</p>
-                            </li>
-                            <li>
-                                <p>Connectez-vous en SSH à la Raspberry Pi du TurtleBot3 avec la commande suivante :</p>
-                                <div class="code-block" style="background-color: lightgray;">
-<pre id="code35" class="code-content">
-ssh ubuntu@{IP_ADRESS_OF_RASPBERRY_PI}
-</pre>
-                                </div>
-
-                                <p>Exemple :</p>
-                                <div class="code-block">
-<button class="copy-button" onclick="copyCode('code36')">Copier</button>
-<pre id="code36" class="code-content">
-ssh ubuntu@10.173.20.207
-</pre>
-                                </div>
-                                <p>Le mot de passe est ensuite demandé (Mot de passe : <em>turtlebot</em>).</p>
-                                <p>Pour connaître l'adresse IP de la Raspberry :</p>
-                                <ul>
-                                    <li>Utiliser la commande "ifconfig" sur la Raspberry Pi du TurtleBot3.</li>
-                                    <li>Utiliser un scanner d'adresse IP depuis votre PC personnel. Ce scanner permettra de scanner et de trouver l'adresse IP de tous les appareils connectés à votre wifi. En déduire l'IP de la RPi.</li>
-                                </ul>
-                            </li>
                             <li>
                                 <p>Indiquez à ce terminal le type de votre TurtleBot3. Choisissez le bon modèle parmi : <em>burger</em>, <em>waffle</em> et <em>waffle_pi</em>. Tapez alors la commande suivante en modifiant en fonction de votre modèle :</p>
                                 <div class="code-block">
@@ -752,11 +756,11 @@ ros2 launch turtlebot3_bringup robot.launch.py &amp;
                         <p>Vous pouvez vérifier que le bringup du TurtleBot3 à bien été lancé correctement en affichant la liste des topics actifs sur le ROS_DOMAIN_ID=30 (correspondant au sous réseau sur lequel le TurtleBot3 est connecté).</p>
                         <ol>
                             <li id="lancer_bringup">
-                                <p>Tapez la commande :</p>
+                                <p>Tapez la commande suivante toujours dans ce terminal en SSH sur la Raspberry Pi du TurtleBot :</p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code38')">Copier</button>
 <pre id="code38" class="code-content">
-ros2 launch turtlebot3_bringup robot.launch.py &amp;
+ros2 topic list
 </pre>
                                 </div>
                             </li>
@@ -769,47 +773,13 @@ ros2 launch turtlebot3_bringup robot.launch.py &amp;
                     </section>
 
                     <section id="subsection6-3">
-                        <h4>Faire bouger le TurtleBot3 avec la télécommande</h4>
-                        <ol>
-                            <li>
-                                <p>Ouvrez un second terminal sur votre PC personnel.</p>
-                            </li>
-                            <li>
-                                <p>Connectez-vous à nouveau en ssh au TurtleBot3.</p>
-                                <div class="code-block" style="background-color: lightgray;">
-<pre id="code39" class="code-content">
-ssh ubuntu@{IP_ADRESS_OF_RASPBERRY_PI}
-</pre>
-                                </div>
-                            </li>
-                            <li>
-                                <p>Tapez ensuite la commande pour lancer la télécommande consacré au TurtleBot :</p>
-                                <div class="code-block">
-<button class="copy-button" onclick="copyCode('code40')">Copier</button>
-<pre id="code40" class="code-content">
-ros2 run turtlebot3_teleop teleop_keyboard
-</pre>
-                                </div>
-                            </li>
-                            <li>
-                                <p>Vous pourrez alors contrôler le déplacement du TurtleBot grâce aux touches de votre PC personnel. Suivez les instructions affichées sur le terminal de la télécommande.</p>
-                                <img src="images/tuto_6/section6/telecommande qwerty.png" width="550px">
-                            </li>
-                            <li>
-                                <p>Problème, cette télécommande est à la base prévue pour les claviers Qwerty. Nous allons donc créer une télécommande pour clavier Azerty avec un package Python dans la sous-section <a href="#subsection6-5">Bonus : Créer votre propre télécommande en python pour le TurtleBot3</a>.</p>
-                            </li>
-                        </ol>
-                        
-                    </section>
-
-                    <section id="subsection6-4">
                         <h4>Faire bouger le TurtleBot3 en publiant directement un message sur le topic /cmd_vel</h4>
-                        <ol>
+                        <ol start="0">
                             <li>
-                                <p>Faites "ctrl+C" dans le terminal de la télécommande pour l'arrêter.</p>
+                                <p>Suivez les instructions suivantes en étant toujours dans le terminal en SSH avec la Raspberry Pi du TurtleBot.</p>
                             </li>
                             <li>
-                                <p>Tapez alors la commande permettant de publier un message sur le topic /cmd\_vel du TurtleBot3 (Rappel : les messages des topics /cmd\_vel sont du type geometry\_msgs/Twist) :</p>
+                                <p>Tapez la commande permettant de publier un message sur le topic <code>/cmd_vel</code> du TurtleBot3 (Rappel : les messages des topics <code>/cmd_vel</code> sont du type <code>geometry_msgs/Twist</code>) :</p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code41')">Copier</button>
 <pre id="code41" class="code-content">
@@ -830,6 +800,46 @@ ros2 topic pub /cmd_vel geometry_msgs/Twist "{linear: {x: 0.0, y: 0.0, z: 0.0}, 
                         
                     </section>
 
+                    <section id="subsection6-4">
+                        <h4>Faire bouger le TurtleBot3 avec la télécommande</h4>
+                        <ol>
+                            <li>
+                                <p>Tapez la commande pour lancer la télécommande consacré au TurtleBot en étant toujours dans le terminal en SSH :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code40')">Copier</button>
+<pre id="code40" class="code-content">
+ros2 run turtlebot3_teleop teleop_keyboard
+</pre>
+                                </div>
+                            </li>
+                            <li>
+                                <p>Vous pourrez alors contrôler le déplacement du TurtleBot grâce aux touches de votre PC personnel. Suivez les instructions affichées sur le terminal de la télécommande.</p>
+                                <img src="images/tuto_6/section6/telecommande qwerty.png" width="550px">
+                            </li>
+                            <li>
+                                <p>Problème, cette télécommande est à la base prévue pour les claviers Qwerty. Nous allons donc créer une télécommande pour clavier Azerty avec un package Python dans la sous-section <a href="#subsection6-5">Bonus : Créer votre propre télécommande en python pour le TurtleBot3</a>.</p>
+                            </li>
+                            <li>
+                                <p>Arrêtez la télécommande en faisant "<code>Ctrl+C</code>".</p>
+                            </li>
+                            <li>
+                                <p>Arrêtez le bringup du TurtleBot3. Pour ce faire tapez la commande "<code>fg</code>" pour pouvoir voir la commande qui à été placée en arrière plan et faites ensuite "<code>Ctrl+C</code>".</p>
+                            </li>
+                            <li>
+                                <p>Vérifiez l'arrêt du bringup du TurtleBot3 en vérifiant que les topics du TurtleBot3 ne sont plus accessibles/actifs (vérifiez avec la commande <code>$ ros2 topic list</code>).</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code40.1')">Copier</button>
+<pre id="code40.1" class="code-content">
+ros2 topic list
+</pre>
+                                </div>
+                            </li>
+                        </ol>
+                        
+                    </section>
+
+                    
+
                     <section id="subsection6-5">
                         <h4>Bonus : Créer votre propre télécommande en python pour le TurtleBot3</h4>
                     
@@ -837,10 +847,7 @@ ros2 topic pub /cmd_vel geometry_msgs/Twist "{linear: {x: 0.0, y: 0.0, z: 0.0}, 
                             <h5>Créer le package de la télécommande</h5>
                             <ol>
                                 <li>
-                                    <p>Arrêtez le bringup du TurtleBot3 et vérifiez que les topics du TurtleBot3 ne sont plus accessibles (vérifiez avec la commande <code>$ ros2 topic list</code>).</p>
-                                </li>
-                                <li>
-                                    <p>Rendez-vous dans le répertoire "/src" du workspace ros\_ws :</p>
+                                    <p>Rendez-vous dans le répertoire "<code>/src</code>"" du workspace <code>/ros2_ws</code> :</p>
                                     <div class="code-block">
 <button class="copy-button" onclick="copyCode('code42.1')">Copier</button>
 <pre id="code42.1" class="code-content">
@@ -867,7 +874,7 @@ cd ~/ros2_ws/src/turtlebot3_teleop_fr/turtlebot3_teleop_fr
                                     </div>
                                 </li>
                                 <li>
-                                    <p>Créez un fichier "turtlebot3\_teleop\_fr.py"</p>
+                                    <p>Créez un fichier "turtlebot3_teleop_fr.py"</p>
                                     <div class="code-block">
 <button class="copy-button" onclick="copyCode('code44')">Copier</button>
 <pre id="code44" class="code-content">
@@ -992,7 +999,16 @@ colcon build
                             <h5>Utiliser le package</h5>
                             <ol>
                                 <li>
-                                    <p>Restez encore à la racine de votre workspace :</p>
+                                    <p>Tapez la commande pour lancer le bringup du TurtleBot3 en étant toujours dans le terminal en SSH sur la Raspberry Pi du Turtlebot 3 :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code64')">Copier</button>
+<pre id="code64" class="code-content">
+ros2 launch turtlebot3_bringup robot.launch.py
+</pre>
+                                </div>
+                                </li>
+                                <li>
+                                    <p>Retournez à la racine de votre workspace :</p>
                                     <div class="code-block">
 <button class="copy-button" onclick="copyCode('code53')">Copier</button>
 <pre id="code53" class="code-content">
@@ -1001,7 +1017,7 @@ cd ~/ros2_ws
                                     </div>
                                 </li>
                                 <li>
-                                    <p>Écrivez la source de votre workspace dans le terminal (Rappel : on a sourcé ROS2 dans le fichier .bashrc en tant qu'underlay et maintenant nous allons sourcé par-dessus votre workspace en tant qu'overlay pour avoir accès aux packages que vous avez dans votre workspace) :</p>
+                                    <p>Écrivez la source de votre workspace dans le terminal (Rappel : on a sourcé ROS2 dans le fichier .bashrc en tant qu'underlay et maintenant nous allons sourcé par-dessus votre workspace en tant qu'overlay pour avoir accès aux packages que vous avez crées dans votre workspace) :</p>
                                     <div class="code-block">
 <button class="copy-button" onclick="copyCode('code54')">Copier</button>
 <pre id="code54" class="code-content">
@@ -1010,7 +1026,7 @@ source install/setup.bash
                                     </div>
                                 </li>
                                 <li>
-                                    <p>Ecrivez la commande pour lancer la télécommande (n'oubliez pas de <a href="#lancer_bringup">lancer le bringup du turtlebot</a> et de vérifier de voir ses topics):</p>
+                                    <p>Ecrivez la commande pour lancer la télécommande de votre package Python:</p>
                                     <div class="code-block">
 <button class="copy-button" onclick="copyCode('code55')">Copier</button>
 <pre id="code55" class="code-content">
@@ -1022,35 +1038,7 @@ ros2 run turtlebot3_teleop_fr turtlebot3_teleop_fr
                                     <div>
                                         <img src="images/tuto_6/section6/telecommande.png" width="400px">
                                     </div>
-                                </li>
-                                <li>
-                                    <p>Ouvrez <code>rqt_graph</code> dans un nouveau terminal. Vous pouvez voir que le nœud de la télécommande peut publier des messages sur le topic <code>/cmd_vel</code>.</p>
-                                </li>
-                                <li>
-                                    <div class="code-block">
-<button class="copy-button" onclick="copyCode('code56')">Copier</button>
-<pre id="code56" class="code-content">
-ros2 topic echo /cmd_vel
-</pre>
-                                    </div>
-                                </li>
-                                <li>
-                                    <p>Cliquez sur le terminal de la télécommande et utilisez les touches de la télécommande. Vous pourrez voir les messages qui transitent par le topic /cmd_vel !</p>
-                                </li>
-                                <li>
-                                    <div class="code-block">
-<button class="copy-button" onclick="copyCode('code57')">Copier</button>
-<pre id="code57" class="code-content">
-export TURTLEBOT3_MODEL=burger
-ros2 launch turtlebot3_bringup robot.launch.py
-</pre>
-                                    </div>
-                                </li>
-                                <li>
                                     <p>Vous pouvez maintenant contrôler le TurtleBot3 à l'aide de la télécommande dans le premier terminal.</p>
-                                </li>
-                                <li>
-                                    <p>Ouvrez <code>rqt_graph</code> pour voir le lien entre le TurtleBot3 et la télécommande.</p>
                                 </li>
                             </ol>
                             
@@ -1061,7 +1049,7 @@ ros2 launch turtlebot3_bringup robot.launch.py
 
                 <section id="section7">
                     <h3>Utiliser le LIDAR du Turtlebot</h3>
-                    <p>Dans cette section nous ne pouvons pas utiliser une simple communication ssh avec le TurtleBot. Nous avons besoin d'un ordinateur linux Ubuntu 22.04 (ou une machine virtuelle) ayant ROS2 pour pouvoir utiliser une application de mapping SLAM (une appliation de mapping avec une interface graphique).</p> 
+                    <p>Dans cette section nous ne pouvons pas utiliser une simple communication ssh avec le TurtleBot. Nous avons besoin d'un ordinateur linux Ubuntu 22.04 (ou une machine virtuelle) ayant ROS2 pour pouvoir utiliser une application de mapping SLAM (une application de mapping avec une interface graphique).</p> 
                     <p>De plus cet ordinateur et le TurtleBot devrons être connectés à un même réseau wifi sans passerelles. (Par exemple, pour le moment, nous avons un problème de ports de communications sur la passerelle entre le réseau INSA-IoT (wifi) et le réseau filaire des ordinateurs des salles informatiques T.041 et L.112. De ce fait nous ne pouvons pas encore faire communiquer le Turtlebot (wifi: INSA-IoT) avec les ordinateurs des salles informatiques). C'est pour cela que dans la suite de ce tutoriel, il est demandé de se connecter à un réseau wifi simple comme par exemple le partage de connection d'un téléphone portable.</p>
                     
                     <section id="subsection7-1">
@@ -1077,6 +1065,14 @@ ros2 launch turtlebot3_bringup robot.launch.py
 sudo nano /etc/netplan/50-cloud-init.yaml
 </pre>
                                 </div>
+                                <p>Dans le cas où votre user n'est pas dans les utilisateurs administrateurs, il faut passer en mode root et il faudra ensuite l'ajouter dans la liste des utilisateurs administrateurs :</p>
+                                <div class="code-block">
+<pre id="code58.1" class="code-content">
+sudo -i
+adduser {user} sudo
+exit
+</pre>
+                              </div>
                             </li>
                             <li><p>Ouvrez un terminal dans votre VM et mettez la source de ROS2 dans le fichier <code>.bashrc</code> :</p></li>
                             <div class="code-block">
@@ -1092,7 +1088,7 @@ echo 'source /opt/ros/humble/setup.bash' >> ~/.bashrc
 source ~/.bashrc
 </pre>
                             </div>
-                            <li><p>Tapez les commandes suivantes pour installer les packages ROS2 sur votre VM :</p></li>
+                            <li><p>Tapez les commandes suivantes pour installer les packages de simulation et de mapping pour ROS2 sur votre VM :</p></li>
                             <div class="code-block">
 <button class="copy-button" onclick="copyCode('code60')">Copier</button>
 <pre id="code60" class="code-content">
@@ -1113,7 +1109,7 @@ sudo apt install ros-humble-turtlebot3-msgs
 sudo apt install ros-humble-turtlebot3
 </pre>
                             </div>
-                            <li><p>Ajoutez au fichier <code>.bashrc</code> le <code>ROS_DOMAIN_ID</code> de votre VM pour qu'il soit identique à celui du TurtleBot3 :</p></li>
+                            <li><p>Ajoutez au fichier <code>.bashrc</code>, de votre VM, le <code>ROS_DOMAIN_ID</code> pour qu'il soit identique à celui du TurtleBot3 :</p></li>
                             <div class="code-block">
 <button class="copy-button" onclick="copyCode('code62')">Copier</button>
 <pre id="code62" class="code-content">
@@ -1174,11 +1170,11 @@ ros2 launch turtlebot3_cartographer cartographer.launch.py
                         <h4>Lancez la télécommande</h4>
                         <ol>
                             <li>
-                                <p>Ouvrez un nouveau terminal et tapez les commandes suivantes pour lancer la télécommande :</p>
+                                <p>Ouvrez un nouveau terminal et tapez les commandes suivantes pour lancer la télécommande de votre package Python :</p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code66')">Copier</button>
 <pre id="code66" class="code-content">
-cd ~/ros2_ws/
+cd ~/ros2_ws
 source install/setup.bash
 </pre>
                                 </div>
@@ -1217,7 +1213,7 @@ ros2 run turtlebot3_teleop_fr turtlebot3_teleop_fr
                         </ol>
 
                     </section>
-                    <p>Le tutoriel est fini ! Vous avez donc appris à configurer le TurtleBot3 (partie Raspberry Pi et partie OpenCR) puis à le faire fonctionner. Vous avez aussi appris a créez une télécommande pour le TurtleBot3 en python. </p>
+                    <p>Le tutoriel est fini ! Vous avez donc appris à configurer le TurtleBot3 (partie Raspberry Pi et partie OpenCR) puis à le faire fonctionner. Vous avez aussi appris a créez une télécommande pour le TurtleBot3 en Python et vous avez appris à faire du mapping avec ROS2 !</p>
                 </section>
 
 
