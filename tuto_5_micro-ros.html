@@ -44,7 +44,509 @@
         <section>
             <article>
                 <h2>Tutoriel : Micro-ROS</h2>
-                <p>Contenu du tutoriel en construction...</p>
+
+                <div class="table-of-contents">
+                    <h3>Table des matières</h3>
+                    <ul>
+                        <li><a href="#section1">Introduction</a></li>
+                        <li>
+                            <a href="#section2">Création d'une communication Publisher-Subscriber sur un Topic grâce à micro-ROS sur Linux</a>
+                            <ul>
+                                <li><a href="#subsection2-1">Création d'un espace de travail micro-ROS</a></li>
+                                <li><a href="#subsection2-2">Mise à jour des dépendances avec rosdep et installation de pip</a></li>
+                                <li><a href="#subsection2-3">Création du firmware</a></li>
+                                <li><a href="#subsection2-4">Création des fichiers de l'application pour le Publisher et le Subscriber</a></li>
+                                <li><a href="#subsection2-5">Ajout de nos deux programmes dans le registre des exécutables micro-ROS</a></li>
+                                <li><a href="#subsection2-6">Mise en place du firmware</a></li>
+                                <li><a href="#subsection2-7">Création, mise en place et lancement d'un agent micro-ROS</a></li>
+                                <li><a href="#subsection2-8">Lancement du Publisher et du Subscriber</a></li>
+                                <li><a href="#subsection2-9">Observation du nœud et du topic avec rqt_graph</a></li>
+                            </ul>
+                        </li>
+
+                        <li><a href="#section3">Titre en construction</a></li>
+                        <li><a href="#section8">Annexes</a></li>
+                    </ul>
+                </div>
+
+                <section id="section1">
+                    <h3>Introduction</h3>
+                    <p>Ce premier tutoriel a pour but de comprendre un petit peu plus ce qu'est micro-ROS et de créer une première application micro-ROS.</p>
+                    <p><strong>Micro-ROS</strong> : ROS est un middleware ( un software qui se comporte comme une passerelle entre des applications et des bases de données ou des systèmes d'exploitation, aussi appelé intergiciel en français ), et ROS2 est sa nouvelle version. Elle comporte à peu près les mêmes composants, mais son architecture change fondamentalement en utilisant le protocole DDS (Data Distribution Service), qui a pour but de simplifier la programmation réseau. Micro-ROS est la version de ROS2 créée pour être utilisé directement avec des microcontrôleurs. Pour cela, quelques changements sont opérés sur son architecture. Le stack ROS2 utilisé sur les systèmes d'exploitation deviennent des agents dont le seul but est de gérer micro-ROS sur le microcontrôleur. On retrouve les RTOS (système d'exploitation en temps réel), mais avec des drivers spécifiques à micro-ROS, avec en plus le RTOS Arduino open source, qui est « Community based » et non proposé de base par micro-ROS. En plus des API ROS et des RCL (ROS Client Libraries), codés en langage C, on retrouve le RCLC qui aoute des fonctions, des exécuteurs ainsi que d'autres choses spécialement pour l'utilisation sur microcontrôleur. Pour le point de vue Middleware, le ROS Middleware Interface ne suffit plus, car il ne permet pas au microcontrôleur d'utiliser le protocole réseau DDS. Pour cela, un adaptateur DDS est ajouté, et un client avec à l'intérieur du Middleware. Le microcontrôleur ne peut donc pas assumer le rôle de serveur DDS.</p>
+                    <p><strong>RTOS</strong> : Un système d'exploitation en temps réel (RTOS) est un système d'exploitation (OS) léger, utilisé pour faciliter le fonctionnement multitâche et l'intégration des tâches dans les conceptions où les ressources et le temps sont limités, ce qui est généralement le cas dans les systèmes embarqués. En outre, le terme « temps réel » suggère la prévisibilité/le déterminisme du temps d'exécution plutôt que la vitesse brute. Ainsi, on peut généralement démontrer qu'un RTOS répond aux exigences de temps réel dur en raison de son déterminisme (source : <a href="https://www.digikey.fr/fr/articles/real-time-operating-systems-and-their-applications#:~:text=Qu'est%2Dce%20qu',cas%20dans%20les%20syst%C3%A8mes%20embarqu%C3%A9s." target="_blank">Systèmes d'exploitation en temps réel (RTOS) et applications, DigiKey</a>).</p>
+                
+                </section>
+
+
+                <section id="section2">
+                    <h3>Création d'une communication Publisher-Subscriber sur un Topic grâce à micro-ROS sur Linux</h3>
+
+                    <section id="subsection2-1">
+                        <h4>Création d'un espace de travail micro-ROS</h4>
+
+                        <p>Pour créer l'espace de travail propre à ce tutoriel, suivez les commandes suivantes :</p>
+                        <div class="code-block">
+<button class="copy-button" onclick="copyCode('code0')">Copier</button>
+<pre id="code0" class="code-content">
+mkdir microros_linux_ws
+cd ~/microros_linux_ws
+git clone -b $ROS_DISTRO https://github.com/micro-ROS/micro_ros_setup.git src/micro_ros_setup
+</pre>
+                        </div>
+                    </section>
+
+                    <section id="subsection2-2">
+                        <h4>Mise à jour des dépendances avec rosdep et installation de pip</h4>
+                        <ol>
+                            <li>
+                                <p>Mettez à jour les dépendances avec rosdep :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code1')">Copier</button>
+<pre id="code1" class="code-content">
+sudo apt update && rosdep update
+rosdep install --from-paths src --ignore-src -y
+</pre>
+                                </div>
+                            </li>
+                            <li>
+                                <p>Installez pip :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code2')">Copier</button>
+<pre id="code2" class="code-content">
+sudo apt-get install python3-pip
+</pre>
+                                </div>
+                            </li>
+                            <li>
+                                <p>Faites la mise en place de outils (packages) Micro-ROS :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code3')">Copier</button>
+<pre id="code3" class="code-content">
+colcon build
+</pre>
+                                </div>
+                                <p>Sourcez le workspace micro-ROS :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code4')">Copier</button>
+<pre id="code4" class="code-content">
+source install/local_setup.bash
+</pre>
+                                </div>
+                            </li>
+                        </ol>
+
+                    </section>
+
+                    <section id="subsection2-3">
+                        <h4>Création du firmware</h4>
+                        <p>Lancer un programme qui va créer le firmware du micro-ROS sur la VM Linux :</p>
+                        <div class="code-block">
+<button class="copy-button" onclick="copyCode('code5')">Copier</button>
+<pre id="code5" class="code-content">
+ros2 run micro_ros_setup create_firmware_ws.sh host
+</pre>
+                        </div>
+                        <p>Le paramètre "host" signifie que nous utilisons notre ordinateur comme cible du firmware. En utilisant la commande « ls », le dossier du firmware devrait être visible.</p>
+
+                    </section>
+
+                    <section id="subsection2-4">
+                        <h4>Création des fichiers de l'application pour le Publisher et le Subscriber</h4>
+                        <ol>
+                            <li>
+                                <p>Allez dans le dossier « rclc » qui contient les codes des applications micro-ROS en langage C avec la commande suivante :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code6')">Copier</button>
+<pre id="code6" class="code-content">
+cd src/uros/micro-ROS-demos/rclc
+</pre>
+                                 </div>
+                            </li>
+                            <li>
+                                <p>On peut alors créer nos deux dossiers d'application avec les commandes :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code7')">Copier</button>
+<pre id="code7" class="code-content">
+mkdir Pub
+mkdir Sub
+</pre>
+                                </div>
+                            </li>
+
+                            <li>
+                                <p>Dans chaque dossier, nous allons créer un fichier « main.c » qui contiendra le code de nos application, et un fichier « CMakeLists.txt » qui contiendra le code permettant de compiler notre application.</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code8')">Copier</button>
+<pre id="code8" class="code-content">
+cd Pub
+touch main.c
+touch CMakeLists.txt
+cd ../Sub
+touch main.c
+touch CMakeLists.txt
+cd ..
+</pre>
+                                </div>
+                            </li>
+
+                            <li>
+                                <p>Nous allons maintenant remplir différents les fichiers que nous avons créés. Commençons par l'application « Pub ». Ouvrons le fichier main.c qui se trouve dedans :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code9')">Copier</button>
+<pre id="code9" class="code-content">
+cd Pub
+sudo nano main.c
+</pre>
+                                </div>
+                            </li>
+                            <li id="main_pub">
+                                <p>Remplissez-le avec le code qui se trouve en <a href="#annexe1">Annexe 1</a>. Les commentaires expliquent son fonctionnement.</p>
+                                <p>Sauvegardez avec ctrl+O et sortez du fichier avec ctrl+X.</p>
+                            </li>
+                            <li>
+                                <p>Occupez-vous maintenant du fichier CMakeLists.txt :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code10')">Copier</button>
+<pre id="code10" class="code-content">
+sudo nano CMakeLists.txt
+</pre>
+                                </div>
+                            </li>
+                            <li id="cmakelist_pub">
+                                <p>Remplissez-le avec le texte en <a href="#annexe2">Annexe 2</a> afin de donner les informations complémentaires au compilateur, enregistrez-les, et quittez l'éditeur de texte.</p>
+                                Le Publisher est maintenant codé. Occupez-vous de la même façon du Subscriber !
+                            </li>
+
+                            <li>
+                                <p>Nous allons maintenant remplir différents les fichiers que nous avons créés. Commençons par l'application « Pub ». Ouvrons le fichier main.c qui se trouve dedans :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code9')">Copier</button>
+<pre id="code9" class="code-content">
+cd ../Sub
+sudo nano main.c
+</pre>
+                                </div>
+                            </li>
+                            <li id="main_sub">
+                                <p>Remplissez-le avec le code qui se trouve en <a href="#annexe3">Annexe 3</a>. Les commentaires expliquent son fonctionnement.</p>
+                                <p>Sauvegardez avec ctrl+O et sortez du fichier avec ctrl+X.</p>
+                            </li>
+                            <li>
+                                <p>Occupez-vous maintenant du fichier CMakeLists.txt :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code10')">Copier</button>
+<pre id="code10" class="code-content">
+sudo nano CMakeLists.txt
+</pre>
+                                </div>
+                            </li>
+                            <li id="cmakelist_sub">
+                                <p>Remplissez-le avec le texte en <a href="#annexe4">Annexe 4</a> afin de donner les informations complémentaires au compilateur, enregistrez-les, et quittez l'éditeur de texte.</p>
+                                Le Subcriber est maintenant codé !
+                            </li>
+                        </ol>
+                        
+
+                    </section>
+
+                    <section id="subsection2-5">
+                        <h4>Ajout de nos deux programmes dans le registre des exécutables micro-ROS</h4>
+                        <p>Contenu du tutoriel en construction...</p>
+
+                    </section>
+
+                    <section id="subsection2-6">
+                        <h4>Mise en place du firmware</h4>
+                        <p>Contenu du tutoriel en construction...</p>
+
+                    </section>
+
+                    <section id="subsection2-7">
+                        <h4>Création, mise en place et lancement d'un agent micro-ROS</h4>
+                        <p>Contenu du tutoriel en construction...</p>
+
+                    </section>
+
+                    <section id="subsection2-8">
+                        <h4>Lancement du Publisher et du Subscriber</h4>
+                        <p>Contenu du tutoriel en construction...</p>
+
+                    </section>
+
+                    <section id="subsection2-9">
+                        <h4>Observation du nœud et du topic avec rqt_graph</h4>
+                        <p>Contenu du tutoriel en construction...</p>
+
+                    </section>
+                </section>
+
+                <section id="section8">
+                    <h3>Annexes</h3>
+                    
+                    <section id="annexe1">
+                        <h4>Annexe 1 : Code C++ du Publisher</h4>
+                        <p>Revenez <a href="#main_pub">au bon endroit</a> dans le tuto !</p>
+                        
+                        <div class="code-block">
+<button class="copy-button" onclick="copyCode('code_main_pub')">Copier</button>
+<pre id="code_main_pub" class="code-content">
+//Installation des bibliotheques
+#include &lt;rcl/rcl.h&gt;
+#include &lt;rcl/error_handling.h&gt;
+#include &lt;rclc/rclc.h&gt;
+#include &lt;rclc/executor.h&gt;
+//Bibliotheques de gestion des API en C
+#include &lt;std_msgs/msg/string.h&gt;
+//Bibliotheque de String
+#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+//Bibliotheques de gestion des I/O
+    
+//On définit une variable ARRAY_LEN qui sera la taille maimale
+// de notre STRING
+#define ARRAY_LEN 200
+    
+//On définit nos fonctions RCCHECK et RCSOFTCHECK qui ont pour
+// objectif de gérer les avertissements et les erreurs
+#define RCCHECK(fn) { rcl_ret_t temp_rc = fn; if((temp_rc != RCL_RET_OK)){printf("Failed status on line %d: %d. Aborting.\n",__LINE__,(int)temp_rc); return 1;}}
+#define RCSOFTCHECK(fn) { rcl_ret_t temp_rc = fn; if((temp_rc != RCL_RET_OK)){printf("Failed status on line %d: %d. Continuing.\n",__LINE__,(int)temp_rc);}} 
+
+//Initialisation du publisher et du message
+rcl_publisher_t publisher;
+std_msgs__msg__String msg;
+    
+//Fonction chargeant "Hello World !!!" dans notre message à chaque 
+//tic d'un timer, le publiant sur le publisher et affichant que
+//le message a été publié dans le terminal
+void timer_callback(rcl_timer_t * timer, int64_t last_call_time)
+{
+    (void) last_call_time;
+    if (timer != NULL) {
+        sprintf(msg.data.data, "Hello World !!!");
+            msg.data.size = strlen(msg.data.data);
+            RCSOFTCHECK(rcl_publish(&publisher, &msg, NULL));
+            printf("Publie : \"%s\"\n", msg.data.data);
+    }
+}
+    
+//Fonction principale qui se lance lorce qu'on appelle le programme
+int main(int argc, const char * const * argv)
+{
+    
+    //Création de l'allocateur qui gère la mémoire dynamique 
+    //allouée au programme
+    rcl_allocator_t allocator = rcl_get_default_allocator();
+    //Création du support qui va créer le client micro-ros et 
+    //gérer les données
+    rclc_support_t support;
+
+    //Création des options d'initialisations
+    RCCHECK(rclc_support_init(&support, argc, argv, &allocator));
+
+    //Création d'un noeud micro-ros
+    rcl_node_t node;
+    RCCHECK(rclc_node_init_default(&node, "My_Node", "", &support));
+
+    //Création du Publisher sur le topic My_Topic
+    RCCHECK(rclc_publisher_init_default(
+            &publisher,
+            &node,
+            ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, String),
+            "/My_Topic"));
+
+    //Création du timer auquel on va ajouter la fonction que 
+    //nous avons défini plus haut
+    rcl_timer_t timer;
+    const unsigned int timer_timeout = 1000;
+    RCCHECK(rclc_timer_init_default(
+            &timer,
+            &support,
+            RCL_MS_TO_NS(timer_timeout),
+            timer_callback));
+
+    //Création de l'executeur qui est un API gérant les timers et les
+    //souscription à des topics
+    rclc_executor_t executor = rclc_executor_get_zero_initialized_executor();
+    RCCHECK(rclc_executor_init(&executor, &support.context, 1, &allocator));
+    RCCHECK(rclc_executor_add_timer(&executor, &timer));
+
+    //On initialise notre message
+    msg.data.data = (char * ) malloc(ARRAY_LEN * sizeof(char));
+    msg.data.size = 0;
+    msg.data.capacity = ARRAY_LEN;
+
+    //On lance notre executeur
+    rclc_executor_spin(&executor);
+
+    //On assigne notre publisher à notre noeud, et on lance notre
+    //noeud 
+    RCCHECK(rcl_publisher_fini(&publisher, &node))
+    RCCHECK(rcl_node_fini(&node))
+}
+</pre>
+                        </div>
+                    </section>
+
+                    <section id="annexe2">
+                        <h4>Annexe 2 : Code C++ pour le Subscriber</h4>
+                        <p>Revenez <a href="#cmakelist_pub">au bon endroit</a> dans le tuto !</p>
+                        
+                        <div class="code-block">
+<button class="copy-button" onclick="copyCode('code_cmakelist_pub')">Copier</button>
+<pre id="code_cmakelist_pub" class="code-content">
+cmake_minimum_required(VERSION 3.5)
+    
+project(Pub LANGUAGES C)
+
+find_package(ament_cmake REQUIRED)
+find_package(rcl REQUIRED)
+find_package(rclc REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(rmw_microxrcedds REQUIRED)
+
+add_executable(${PROJECT_NAME} main.c)
+
+ament_target_dependencies(${PROJECT_NAME}
+    rcl
+    rclc
+    std_msgs
+    rmw_microxrcedds
+    )
+
+install(TARGETS ${PROJECT_NAME}
+    DESTINATION ${PROJECT_NAME}
+    )
+</pre>
+                        </div>
+                    </section>
+
+
+                    <section id="annexe3">
+                        <h4>Annexe 3 : Code C++ du Subscriber</h4>
+                        <p>Revenez <a href="#main_sub">au bon endroit</a> dans le tuto !</p>
+                        
+                        <div class="code-block">
+<button class="copy-button" onclick="copyCode('code_main_sub')">Copier</button>
+<pre id="code_main_sub" class="code-content">
+    [frame=single,framesep=1.5mm,bgcolor=gray!10]{c}
+    //Installation des bibliothèques
+    #include &lt;rcl/rcl.h&gt;
+    #include &lt;rcl/error_handling.h&gt;
+    #include &lt;rclc/rclc.h&gt;
+    #include &lt;rclc/executor.h&gt;
+    
+    //Bibliothèque de gestion des API en c
+    #include &lt;std_msgs/msg/string.h&gt;
+    //Bibliothèque de String
+    #include &lt;stdio.h&gt;
+    //Bibliothèque de gestion des IO
+     
+    //On définit une variable ARRAY_LEN qui sera la taille maimale
+    // de notre STRING
+    #define ARRAY_LEN 200
+     
+    //On définit nos fonctions RCCHECK et RCSOFTCHECK qui ont pour
+    // objectif de gérer les avertissements et les erreurs
+    #define RCCHECK(fn) { rcl_ret_t temp_rc = fn; if((temp_rc != RCL_RET_OK)){printf("Failed status on line %d: %d. Aborting.\n",__LINE__,(int)temp_rc); return 1;}}
+    #define RCSOFTCHECK(fn) { rcl_ret_t temp_rc = fn; if((temp_rc != RCL_RET_OK)){printf("Failed status on line %d: %d. Continuing.\n",__LINE__,(int)temp_rc);}}
+     
+    //Initialisation du publisher, du message et d'un vecteur de taille 
+    // ARRAY_LEN de aractères
+    rcl_subscription_t subscriber;
+    std_msgs__msg__String msg;
+    char test_array[ARRAY_LEN];
+     
+    //Fonction gérant la réception des messages par le Subscriber en 
+    // affichant le message contenu dedans
+    void subscription_callback(const void * msgin)
+    {
+        const std_msgs__msg__String * msg = (const std_msgs__msg__String *)msgin;
+        printf("Recu : \"%s\"\n", msg-&gt;data.data);
+    }
+     
+    //Fonction principale qui se lance lorce qu'on appelle le programme
+    int main(int argc, const char * const * argv)
+    {
+        //Initialisation du vecteur de caractères
+        memset(test_array,'z',ARRAY_LEN);
+ 
+        //Création de l'allocateur qui gère la mémoire dynamique 
+        //allouée au programme
+        rcl_allocator_t allocator = rcl_get_default_allocator();
+        //Création du support qui va créer le client micro-ros et 
+        //gérer les données
+        rclc_support_t support;
+
+        //Création des options d'initialisations
+        RCCHECK(rclc_support_init(&support, argc, argv, &allocator));
+ 
+        //Création d'un noeud micro-ros
+        rcl_node_t node;
+        RCCHECK(rclc_node_init_default(&node, "My_Node", "", &support));
+ 
+        //Création du Subscriber sur le topic My_Topic
+        RCCHECK(rclc_subscription_init_default(
+                &subscriber,
+                &node,
+                ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, String),
+                "/My_Topic"));
+ 
+        //Création de l'executeur qui est un API gérant les timers et les
+        //souscription à des topics
+        rclc_executor_t executor = rclc_executor_get_zero_initialized_executor();
+        RCCHECK(rclc_executor_init(&executor, &support.context, 1, &allocator));
+        RCCHECK(rclc_executor_add_subscription(&executor, &subscriber, &msg, &subscription_callback, ON_NEW_DATA));
+ 
+        //On initialise notre message
+        msg.data.data = (char * ) malloc(ARRAY_LEN * sizeof(char));
+        msg.data.size = 0;
+        msg.data.capacity = ARRAY_LEN;
+ 
+        //On lance notre executeur
+        rclc_executor_spin(&executor);
+ 
+        //On assigne notre subscriber à notre noeud, et on lance notre
+        //noeud 
+        RCCHECK(rcl_subscription_fini(&subscriber, &node));
+        RCCHECK(rcl_node_fini(&node));
+    }
+</pre>
+                        </div>
+                    </section>
+
+                    <section id="annexe4">
+                        <h4>Annexe 4 : Code Cmakelist pour le Subscriber</h4>
+                        <p>Revenez <a href="#cmakelist_sub">au bon endroit</a> dans le tuto !</p>
+                        
+                        <div class="code-block">
+<button class="copy-button" onclick="copyCode('code_cmakelist_sub')">Copier</button>
+<pre id="code_cmakelist_sub" class="code-content">
+cmake_minimum_required(VERSION 3.5)
+    
+project(Sub LANGUAGES C)
+
+find_package(ament_cmake REQUIRED)
+find_package(rcl REQUIRED)
+find_package(rclc REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(rmw_microxrcedds REQUIRED)
+
+add_executable(${PROJECT_NAME} main.c)
+
+ament_target_dependencies(${PROJECT_NAME}
+    rcl
+    rclc
+    std_msgs
+    rmw_microxrcedds
+    )
+
+install(TARGETS ${PROJECT_NAME}
+    DESTINATION ${PROJECT_NAME}
+    )
+</pre>
+                        </div>
+                    </section>
+                </section>
             </article>
             <!-- Ajoutez d'autres articles pour chaque tutoriel -->
         </section>
