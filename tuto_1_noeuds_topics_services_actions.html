@@ -236,7 +236,7 @@ ros2 run turtlesim turtlesim_node
                             <li>
                                 <p>Plusieurs informations apparaissent dans le terminal :</p>
                                 <ul style="list-style-type: '- ';">
-                                    <li><p>TurtleSim a été démarré avec le nœud "/turtlesim"</p></li>
+                                    <li><p>TurtleSim a été démarré avec le nœud "<code>/turtlesim</code>"</p></li>
                                     <li><p>Une tortue a été créée avec le nom "turtle1"</p></li>
                                     <li><p>Et elle a été placée dans la fenêtre TurtleSim avec les coordonnées x,y et &theta; suivantes : x=5.54 ; y=5,54 et une orientation &theta;=0.00&deg;</p></li>
                                 </ul>
@@ -486,7 +486,7 @@ ros2 run turtlesim turtle_teleop_key
                             </li>
 
                             <li>
-                                <p> Retournez sur la fenêtre rqt_graph et rafraîchissez le graph. Vous allez obtenir ceci :</p>
+                                <p> Retournez sur la fenêtre <code>rqt_graph</code> et rafraîchissez le graph. Vous allez obtenir ceci :</p>
                                 <img src="images/tuto_1/section4/rqt_graph_turtle1_teleop.png" width="500px">
                                 
                             </li>
@@ -782,7 +782,7 @@ ros2 run turtlesim turtlesim_node
                                 <img src="images/tuto_1/section7/0 teleop_touches_absolute.png" width="500px">
                                 <p>La deuxième ligne correspond aux actions que l'on peut demander à la tortue de TurtleSim. (La première ligne correspond à l'utilisation des flèches pour piloter la tortue avec le topic "cmd_vel", abordé précédemment dans les tutoriels).</p>
                                 <p>On remarque que les touches G|B|V|C|D|E|R|T forment un "carré" autour de la touche F sur votre clavier. La position de chaque touche autour de F correspond à cette orientation dans la fenêtre TurtleSim. Par exemple, le E fera pivoter l'orientation de la tortue vers le coin supérieur gauche.</p>
-                                <p>Prêtez attention au terminal où le nœud /turtlesim est exécuté. Chaque fois que vous appuierez sur l'une de ces touches, vous enverrez un objectif à un serveur d'action qui fait partie du nœud /turtlesim. L'objectif est de faire tourner la tortue dans une direction précise.</p>
+                                <p>Prêtez attention au terminal où le nœud <code>/turtlesim</code> est exécuté. Chaque fois que vous appuierez sur l'une de ces touches, vous enverrez un objectif à un serveur d'action qui fait partie du nœud <code>/turtlesim</code>. L'objectif est de faire tourner la tortue dans une direction précise.</p>
                             </li>
 
                             <li>
@@ -799,16 +799,16 @@ ros2 run turtlesim turtlesim_node
 
                             <li>
                                 <p>Appuyer, par exemple sur la touche 'C',  pour faire tourner la tortue vers une coin inférieur gauche, puis sur la touche 'F' avant que la tortue ne termine sa rotation.
-                                    Dans le terminal où le nœud /turtlesim est exécuté, vous verrez le message suivant :
+                                    Dans le terminal où le nœud <code>/turtlesim</code> est exécuté, vous verrez le message suivant :
                                 </p>
                                 <img src="images/tuto_1/section7/4 cancel_goal.png" width="450px">
-                                <p>Non seulement le côté client (votre entrée dans le teleop_key ) peut arrêter un objectif, mais le côté serveur (le noeud /turtlesim) le peut également. 
+                                <p>Non seulement le côté client (votre entrée dans le teleop_key ) peut arrêter un objectif, mais le côté serveur (le noeud <code>/turtlesim</code>) le peut également. 
                                     Lorsque le serveur décide d'arrêter le traitement d'un objectif, on dit qu'il "abandonne" l'objectif.
                                 </p>
                             </li>
 
                             <li>
-                                <p>Essayez d'appuyer sur la touche 'T', puis sur la touche 'G' avant que la première rotation ne soit terminée. Dans le terminal où le nœud /turtlesim est exécuté, vous verrez le message suivant :</p>
+                                <p>Essayez d'appuyer sur la touche 'T', puis sur la touche 'G' avant que la première rotation ne soit terminée. Dans le terminal où le nœud <code>/turtlesim</code> est exécuté, vous verrez le message suivant :</p>
                                 <img src="images/tuto_1/section7/5 rotation goal received before a previous goal.png" width="500px">
                                 <p>On remarque, sur la fenêtre TurtleSim, que la rotation vers 'T' (coin supérieur droit) a été annulée et a été remplacée par une rotation vers l'orientation de 'G' (droite).</p>
                             </li>
@@ -828,13 +828,13 @@ ros2 node info /turtlesim
 </pre>
                                 </div>
                                 <img src="images/tuto_1/section7/6 ros2 node info.png" width="280px">
-                                <p>Cette commande renvoie une liste des "Subscribers", des "Publishers", des "Services", des "serveurs d'actions" et des "clients d'actions" de /turtlesim :</p>
+                                <p>Cette commande renvoie une liste des "Subscribers", des "Publishers", des "Services", des "serveurs d'actions" et des "clients d'actions" de <code>/turtlesim</code> :</p>
                                 <img src="images/tuto_1/section7/7 ros2 node info results.png" width="550px">
-                                <p>On remarque que le nœud /turtlesim est un serveur de l'action /turtle1/rotate_absolute. C'est-à-dire qu'il peut recevoir des actions à effectuer et qu'il renvoie aussi des données au client.</p>
+                                <p>On remarque que le nœud <code>/turtlesim</code> est un serveur de l'action <code>/turtle1/rotate_absolute</code>. C'est-à-dire qu'il peut recevoir des actions à effectuer et qu'il renvoie aussi des données au client.</p>
                             </li>
 
                             <li>
-                                <p>Utilisez et modifiez la commande précédente pour trouver les informations du noeud /teleop_turtle :</p>
+                                <p>Utilisez et modifiez la commande précédente pour trouver les informations du noeud <code>/teleop_turtle</code> :</p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code17.1')">Copier</button>
 <pre id="code17.1" class="code-content">
@@ -842,7 +842,7 @@ ros2 node info /teleop_turtle
 </pre>
                                 </div>
                                 <img src="images/tuto_1/section7/8 ros2 node info teleop.png" width="550px">
-                                <p>On remarque que le nœud /teleop_turtle est un client de l'action /turtle1/rotate_absolute. C'est-à-dire qu'il peut envoyer actions que le serveur doit effectuer et il peut recevoir des données de la part du serveur.</p>
+                                <p>On remarque que le nœud <code>/teleop_turtle</code> est un client de l'action <code>/turtle1/rotate_absolute</code>. C'est-à-dire qu'il peut envoyer actions que le serveur doit effectuer et il peut recevoir des données de la part du serveur.</p>
                             </li>
                         </ol>
                     </section>
@@ -873,13 +873,13 @@ ros2 action list -t
 </pre>
                                 </div>
                                 <img src="images/tuto_1/section7/11 actions list result type.png" width="400px">
-                                <p>Entre crochets à droite de chaque nom d'action (dans notre cas, uniquement pour l'action /turtle1/rotate_absolute) se trouve le type d'action, 
+                                <p>Entre crochets à droite de chaque nom d'action (dans notre cas, uniquement pour l'action <code>/turtle1/rotate_absolute</code>) se trouve le type d'action, 
                                     turtlesim/action/RotateAbsolute. Vous en aurez besoin lorsque vous voudrez exécuter une action à partir de la ligne de commande ou du code.
                                 </p>
                             </li>
 
                             <li>
-                                <p>Tapez la commande suivante dans le second terminal pour Vous pouvez analyser l'action /turtle1/rotate_absolute : </p>
+                                <p>Tapez la commande suivante dans le second terminal pour pouvoir analyser l'action <code>/turtle1/rotate_absolute</code> : </p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code20')">Copier</button>
 <pre id="code20" class="code-content">
@@ -889,21 +889,21 @@ ros2 action info /turtle1/rotate_absolute
                                 <img src="images/tuto_1/section7/12 action info.png" width="380px">
                                 <p>Vous obtiendrez dans le terminal les informations de cette action :</p>
                                 <img src="images/tuto_1/section7/13 action info res.png" width="380px">
-                                <p>Cela nous indique ce que nous avons appris plus tôt en exécutant ros2 node info sur chaque nœud : Le noeud /teleop_turtle est un client d'action et le noeud /turtlesim est un serveur d'action pour l'action /turtle1/rotate_absolute</p>
+                                <p>Cela nous indique ce que nous avons appris plus tôt en exécutant ros2 node info sur chaque nœud : Le noeud <code>/teleop_turtle</code> est un client d'action et le noeud <code>/turtlesim</code> est un serveur d'action pour l'action <code>/turtle1/rotate_absolute</code></p>
                             </li>
                         </ol>
                     </section>
 
                     <section id="subsection7-4">
-                        <h4>Visualisation de l'action /turtle1/rotate_absolute avec rqt_graph</h4>
+                        <h4>Visualisation de l'action <code>/turtle1/rotate_absolute</code> avec <code>rqt_graph</code></h4>
                         
                         <ol>
-                            <li><p>Tapez la commande pour ouvrir rqt_graph, toujours dans le second terminal (Voir la section <a href="#rqt_graph">Visualisation des nœuds et topics avec rqt graph 1.</a>).</p></li>
-                            <li><p>Faites les réglages, concernant les cases à cocher ou à décocher dans rqt_graph (Voir la section <a href="#rqt_graph">Visualisation des nœuds et topics avec rqt graph 1.</a>).</p></li>
+                            <li><p>Tapez la commande pour ouvrir <code>rqt_graph</code>, toujours dans le second terminal (Voir la section <a href="#rqt_graph">Visualisation des nœuds et topics avec rqt graph 1.</a>).</p></li>
+                            <li><p>Faites les réglages, concernant les cases à cocher ou à décocher dans <code>rqt_graph</code> (Voir la section <a href="#rqt_graph">Visualisation des nœuds et topics avec rqt graph 1.</a>).</p></li>
                             <li>
-                                <p>Comme TurtleSim et la télécommande teleop_key sont lancés, les nœuds /turtlesim et /teleop_turtle le sont aussi. Vous obtiendrez :</p>
+                                <p>Comme TurtleSim et la télécommande teleop_key sont lancés, les nœuds <code>/turtlesim</code> et <code>/teleop_turtle</code> le sont aussi. Vous obtiendrez :</p>
                                 <img src="images/tuto_1/section7/14 rqt_graph.png" width="450px">
-                                <p>Vous pouvez constater que l'action /turtle1/rotate_absolute peut recevoir des données du nœud /turtlesim (serveur de l'action) et que le nœud /teleop_turtle peut recevoir des données de cette action (client de l'action).</p>
+                                <p>Vous pouvez constater que l'action <code>/turtle1/rotate_absolute</code> peut recevoir des données du nœud <code>/turtlesim</code> (serveur de l'action) et que le nœud <code>/teleop_turtle</code> peut recevoir des données de cette action (client de l'action).</p>
                             </li>
                         </ol>
                     </section>
@@ -917,6 +917,12 @@ ros2 action info /turtle1/rotate_absolute
                         <ol>
                             <li>
                                 <p>Entrez la commande suivante pour déterminer la structure de ce type d'action :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code20.1')">Copier</button>
+<pre id="code20.1" class="code-content">
+ros2 interface show turtlesim/action/RotateAbsolute
+</pre>
+                              </div>
                                 <img src="images/tuto_1/section7/15 interface show.png" width="450px">
                                 <p>Vous obtiendrez dans le terminal :</p>
                                 <img src="images/tuto_1/section7/16 interface show res.png" width="450px">
@@ -948,6 +954,12 @@ ros2 action info /turtle1/rotate_absolute
 
                             <li>
                                 <p>Gardez un oeil sur la fenêtre TurtleSim, et entrez la commande suivante dans votre terminal :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code20.2')">Copier</button>
+<pre id="code20.2" class="code-content">
+ros2 action send_goal /turtle1/rotate_absolute turtlesim/action/RotateAbsolute "{theta: 1.57}"
+</pre>
+                                </div>
                                 <img src="images/tuto_1/section7/17 send_goal.png" width="450px">
                                 <p>Votre tortue, dans la fenêtre TurtleSim, va tourner. Vous obtiendrez cette réponse :</p>
                                 <img src="images/tuto_1/section7/18 send_goal_res.png" width="450px">
@@ -960,6 +972,12 @@ ros2 action info /turtle1/rotate_absolute
                                 <p>Ajoutez le paramètre "--feedback" à la commande ros2 action send_goal, pour voir le feedback d'un objectif. 
                                     Changez la valeur de theta, par exemple <i>&theta;=-1.57</i> et n'oubliez pas d'ajouter le paramètre "--feedback" :
                                 </p>    
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code20.3')">Copier</button>
+<pre id="code20.3" class="code-content">
+ros2 action send_goal /turtle1/rotate_absolute turtlesim/action/RotateAbsolute "{theta: -1.57}" --feedback
+</pre>
+                                </div>
                                 <img src="images/tuto_1/section7/19 send_goal_feedback.png" width="450px">
                                 <p>Votre terminal vous renvoie le message :</p>
                                 <div> 
@@ -972,7 +990,7 @@ ros2 action info /turtle1/rotate_absolute
                         </ol>
                         
                         <p>Un système robotique utilisera probablement des actions pour la navigation. Un objectif d'action pourrait indiquer à un robot de se rendre à une position. Pendant que le robot navigue vers la position, il peut envoyer des mises à jour en cours de route (c'est-à-dire un retour d'information), puis un message de résultat final une fois qu'il à atteint sa destination.</p>
-                        <p>TurtleSim dispose d'un serveur d'action auquel les clients d'action peuvent envoyer des objectifs pour faire bouger les tortues. Dans ce tutoriel, vous avez étudié cette action, /turtle1/rotate_absolute, pour avoir une meilleure idée de ce que sont les actions et comment elles fonctionnent.</p>
+                        <p>TurtleSim dispose d'un serveur d'action auquel les clients d'action peuvent envoyer des objectifs pour faire bouger les tortues. Dans ce tutoriel, vous avez étudié cette action, <code>/turtle1/rotate_absolute</code>, pour avoir une meilleure idée de ce que sont les actions et comment elles fonctionnent.</p>
                     </section>
 
                 </section>
