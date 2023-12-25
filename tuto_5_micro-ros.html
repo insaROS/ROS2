@@ -251,32 +251,192 @@ sudo nano CMakeLists.txt
 
                     <section id="subsection2-5">
                         <h4>Ajout de nos deux programmes dans le registre des exécutables micro-ROS</h4>
-                        <p>Contenu du tutoriel en construction...</p>
+                        <ol>
+                            <li>
+                                <p>Ajoutez les deux applications dans la liste des applications exécutables par micro-ROS. Pour cela, nous allons ouvrir le fichier CMakeLists.txt du dossier « rclc ». Nous pouvons retourner dans le dossier « rclc » avec la commande suivante :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code11')">Copier</button>
+<pre id="code11" class="code-content">
+cd ..
+</pre>
+                                </div>
+                            </li>
+
+                            <li>
+                                <p>Utilisez la commande suivante pour modifier le fichier CMakelist du répertoire "rclc" :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code12')">Copier</button>
+<pre id="code12" class="code-content">
+sudo nano CMakeLists.txt
+</pre>
+                               </div>
+                            </li>
+
+                            <li>
+                                <p>Dans ce fichier, il y a un moment une longue liste d'export de fichiers exécutables présentés comme suit : </p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code13')">Copier</button>
+<pre id="code13" class="code-content">
+export_executable(&lt;App&gt;)
+</pre>
+                                </div>
+                            </li>
+
+                            <li>
+                                <p>Nous allons alors ajouter nos deux applications à la suite :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code14')">Copier</button>
+<pre id="code14" class="code-content">
+export_executable(Pub)
+export_executable(Sub)
+</pre>
+                                </div>
+                            </li>
+
+                            <li>
+                                <p>Vous aurez donc :</p>
+                                <img src="images/tuto_5/section2/cmakelist txt ajout app.png" width="400px">
+                                <p>Tout est alors mis en place pour que nos programmes fonctionnent et nous pouvons passer à la suite.</p>
+                            </li>
+                        </ol>
 
                     </section>
 
                     <section id="subsection2-6">
                         <h4>Mise en place du firmware</h4>
-                        <p>Contenu du tutoriel en construction...</p>
+                        <p>Nous allons mettre en place notre firmware afin qu'il prenne en compte nos deux nouvelles applications. Pour cela nous allons retourner dans le workspace microros_linux_ws, puis nous allons utiliser la commande pour mettre en place notre firmware. Nous allons ensuite sourcer à nouveau notre installation locale pour qu'il prenne en compte ces changements.</p>
+                        <ol>
+                            <li>
+                                <p>Tapez les commandes :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code15')">Copier</button>
+<pre id="code15" class="code-content">
+cd ~/microros_linux_ws
+ros2 run micro_ros_setup build_firmware.sh
+source install/local_setup.bash
+</pre>
+                                </div>
+                            
+                                <p>Une fois cette étape réalisée, nous pouvons passer à la création et à la mise en place de l'agent micro-ROS qui remplace le stack ROS comme expliqué dans l'introduction. </p>
+                            </li>
+                        </ol>
 
                     </section>
 
                     <section id="subsection2-7">
                         <h4>Création, mise en place et lancement d'un agent micro-ROS</h4>
-                        <p>Contenu du tutoriel en construction...</p>
+                        <ol>
+                            <li>
+                                <p>Afin de permettre à notre application micro-ROS de communiquer avec ROS2, nous devons créer un agent qui nous servira de passerelle. Une fois cet agent créé, nous allons le mettre en place puis re-sourcer notre installation locale pour que l'agent soit pris en compte :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code16')">Copier</button>
+<pre id="code16" class="code-content">
+ros2 run micro_ros_setup create_agent_ws.sh
+</pre>
+                                </div>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code17')">Copier</button>
+<pre id="code17" class="code-content">
+ros2 run micro_ros_setup build_agent.sh
+</pre>
+                                </div>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code18')">Copier</button>
+<pre id="code18" class="code-content">
+source install/local_setup.bash
+</pre>
+                                </div>
 
+                            </li>
+
+                            <li>
+                                <p>Une fois l'agent mis en place, nous allons pouvoir le lancer. Comme il remplace le stack, il faut le considérer comme un « roscore » pour micro-ROS, c'est-à-dire que le terminal dans lequel il sera lancé devra continuer à tourner pour que l'application micro-ROS soit fonctionnelle. Pour le lancer, il faut choisir un port de l'ordinateur sur lequel utiliser l'agent. Dans ce cas, nous allons le mettre en place sur le port 8888 qui fonctionne en UDP. La commande est alors la suivante : </p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code18')">Copier</button>
+<pre id="code18" class="code-content">
+ros2 run micro_ros_agent micro_ros_agent udp4 --port 8888
+</pre>
+                                </div>
+                        
+                                <p>L'agent est alors lancé et le terminal doit ressembler à celui-ci :</p>
+                                <img src="images/tuto_5/section2/agent lancé.png" width="400px">
+                            </li>
+                        </ol>
                     </section>
 
                     <section id="subsection2-8">
                         <h4>Lancement du Publisher et du Subscriber</h4>
-                        <p>Contenu du tutoriel en construction...</p>
+                        <ol>
+                            <li>
+                                <p>Notre agent mis en place, nous pouvons à présent lancer notre Publisher. Pour cela, nous allons retourner dans notre dossier microros\_linux\_ws, sourcer l'installation locale et utiliser une implémentation de notre middleware semblable à celle d'un microcontrôleur connecté en DDS (Nous émulons un microcontrôleur à l'aide de notre terminal). Afin de réaliser ceci, ouvrez un nouveau terminal avec ctrl+alt+T et entrez les commandes suivantes : </p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code19')">Copier</button>
+<pre id="code19" class="code-content">
+cd microros_linux_ws
+source install/local_setup.bash
+export RMW_IMPLEMENTATION=rmw_microxrcedds
+</pre>
+                                </div>
+                            </li>
+
+                            <li>
+                                <p>Maintenant que tout est en place, nous pouvons simplement lancer notre Publisher avec une simple commande ros2 run comme suit : </p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code20')">Copier</button>
+<pre id="code20" class="code-content">
+ros2 run micro_ros_demos_rclc Pub
+</pre>
+                                </div>
+                                <p>Le programme devrait donc afficher qu'il publie « Hello Wold !!! » :</p>
+                                <img src="images/tuto_5/section2/terminal pub hello world.png" width="400px">
+                            </li>
+
+                            <li>
+                                <p>Nous allons ouvrir un nouveau terminal, et utiliser le même modèle que ci-dessus pour lancer notre Subscriber : </p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code21')">Copier</button>
+<pre id="code21" class="code-content">
+cd microros_linux_ws
+source install/local_setup.bash
+export RMW_IMPLEMENTATION=rmw_microxrcedds
+</pre>
+                                </div>
+                            </li>
+
+                            <li>
+                                <p>Puis, nous allons lancer le Subscriber :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code22')">Copier</button>
+<pre id="code22" class="code-content">
+ros2 run micro_ros_demos_rclc Sub
+</pre>
+                                </div>
+                                <p>Le Subscriber va alors commencer à recevoir les messages du Publisher, et le terminal devrait afficher ceci :</p>
+                                <img src="images/tuto_5/section2/terminal sub hello world.png" width="400px">
+                            </li>
+                        </ol>
 
                     </section>
 
                     <section id="subsection2-9">
                         <h4>Observation du nœud et du topic avec rqt_graph</h4>
-                        <p>Contenu du tutoriel en construction...</p>
-
+                        <p>Afin de vérifier que tout fonctionne comme prévu dans nos programmes, nous voulons vérifier que les messages transitent bien par le topic My_Topic créé dans nos programmes, et connecté au nœud My_Node que nous créons auparavant dans ceci. Pour cela, nous pouvons utiliser « rqt_graph » simplement avec la commande :</p>
+                        <ol>
+                            <li>
+                                <p>Tapez la commande pour ouvrir rqt_graph :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code23')">Copier</button>
+<pre id="code23" class="code-content">
+rqt_graph
+</pre>
+                                </div>
+                            </li>
+                            <li>
+                                <p>Après avoir réglé rqt_graph afin de voir les nœuds et les topics (cocher et décocher les bonnes cases), nous observons bien ceci :</p>
+                                <img src="images/tuto_5/section2/rqt_graph.png" width="400px">
+                            </li>
+                        </ol>
+                        <p>Cette partie de tutoriel, montrant comment créer une application micro-ROS avec une communication Publisher-Subscriber sur un Topic, est donc terminé.</p>
                     </section>
                 </section>
 
