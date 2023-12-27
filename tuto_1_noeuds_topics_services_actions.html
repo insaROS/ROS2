@@ -1162,11 +1162,23 @@ ros2 interface show std_srvs/srv/Empty
 
                             <li>
                                 <p>Trouvez le type du service /spawn. Vous trouverez :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code28.0')">Copier</button>
+<pre id="code28.0" class="code-content">
+ros2 service type /spawn
+</pre>
+                                </div>
                                 <img src="images/tuto_1/section8/spawn type.png" width="125px">
                             </li>
 
                             <li>
                                 <p>Trouvez ensuite la structure du type du service /spawn avec la commande :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code28.1')">Copier</button>
+<pre id="code28.1" class="code-content">
+ros2 interface show turtlesim/srv/Spawn
+</pre>
+                                </div>
                                 <img src="images/tuto_1/section8/interface show spawn.png" width="500px">
                                 <p>Les informations au-dessus de la ligne - - - nous indiquent les arguments nécessaires pour appeler /spawn. 
                                     x, y et &theta; déterminent la pose 2D de la tortue engendrée, et name est clairement optionnel.
@@ -1200,6 +1212,12 @@ ros2 service call &lt;service_name&gt; &lt;service_type&gt; &lt;arguments&gt;
 
                             <li>
                                 <p>Tapez la commande suivante pour supprimer le tracé de la tortue :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code29.1')">Copier</button>
+<pre id="code29.1" class="code-content">
+ros2 service call /clear std_srvs/srv/Empty
+</pre>
+                               </div>
                                 <img src="images/tuto_1/section8/clear commande call.png" width="350px">
                                 <p>Vous pourrez voir le changement suivant dans la fenêtre TurtleSim :</p>
                                 <div>
