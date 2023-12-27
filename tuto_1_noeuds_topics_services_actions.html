@@ -947,7 +947,7 @@ ros2 interface show turtlesim/action/RotateAbsolute
                                 <p>Observez la structure d'une commande pour envoyer un objectif à une action :</p>
                                 <div class="code-block" style="background-color: lightgrey;">
 <pre id="code21" class="code-content">
-    ros2 action send_goal &lt;action_name&gt; &lt;action_type&gt; &lt;values&gt;
+ros2 action send_goal &lt;action_name&gt; &lt;action_type&gt; &lt;values&gt;
 </pre>
                                 </div>
                             </li>
@@ -1020,12 +1020,30 @@ ros2 service list
 
                             <li>
                                 <p>Tapez à nouveau la commande pour avoir la liste des services actifs :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code22.1')">Copier</button>
+<pre id="code22.1" class="code-content">
+ros2 service list
+</pre>
+                                </div>
                                 <img src="images/tuto_1/section8/service list turtlesim.png" width="275px">
-                                Comme vous pouvez le voir, tous les services liés au noeud turtlesim et à la /turtle1 sont visibles, donc actifs.
+                                <p>Comme vous pouvez le voir, tous les services liés au noeud turtlesim et à la /turtle1 sont visibles, donc actifs.</p>
                             </li>
 
                             <li>
-                                <p>Tapez la commande pour lancer la télécommande dans le second terminal et tapez à nouveau la commande pour avoir la liste des services actifs. Vous obtiendrez la liste de services actifs suivants :</p>
+                                <p>Tapez la commande pour lancer la télécommande dans le second terminal et tapez à nouveau la commande pour avoir la liste des services actifs dans le premier terminal. Vous obtiendrez la liste de services actifs suivants :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code22.2')">Copier</button>
+<pre id="code22.2" class="code-content">
+ros2 run turtlesim turtle_teleop_key
+</pre>
+                                </div>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code22.3')">Copier</button>
+<pre id="code22.3" class="code-content">
+ros2 service list
+</pre>
+                                </div>
                                 <img src="images/tuto_1/section8/service list turtlesim teleop.png" width="275px">
                                 <p>Vous verrez que les deux nœuds ont six services identiques avec des paramètres dans leurs noms. Presque tous les nœuds de ROS 2 ont ces services d'infrastructure à partir desquels les paramètres sont construits.</p>
                             </li>
@@ -1053,7 +1071,7 @@ ros2 service type &lt;service_name&gt;
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code24')">Copier</button>
 <pre id="code24" class="code-content">
-ros2 service /clear
+ros2 service type /clear
 </pre>
                                 </div>
                                 <img src="images/tuto_1/section8/service type clear.png" width="250px">
@@ -1065,6 +1083,12 @@ ros2 service /clear
 
                             <li>
                                 <p>Tapez la commande suivante, pour directement avoir la liste des services actifs et leur type respectif :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code24.1')">Copier</button>
+<pre id="code24.1" class="code-content">
+ros2 service list -t
+</pre>
+                                </div>
                                 <img src="images/tuto_1/section8/service list -t.png" width="500px">
                             </li>
 
@@ -1088,7 +1112,7 @@ ros2 service find &lt;type_name&gt;
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code26')">Copier</button>
 <pre id="code26" class="code-content">
-ros2 service /clear
+ros2 service find std_srvs/srv/Empty
 </pre>
                                 </div>
                                 <img src="images/tuto_1/section8/service find cmd.png" width="325px">
@@ -1116,7 +1140,7 @@ ros2 interface show &lt;type_name&gt;
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code28')">Copier</button>
 <pre id="code28" class="code-content">
-ros2 service /clear
+ros2 service show /Empty
 </pre>
                                 </div>
                                 <p>Le terminal ne vous renvoie rien et c'est normal car ce type de service est Empty. 
