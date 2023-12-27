@@ -1016,7 +1016,15 @@ ros2 service list
                                 <p>Le terminal ne vous renvoie rien. Est-ce normal ? Oui, car aucun noeud n'a encore été lancé et donc aucun service n'est disponible!</p>
                             </li>
 
-                            <li><p>Lancez TurtleSim en arrière plan dans un second terminal (Voir cette <a href="#turtlesim_arr_p">section</a>)</p></li>
+                            <li>
+                                <p>Lancez TurtleSim en arrière plan dans un second terminal </p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code22.0')">Copier</button>
+<pre id="code22.0" class="code-content">
+ros2 run turtlesim turtlesim_node &
+</pre>
+                                </div>
+                            </li>
 
                             <li>
                                 <p>Tapez à nouveau la commande pour avoir la liste des services actifs :</p>
@@ -1056,7 +1064,10 @@ ros2 service list
                         <h4>Trouver le type d'un service</h4>
                         <p>Les services ont des types qui décrivent comment les données de demande et de réponse d'un service sont structurées. Les types de service sont définis de la même manière que les types de topics, sauf que les types de service ont deux parties : un message pour la demande et un autre pour la réponse.</p>
                     
-                        <ol>
+                        <ol start="0">
+                            <li>
+                                <p>TurtleSim et la télécommande doivent rester actives pour cette section !</p>
+                            </li>
                             <li>
                                 <p>Observez la structure d'une commande pour trouver le type d'un service :</p>
                                 <div class="code-block" style="background-color: lightgrey;">
@@ -1140,7 +1151,7 @@ ros2 interface show &lt;type_name&gt;
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code28')">Copier</button>
 <pre id="code28" class="code-content">
-ros2 service show /Empty
+ros2 interface show std_srvs/srv/Empty
 </pre>
                                 </div>
                                 <p>Le terminal ne vous renvoie rien et c'est normal car ce type de service est Empty. 
