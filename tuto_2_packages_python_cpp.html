@@ -64,7 +64,7 @@
                 <section id="section1">
                     <h3>Introduction</h3>
                     <p>Ce second tutoriel a pour but de comprendre plus en profondeur ce que sont les Publishers et les Subscribers. 
-                        Notamment, de mettre en place une communication entre un Publisher et un Subscriber en utilisant le langage de programmation Python et CMake (C++). 
+                        Notamment, de mettre en place une communication entre un Publisher et un Subscriber en utilisant le langage de programmation Python et CMake (<code>C++</code>). 
                         Nous allons donc d'abord nous intéresser à ce que sont Python et CMake.
                     </p>
 
@@ -82,7 +82,7 @@
                                 <strong>CMake</strong> : CMake est un système de construction logicielle multiplateforme. Il facilite grandement la création de projet, en vérifiant 
                                 les prérequis nécessaires à leur création, et en déterminant les dépendances entre les différents composants d'un même projet. <br>
                                 On va alors pouvoir créer plusieurs packages qui servent à informer CMake des différentes dépendances, et ensuite utiliser des programmes écris avec 
-                                un langage de programmation supporté par CMake (C++ par exemple) dans chacun de ces packages. Cela, afin de créer un projet fonctionnel dont chaque partie 
+                                un langage de programmation supporté par CMake (<code>C++</code> par exemple) dans chacun de ces packages. Cela, afin de créer un projet fonctionnel dont chaque partie 
                                 est indépendamment géré par le système de construction. Il est alors plus facile de gérer et corriger des erreurs si elles apparaissent. 
                             </p>
 
@@ -93,24 +93,31 @@
                 <section id="section2">
                     <h3>Créer un workspace ROS2</h3>
 
-                    <p>Un workspace est simplement un dossier qui contient des packages pour ROS 2. Avant d'utiliser ROS 2, vous devez sourcer les fichiers setup de ROS2 dans votre terminal. 
+                    <p>Un workspace est simplement un dossier qui contient des packages pour ROS2. Avant d'utiliser ROS2, vous devez sourcer les fichiers setup de ROS2 dans votre terminal. 
                         Cela se fait automatiquement car le fichier .bashrc contient les informations nécessaires. Cela rend les différentes fonctions de ros2 disponibles pour une utilisation dans ce terminal . 
                         Cette source de ROS2 agit comme un "<strong>underlay</strong>" qui permet d'utiliser les fonctionnalités de ROS2.
                     </p>
                     
-                    <p>Vous pouvez aussi sourcer un "<strong>overlay</strong>" - un espace de travail supplémentaire où vous pouvez ajouter de nouveaux packages, que vous avez créés ou non, sans perturber votre espace de travail ROS 2 actuel. 
-                        Votre sous-couche (l'overlay) doit contenir les dépendances de tous les packages de votre "overlay". <br>
-                        Les packages de votre "overlay" auront la priorité sur ceux de la sous-couche (c'est à dire que si vous avez un package qui modifie TurtleSim dans votre workspace et que vous sourcez l'overlay ; si vous lancez 
-                        TurtleSim vous aurez alors sa version modifiée). Vous pouvez également avoir plusieurs couches de sous-couches et d'"overlays", et chaque "overlay" suivant utilise les packages de ses sous-couches parentes.
+                    <p>Vous pouvez aussi sourcer un "<strong>overlay</strong>" - un espace de travail supplémentaire où vous pouvez ajouter de nouveaux packages, que vous avez créés ou non, sans perturber votre espace de travail ROS2 actuel. 
+                        Votre sous-couche (l'overlay) doit contenir les dépendances de tous les packages de votre overlay. <br>
+                        Les packages de votre overlay auront la priorité sur ceux de la sous-couche (c'est à dire que si vous avez un package qui modifie TurtleSim dans votre workspace et que vous sourcez l'overlay ; si vous lancez 
+                        TurtleSim vous aurez alors sa version modifiée). Vous pouvez également avoir plusieurs couches de sous-couches et d'overlays, et chaque overlay suivant utilise les packages de ses sous-couches parentes.
                     </p>
                     <section id="subsection2-1">
                         <h4>Mise de la source dans fichier ~/.bashrc</h4>
                         <p>Cette partie consiste à ce que la source de ROS2, "l'underlay" soit ajouté automatiquement pour chaque nouveau terminal que vous ouvrez. Pour ce faire suivez les instructions suivantes :</p>
                     
                         <ol>
-                            <li><p>Ouvrez un terminal avec "<i>ctrl+alt+T</i>", puis modifier le fichier ".bashrc" avec la commande suivante puis tapez votre mot de passe :</p>
+                            <li><p>Ouvrez un terminal avec <code>ctrl+alt+T</code>, puis modifier le fichier <code>.bashrc</code> avec la commande suivante puis tapez votre mot de passe :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code0')">Copier</button>
+<pre id="code0" class="code-content">
+cd ~
+sudo nano .bashrc
+</pre>
+                                </div>
                                 <img src="images/tuto_2/section2/sudo_nano_bashrc.png" width="200px">
-                                <p>La ligne de commande à été expliquée dans le <strong>Tutoriel ROS2 : Partie 1</strong></p>
+                                <p>La ligne de commande à été expliquée dans le tutoriel : <a href="/ROS2/tuto_1_noeuds_topics_services_actions.html">Noeuds, Topics, Services et Actions</a></p>
                             </li>
 
                             <li><p>Indiquer le chemin du fichier setup de ROS2. Voici la ligne de code que vous avez à mettre à la fin de ce fichier :</p>
@@ -122,7 +129,7 @@ source /opt/ros/humble/setup.bash
                                 </div>
                                 <p>Ajoutez le chemin du fichier setup de ROS2 à la fin de ce fichier et vous devriez obtenir :</p>
                                 <img src="images/tuto_2/section2/bashrc.png" width="450px">
-                                <p>Sauvegardez et quittez le fichier avec "Ctrl + O", "Entrer" et ensuite "Crtl + X".</p>
+                                <p>Sauvegardez et quittez le fichier avec <code>ctrl+O</code>, <code>Entrer</code> et ensuite <code>ctrl+X</code>.</p>
                                 <p>La source du fichier setup.bash de ROS2 correspond à l'underlay de notre espace de travail. Par la suite nous ajouterons un overlay pour pouvoir utiliser nos propres packages.</p>
                             </li>
                         </ol>
@@ -149,16 +156,16 @@ mkdir ~/ros2_ws/src/
                                     <li><p><strong>~/ros2_ws/src</strong> : définit un chemin de répertoire et sous répertoire.</p></li>
                                 </ul>
 
-                                <p>Donc la commande suivante permet de créer le répertoire de notre workspace ainsi qu'un sous répertoire src :</p>
+                                <p>Donc la commande suivante permet de créer le répertoire de notre workspace ainsi qu'un sous répertoire <code>src</code> :</p>
                                 <div class="code-block" style="background-color: lightgrey;">
 <pre id="code3" class="code-content">
 mkdir ~/ros2_ws/src/
 </pre>
                                 </div>
-                                <p>Une autre bonne pratique consiste à placer tous les packages de votre espace de travail dans le répertoire src.</p>
+                                <p>Une autre bonne pratique consiste à placer tous les packages de votre espace de travail dans le répertoire <code>src</code>.</p>
                             </li>
 
-                            <li><p>Déplacez vous dans le répertoire src de votre workspace. Pour ce faire tapez la commande :</p>
+                            <li><p>Déplacez vous dans le répertoire <code>src</code> de votre workspace. Pour ce faire tapez la commande :</p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code3.1')">Copier</button>
 <pre id="code3.1" class="code-content">
@@ -169,7 +176,7 @@ cd ~/ros2_ws/src/
                             </li>
 
                             <li>
-                                <p>Vous pouvez utiliser la commande "<i>ls</i>" pour voir les fichiers dans le sous-répertoire src.</p>
+                                <p>Vous pouvez utiliser la commande <code>ls</code> pour voir les fichiers dans le sous-répertoire <code>src</code>.</p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code4')">Copier</button>
 <pre id="code4" class="code-content">
@@ -182,7 +189,7 @@ ls
 
                             <li>
                                 <p>Revenez dans la racine de votre workspace pour la suite du tutoriel (ie. revenez dans le répertoire <code>~/ros2_ws/</code>).</p>
-                                <p id="sub_sec:cd arriere">Vous avez le choix entre deux méthodes pour faire ceci avec la commande cd (cd => change directory):</p>
+                                <p id="sub_sec:cd arriere">Vous avez le choix entre deux méthodes pour faire ceci avec la commande cd (<code>cd</code> => change directory):</p>
                                 <ul style="list-style-type: '- ';">
                                     <li>
                                         <p>Première méthode (permet de chosir le chemin précis où vous souhaitez vous rendre) :</p>
@@ -211,22 +218,22 @@ cd ..
                             </li>
 
                             <li>
-                                <p> Tapez la commande <code>ls</code> pour voir ce que contient votre workspace. Vous pourrez voir qu'il ne contient que votre sous répertoire src qui lui est vide pour le moment.</p>
+                                <p> Tapez la commande <code>ls</code> pour voir ce que contient votre workspace. Vous pourrez voir qu'il ne contient que votre sous répertoire <code>src</code> qui lui est vide pour le moment.</p>
                             </li>
                         </ol>
                     </section>
 
                     <section id="subsection2-3">
                         <h4>Construire votre workspace avec colcon</h4>
-                        <p>Ceci est un mini tutoriel sur la façon de construire un workspace ROS 2 avec colcon. Un workspace ROS2 est 
-                            un répertoire avec une structure particulière. En général, il y a un sous-répertoire src (vous venez de le créer). 
+                        <p>Ceci est un mini tutoriel sur la façon de construire un workspace ROS2 avec colcon. Un workspace ROS2 est 
+                            un répertoire avec une structure particulière. En général, il y a un sous-répertoire <code>src</code> (vous venez de le créer). 
                             A l'intérieur de ce sous-répertoire se trouve le code source des différents packages.
                             <br><br>
-                            Typiquement, le répertoire src commence par être vide (c'est votre cas !).
+                            Typiquement, le répertoire <code>src</code> commence par être vide (c'est votre cas !).
                         </p>
                         <ol>
                             <li>
-                                <p>Depuis la racine de votre workspace (faites la commande cd <code>~/ros2_ws/</code> pour aller dans la racine), vous pouvez maintenant construire vos packages à l'aide de la commande colcon :</p>
+                                <p>Depuis la racine de votre workspace (faites la commande <code>cd ~/ros2_ws/</code> pour aller dans la racine), vous pouvez maintenant construire vos packages à l'aide de la commande colcon :</p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code7')">Copier</button>
 <pre id="code7" class="code-content">
@@ -238,7 +245,7 @@ colcon build
                             </li>
 
                             <li>
-                                <p><i>Explication de colcon :</i> colcon réalise la construction du workspace à partir des sources. Par défaut, il créera les répertoires suivants en tant que répertoire voisins de src :</p>
+                                <p><i>Explication de colcon :</i> colcon réalise la construction du workspace à partir des sources. Par défaut, il créera les répertoires suivants en tant que répertoire voisins de <code>src</code> :</p>
                                 <ul style="list-style-type:disc;">
                                     <li><p>Le répertoire <strong>build</strong> sera l'endroit où les fichiers intermédiaires seront stockés. Pour chaque package, un sous-dossier sera créé dans lequel, par exemple, CMake sera invoqué.</p></li>
                                     <li><p>Le répertoire <strong>install</strong> est l'endroit où chaque package sera installé. Par défaut, chaque package est installé dans un sous-répertoire distinct.</p></li>
@@ -247,7 +254,7 @@ colcon build
                             </li>
 
                             <li>
-                                <p>Vous pouvez ensuite faire un <i>ls</i> (en étant dans le répertoire du workspace <code>~/ros2_ws/</code>) pour voir que les répertoires build, install et log ont bien été créés dans la racine du workspace (à côté de src):</p>
+                                <p>Vous pouvez ensuite faire un <code>ls</code> (en étant dans le répertoire du workspace <code>~/ros2_ws/</code>) pour voir que les répertoires build, install et log ont bien été créés dans la racine du workspace (à côté de <code>src</code>):</p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code8')">Copier</button>
 <pre id="code8" class="code-content">
@@ -265,13 +272,13 @@ ls
                 <section id="section3">
                     <h3>Comprendre les packages (Python et CMake)</h3>
 
-                    <p>Un package est une unité d'organisation pour votre code ROS 2. Si vous voulez pouvoir installer votre code ou le partager avec d'autres, vous aurez besoin de l'organiser dans un package. 
-                        Avec les packages, vous pouvez publier votre travail ROS 2 et permettre aux autres de le construire et de l'utiliser facilement.
+                    <p>Un package est une unité d'organisation pour votre code ROS2. Si vous voulez pouvoir installer votre code ou le partager avec d'autres, vous aurez besoin de l'organiser dans un package. 
+                        Avec les packages, vous pouvez publier votre travail ROS2 et permettre aux autres de le construire et de l'utiliser facilement.
                     </p>
-                    <p>ROS 2 utilise "<strong>ament</strong>" comme <i>système de construction</i> de packages et "<strong>colcon</strong>" comme <i>outil de construction</i> de ces packages. 
+                    <p>ROS2 utilise "<strong>ament</strong>" comme <i>système de construction</i> de packages et "<strong>colcon</strong>" comme <i>outil de construction</i> de ces packages. 
                         Vous pouvez créer un package en utilisant CMake ou Python, qui sont officiellement supportés, bien que d'autres types de construction existent.
                     </p>
-                    <p>Les paquets ROS 2 Python et CMake ont chacun leur propre contenu minimum requis :</p>
+                    <p>Les paquets ROS2 Python et CMake ont chacun leur propre contenu minimum requis :</p>
                     
                     <ul style="list-style-type: disc;">
                         <li>
@@ -281,7 +288,7 @@ ls
                                 <li><p><strong>resource/&lt;nom_du_package&gt;</strong> : fichier marqueur pour le package</p></li>
                                 <li><p><strong>setup.cfg</strong>  est nécessaire lorsqu'un package a des exécutables, afin que ros2 run puisse les trouver</p></li>
                                 <li><p><strong>setup.py</strong> contient les instructions pour l'installation du package</p></li>
-                                <li><p><strong>&lt;nom_du_package&gt;</strong> est un répertoire avec le même nom que votre package, utilisé par les outils de ROS 2 pour trouver votre package, qui contient le fichier python <code>__init__.py</code></p></li>
+                                <li><p><strong>&lt;nom_du_package&gt;</strong> est un répertoire avec le même nom que votre package, utilisé par les outils de ROS2 pour trouver votre package, qui contient le fichier python <code>__init__.py</code></p></li>
                             </ul>
                         </li>
 
@@ -338,7 +345,7 @@ ros2 pkg create --build-type ament_python --node-name my_node my_package
                                 <img src="images/tuto_2/section4/ros2 pkg create.png" width="600px">
                                 <p>Après avoir exécuté la commande, votre terminal affichera le message suivant :</p>
                                 <img src="images/tuto_2/section4/ros2 pkg create res.png" width="550px">
-                                <p>Vous aurez maintenant un nouveau dossier dans le répertoire src de votre espace de travail, appelé <code>my_package</code>.</p>
+                                <p>Vous aurez maintenant un nouveau dossier dans le répertoire <code>src</code> de votre espace de travail, appelé <code>my_package</code>.</p>
                             </li>
 
                             <li>
@@ -454,6 +461,13 @@ cd ~/ros2_ws/src/my_package/my_package/
 sudo nano &lt;nom_fichier&gt;
 </pre>
                                 </div>
+                                <p>Tapez la commande :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code18.1')">Copier</button>
+<pre id="code18.1" class="code-content">
+sudo nano my_node.py
+</pre>
+                                </div>
                                 <img src="images/tuto_2/section4/sudo nano my_node.png" width="450px">
                                 <p>Le code python <code>my_node.py</code> va s'ouvrir avec l'éditeur nano :</p>
                                 <img src="images/tuto_2/section4/code my_node py.png" width="450px">
@@ -461,7 +475,17 @@ sudo nano &lt;nom_fichier&gt;
                             </li>
                         
                             <li>
-                                <p>Modifiez la phrase présente dans la fonction <code>print()</code>. Mettez par exemple :</p>
+                                <p>Modifiez la phrase présente dans la fonction <code>print()</code>. <br>Mettez par exemple : <code>Bonjour, voici un test de my_package.</code></p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code18.2')">Copier</button>
+<pre id="code18.2" class="code-content">
+def main():
+    print('Bonjour, voici un test de my_package.')
+
+if __name__ == '__main__':
+    main()
+</pre>
+                                </div>
                                 <img src="images/tuto_2/section4/sudo nano my_node modif.png" width="350px">
                                 <p>Enregistrez le fichier ! À cette étape, vous avez besoin de reconstruire juste votre package et pas tout votre workspace.</p>
                             </li>
@@ -471,10 +495,11 @@ sudo nano &lt;nom_fichier&gt;
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code19')">Copier</button>
 <pre id="code19" class="code-content">
+cd ~/ros2_ws/
 colcon build --packages-select my_package
 </pre>
                                 </div>
-                                <img src="images/tuto_2/section4/colcon build my_package.png" width="350px">
+                                <img src="images/tuto_2/section4/colcon build my_package.png" width="400px">
                             </li>
                         
                             <li>
@@ -485,7 +510,7 @@ colcon build --packages-select my_package
 ros2 run my_package my_node
 </pre>
                                 </div>
-                                <img src="images/tuto_2/section4/ros2 run modifié.png" width="300px">
+                                <img src="images/tuto_2/section4/ros2 run modifié.png" width="350px">
                                 <p>Voilà, vous avez créé un package simple en python, permettant de créer un nœud <code>my_node</code> qui affiche une ligne de texte dans un terminal.</p>
                             </li>
                         </ol>
@@ -501,7 +526,7 @@ ros2 run my_package my_node
                         <h4>Créer le package</h4>
                         <ol>
                             <li>
-                                <p>Rendez-vous dans le répertoire src de votre workspace. Pour ce faire, tapez la commande :</p>
+                                <p>Rendez-vous dans le répertoire <code>src</code> de votre workspace. Pour ce faire, tapez la commande :</p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code21')">Copier</button>
 <pre id="code21" class="code-content">
@@ -530,7 +555,7 @@ ros2 pkg create --build-type ament_cmake --node-name my_node my_package2
 </pre>
                                 </div>
                                 <img src="images/tuto_2/section5/ros2 package create.png" width="650px">
-                                <p>Vous aurez maintenant un nouveau dossier dans le répertoire src de votre espace de travail appelé my_package2.</p>
+                                <p>Vous aurez maintenant un nouveau dossier dans le répertoire <code>src</code> de votre espace de travail appelé <code>my_package2</code>.</p>
                             </li>
                         
                             <li>
@@ -545,7 +570,13 @@ ros2 pkg create --build-type ament_cmake --node-name my_node my_package2
 
                         <ol>
                             <li>
-                                <p>Retournez à la racine de votre espace de travail (Voir <a href="#sub_sec:cd_arriere">2.2.4</a>)</p>
+                                <p>Retournez à la racine de votre espace de travail :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code23.1')">Copier</button>
+<pre id="code23.1" class="code-content">
+cd ~/ros2_ws/
+</pre>
+                                </div>
                             </li>
 
                             <li>
@@ -613,9 +644,9 @@ ros2 run &lt;package_name&gt; &lt;node_name&gt;
 ros2 run my_package2 my_node
 </pre>
                                 </div>
-                                <img src="images/tuto_2/section5/ros2 run my_package2.png" width="300px">
+                                <img src="images/tuto_2/section5/ros2 run my_package2.png" width="350px">
                                 <p>Vous obtiendrez dans le terminal :</p>
-                                <img src="images/tuto_2/section5/ros2 run my_package2 res.png" width="300px">
+                                <img src="images/tuto_2/section5/ros2 run my_package2 res.png" width="350px">
                                 <p>Vous pouvez voir que l'exécutable <code>my_node</code> de votre package permet de faire afficher du texte dans le terminal comme le package en python.</p>
                             </li>
                         
@@ -628,8 +659,8 @@ cd ~/ros2_ws/src/my_package2/src/
 </pre>
                                 </div>
                                     et faites ensuite la commande <code>ls</code> :</p>
-                                <img src="images/tuto_2/section5/ls my_node cpp.png" width="275px">
-                                <p>Le fichier <code>my_node.cpp</code> est l'exécutable qui a été créé automatiquement lors de la création du package. Cet exécutable est un code en C++ servant, ici, à afficher du texte dans le terminal.</p>
+                                <img src="images/tuto_2/section5/ls my_node cpp.png" width="300px">
+                                <p>Le fichier <code>my_node.cpp</code> est l'exécutable qui a été créé automatiquement lors de la création du package. Cet exécutable est un code en <code>C++</code> servant, ici, à afficher du texte dans le terminal.</p>
                                 <p>Contrairement à un package Python, vous pouvez voir que la structure du package en CMake est différente de celle d'un package en Python.</p>
                             </li>
                         </ol>
@@ -639,7 +670,7 @@ cd ~/ros2_ws/src/my_package2/src/
                         <h4>Modifier votre premier package avec CMake</h4>
                         <ol>
                             <li>
-                                <p>Ouvrez le fichier <i>my_node.cpp</i> avec le même type de commande que pour modifier le fichier .bashrc. Pour rappel, la fonction à utiliser est la suivante :</p>
+                                <p>Ouvrez le fichier <code>my_node.cpp</code> avec le même type de commande que pour modifier le fichier <code>.bashrc</code>. Pour rappel, la fonction à utiliser est la suivante :</p>
                                 <div class="code-block" style="background-color: lightgray;">
 <pre id="code28" class="code-content">
 sudo nano &lt;nom_fichier&gt;
@@ -654,7 +685,7 @@ sudo nano my_node.cpp
 </pre>
                                 </div>
                                 <img src="images/tuto_2/section5/sudo nano my node cpp.png" width="400px">
-                                <p>Le code C++ dans le fichier <code>my_node.cpp</code> va s'ouvrir avec l'éditeur nano :</p>
+                                <p>Le code <code>C++</code> dans le fichier <code>my_node.cpp</code> va s'ouvrir avec l'éditeur nano :</p>
                                 <img src="images/tuto_2/section5/code my node cpp.png" width="400px">
                                 <p>Vous constaterez directement que le code est totalement différent d'un code Python. Ici, nous avons uniquement une fonction main qui contient la fonction <code>printf()</code> avec la phrase (sous la forme d'un String) que vous avez pu voir dans votre terminal précédemment.</p>
                             </li>
@@ -662,7 +693,7 @@ sudo nano my_node.cpp
                             <li>
                                 <p>Modifiez le texte présent dans la fonction <code>printf()</code>. Mettez par exemple :</p>
                                 <img src="images/tuto_2/section5/code modifié.png" width="350px">
-                                <p>Sauvegardez avec "ctrl+O", puis "Entrer" et "ctrl+X".</p>
+                                <p>Sauvegardez avec <code>ctrl+O</code>, puis <code>Entrer</code> et <code>ctrl+X</code>.</p>
                                 <p>A cette étape, vous avez besoin de reconstruire uniquement votre package et pas tout votre workspace.</p>
                             </li>
                             
@@ -705,7 +736,7 @@ ros2 run my_package2 my_node
                         <h4>Créer le package</h4>
                         <ol>
                             <li>
-                                <p>Rendez-vous dans le répertoire src de votre workspace <code>ros2_ws/src</code>.</p>
+                                <p>Rendez-vous dans le répertoire <code>src</code> de votre workspace <code>ros2_ws/src</code>.</p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code29.0')">Copier</button>
 <pre id="code29.0" class="code-content">
@@ -725,7 +756,7 @@ ros2 pkg create --build-type ament_python --node-name py_pubsub_node py_pubsub
                                 <img src="images/tuto_2/section6/Images/pkg create py_pubsub.png" width="500px">
                                 <p>Après avoir lancé la commande, votre terminal vous renverra le message suivant :</p>
                                 <img src="images/tuto_2/section6/Images/pkg create py_pubsub res.png" width="600px">
-                                <p>Vous avez peut-être remarqué dans le message après la création de votre package que les champs description et licence contiennent des notes TODO. C'est parce que la description du package et la déclaration de licence ne sont pas automatiquement définies, mais sont nécessaires si vous souhaitez publier votre package. Dans ce tutoriel, vous allez aussi apprendre à modifier ces informations.</p>
+                                <p>Vous avez peut-être remarqué dans le message, après la création de votre package, que les champs description et licence contiennent des notes TODO. C'est parce que la description du package et la déclaration de licence ne sont pas automatiquement définies, mais sont nécessaires si vous souhaitez publier votre package. Dans ce tutoriel, vous allez aussi apprendre à modifier ces informations.</p>
                             </li>
                         
                             <li>
@@ -749,7 +780,7 @@ ros2 pkg create --build-type ament_python --node-name py_pubsub_node py_pubsub
 cd ~/ros2_ws/src/py_pubsub/py_pubsub/
 </pre>
                                 </div>
-                                <img src="images/tuto_2/section6/Images/cd py_pubsub py_pubsub.png" width="300px">
+                                <img src="images/tuto_2/section6/Images/cd py_pubsub py_pubsub.png" width="330px">
                             </li>
                         
                             <li>
@@ -760,15 +791,15 @@ cd ~/ros2_ws/src/py_pubsub/py_pubsub/
 sudo nano publisher_member_function.py
 </pre>
                                 </div>
-                                <img src="images/tuto_2/section6/Images/sudo nano publisher.png" width="500px">
+                                <img src="images/tuto_2/section6/Images/sudo nano publisher.png" width="550px">
                             </li>
                         
                             <li id="code_publisher_member">
                                 <p>Ecrivez les lignes suivantes dans le fichier que l'éditeur a ouvert (Vous trouverez ce code en <a href="#annexe1">Annexe 1</a>):</p>
-                                <img src="images/tuto_2/section6/Images/code publisher.png" width="500px">
+                                <img src="images/tuto_2/section6/Images/code publisher.png" width="525px">
                                 <p style="color:red;">Faites attention à l'indentation que vous utilisez dans votre code : Utilisez soit des espaces soit des tabulations mais pas les deux dans le même code.</p>
                                 <p style="color:red;">Faites attention à <code>__init__</code> qui contient 2 underscores avant et après le init. Pareil pour <code>__name__</code> et <code>__main__</code>.</p>
-                                <p>Sauvegardez avec "ctrl+O", puis "Entrer" et "ctrl+X".</p>
+                                <p>Sauvegardez avec <code>ctrl+O</code>, puis <code>Entrer</code> et <code>ctrl+X</code>.</p>
                             </li>
                         </ol>
                         
@@ -787,19 +818,19 @@ sudo nano publisher_member_function.py
                         
                             <li>
                                 <p>Ensuite, la classe <code>MinimalPublisher</code> est créée, qui hérite de (ou est une sous-classe de) <code>Node</code> :</p>
-                                <img src="images/tuto_2/section6/Images pub/class minimal.png" width="200px">
+                                <img src="images/tuto_2/section6/Images pub/class minimal.png" width="180px">
                             </li>
                         
                             <li>
                                 <p>Voici, ci-dessous, le constructeur de la classe. La fonction <code>super().__init__</code> appelle le constructeur de la classe <code>Node</code> et lui donne le nom de notre nœud, dans ce cas "<code>minimal_publisher</code>".</p>
                                 <p><code>create_publisher</code> déclare que le nœud publie des messages de type <code>String</code> (importé du module <code>std_msgs.msg</code>), sur un topic nommé "topic", et que la "taille de la file d'attente" est de 10. La taille de la file d'attente est un paramètre de QoS (qualité de service) requis qui limite le nombre de messages mis en file d'attente si un subscriber ne les reçoit pas assez rapidement.</p>
                                 <p>Ensuite, un timer est créé avec un callback à exécuter toutes les 0.5 secondes. <code>self.i</code> est un compteur utilisé dans le callback :</p>
-                                <img src="images/tuto_2/section6/Images pub/init py.png" width="350px">
+                                <img src="images/tuto_2/section6/Images pub/init py.png" width="400px">
                             </li>
                         
                             <li>
                                 <p><code>timer_callback</code> créé un message avec la valeur du compteur en annexe, et le publie sur le terminal avec la fonction <code>get_logger().info()</code>.</p>
-                                <img src="images/tuto_2/section6/Images pub/timer_callback.png" width="350px">
+                                <img src="images/tuto_2/section6/Images pub/timer_callback.png" width="375px">
                             </li>
                         
                             <li>
@@ -815,7 +846,7 @@ sudo nano publisher_member_function.py
                         <h4>Créer le noeud subscriber</h4>
                         <ol>
                             <li>
-                                <p>Rendez-vous dans le répertoire <code>~/ros2_ws/src/py_pubsub/py_pubsub/</code> et créez un fichier <code>subscriber_member_function.py</code> avec la commande <strong>sudo nano</strong> : </p>
+                                <p>Rendez-vous dans le répertoire <code>~/ros2_ws/src/py_pubsub/py_pubsub/</code> et créez un fichier <code>subscriber_member_function.py</code> avec la commande <code>sudo nano</code> : </p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code33')">Copier</button>
 <pre id="code33" class="code-content">
@@ -830,7 +861,7 @@ sudo nano subscriber_member_function.py
                                 <img src="images/tuto_2/section6/Images sub/code sub.png" width="500px">
                                 <p style="color:red;">Faites attention à l'indentation que vous utilisez dans votre code : Utilisez soit des espaces soit des tabulations mais pas les deux dans le même code.</p>
                                 <p style="color:red;">Faites attention à <code>__init__</code> qui contient 2 underscores avant et après le init. Pareil pour <code>__name__</code> et <code>__main__</code>.</p>
-                                <p>Sauvegardez avec "ctrl+O", puis "Entrer" et "ctrl+X".</p>
+                                <p>Sauvegardez avec <code>ctrl+O</code>, puis <code>Entrer</code> et <code>ctrl+X</code>.</p>
                             </li>
                         </ol>
                     </section>
@@ -862,7 +893,7 @@ sudo nano subscriber_member_function.py
                         <p>Dans cette section, nous allons ajouter des dépendances comme la description de notre package, l'email de contact, votre nom, et une licence. </p>
                         <ol>
                             <li>
-                                <p>Rendez-vous dans le répertoire <code>~/ros2\_ws/src/py\_pubsub/</code> : </p>
+                                <p>Rendez-vous dans le répertoire <code>~/ros2_ws/src/py_pubsub/</code> : </p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code35')">Copier</button>
 <pre id="code35" class="code-content">
@@ -872,13 +903,13 @@ cd ~/ros2_ws/src/py_pubsub/
                             </li>
                         
                             <li>
-                                <p>Faites <code>ls</code> pour voir la liste des fichiers et répertoires disponibles dans votre package <code>py\_pubsub</code> :</p>
+                                <p>Faites <code>ls</code> pour voir la liste des fichiers et répertoires disponibles dans votre package <code>py_pubsub</code> :</p>
                                 <img src="images/tuto_2/section6/Images dépendances/ls package py_pubsub.png" width="375px">
-                                <p>Vous pouvez voir que les différents fichiers d'un package python, explicités dans la <a href="#sec-packages">section 3</a>, sont présents. Dans notre cas, nous allons commencer par modifier le fichier <code>package.xml</code>.</p>
+                                <p>Vous pouvez voir que les différents fichiers d'un package python sont présents. Dans notre cas, nous allons commencer par modifier le fichier <code>package.xml</code>.</p>
                             </li>
                         
                             <li>
-                                <p>Ouvrez le fichier <code>package.xml</code> avec la commande <strong>sudo nano</strong> et modifiez les lignes <code>&lt;description&gt;</code>, <code>&lt;maintainer&gt;</code>, et <code>&lt;license&gt;</code> avec vos informations personnelles :</p>
+                                <p>Ouvrez le fichier <code>package.xml</code> avec la commande <code>sudo nano</code> et modifiez les lignes <code>&lt;description&gt;</code>, <code>&lt;maintainer&gt;</code>, et <code>&lt;license&gt;</code> avec vos informations personnelles :</p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code36')">Copier</button>
 <pre id="code36" class="code-content">
@@ -894,7 +925,7 @@ sudo nano package.xml
                             </li>
                         
                             <li>
-                                <p>Modifiez ensuite le fichier setup.py avec la commande <strong>sudo nano</strong> :</p>
+                                <p>Modifiez ensuite le fichier <code>setup.py</code> avec la commande <code>sudo nano</code> :</p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code37')">Copier</button>
 <pre id="code37" class="code-content">
@@ -908,20 +939,26 @@ sudo nano setup.py
                             </li>
                         
                             <li>
-                                <p>Ajoutez un point d'entrée pour le nœud publisher entre les crochets de 'console_script'. Pour ce faire, ajoutez la ligne <code>'talker = py_pubsub.publisher_member_function:main'</code>, entre les crochets de "console_script".</p>
-                                <p>Votre fichier setup.py devrait être identique à celui ci-dessous :</p>
+                                <p>Ajoutez un point d'entrée pour le nœud publisher entre les crochets de <code>'console_script': []</code>. Pour ce faire, ajoutez la ligne suivante, entre les crochets de <code>'console_script': []</code> :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code37.1')">Copier</button>
+<pre id="code37.1" class="code-content">
+'talker = py_pubsub.publisher_member_function:main',
+</pre>
+                                </div>
+                                <p>N'oubliez pas la virgule à la fin de cette ligne. Votre fichier setup.py devrait être identique à celui ci-dessous :</p>
                                 <img src="images/tuto_2/section6/Images dépendances/setup py 1.png" width="375px">
                                 <p>Sauvegardez le fichier !</p>
                             </li>
                         
                             <li>
-                                <p>Vérifiez que le fichier setup.cfg a bien été créé correctement.</p>
+                                <p>Vérifiez que le fichier <code>setup.cfg</code> a bien été créé correctement.</p>
                                 <ul>
                                     <li>Ouvrez le fichier <code>setup.cfg</code></li>
                                     <li>Vous devriez obtenir :</li>
                                 </ul>
                                 <img src="images/tuto_2/section6/Images dépendances/setup cfg.png" width="275px">
-                                <p>Il s'agit simplement d'indiquer à setuptools de placer vos exécutables dans lib, car la fonction run de ros2 les cherchera à cet emplacement.</p>
+                                <p>Il s'agit simplement d'indiquer à setuptools de placer vos exécutables dans lib, car la fonction run de ROS2 les cherchera à cet emplacement.</p>
                             </li>
                         
                             <li>Toutes les dépendances du publisher ont été ajoutées. Passons aux dépendances du subscriber.</li>
@@ -934,11 +971,11 @@ sudo nano setup.py
                         <p>Les fichiers modifiés précédemment sont les mêmes pour nos deux nœuds (publisher et subscriber). </p>
                         <ol>
                             <li>
-                                <p>Comme les dépendances correspondantes aux imports de nos 2 nœuds sont identiques (<code>rclpy</code> et <code>std_msgs</code>), nous avons uniquement besoin de modifier le fichier setup.py en ajoutant un point d'entrée pour le subscriber.</p>
+                                <p>Comme les dépendances correspondantes aux imports de nos 2 nœuds sont identiques (<code>rclpy</code> et <code>std_msgs</code>), nous avons uniquement besoin de modifier le fichier <code>setup.py</code> en ajoutant un point d'entrée pour le subscriber.</p>
                             </li>
                         
                             <li>
-                                <p>Ajoutez la ligne <code>'listener = py_pubsub.subscriber_member_function:main'</code>, entre les crochets de "console_script" et après la ligne d'entrée du publisher.</p>
+                                <p>Ajoutez la ligne <code>'listener = py_pubsub.subscriber_member_function:main'</code>, entre les crochets de <code>'console_script'</code> et après la ligne d'entrée du publisher.</p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code38')">Copier</button>
 <pre id="code38" class="code-content">
@@ -983,7 +1020,7 @@ cd ~/ros2_ws/
 rosdep init
 </pre>
                                         </div>
-                                        <p>Il est possible que cela prenne plusieurs minutes ! À la fin, un message vous avertira qu'il est préférable de taper la commande suivante.</p>
+                                        <p>Il est possible que cela prenne plusieurs minutes ! À la fin, un message vous avertira qu'il est préférable de taper la commande suivante. <br>En cas de message d'erreur, cela vient probablement du fait que cette commande à déjà été utilisée. Passez à la suivante !</p>
                                     </li>
                         
                                     <li>
@@ -1066,7 +1103,7 @@ source install/setup.bash
                             </li>
                         
                             <li>
-                                <p>Testez le nœud publisher, nommé <code>talker</code>, de votre package en tapant la commande suivante dans le premier terminal :</p>
+                                <p>Testez le publisher, nommé <code>talker</code>, de votre package en tapant la commande suivante dans le premier terminal :</p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code45')">Copier</button>
 <pre id="code45" class="code-content">
@@ -1082,7 +1119,7 @@ ros2 run py_pubsub talker
                             </li>
                         
                             <li>
-                                <p>Ouvrez un deuxième terminal et allez dans la racine de votre workspace (<code>cd ~/ros2_ws/</code>). Tapez ensuite la commande pour <strong>mettre la source de l'overlay</strong> dans le terminal. Puis, tapez la commande pour lancer le nœud du subscriber, nommé <code>listener</code> :</p>
+                                <p>Ouvrez un deuxième terminal et allez dans la racine de votre workspace (<code>cd ~/ros2_ws/</code>). Tapez ensuite la commande pour <strong>mettre la source de l'overlay</strong> dans le terminal. Puis, tapez la commande pour lancer le subscriber, nommé <code>listener</code> :</p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code46')">Copier</button>
 <pre id="code46" class="code-content">
@@ -1099,7 +1136,7 @@ ros2 run py_pubsub listener
                             </li>
                         
                             <li>
-                                <p>Vous avez créé deux nœuds. Un pour publier et l'autre pour souscrire à ces données sur un topic. Avant de les exécuter, vous avez ajouté leurs dépendances et leurs points d'entrée aux fichiers de configuration du package.</p>
+                                <p>Vous avez créé deux nœuds.Un pour publier et l'autre pour souscrire à ces données sur un topic. Avant de les exécuter, vous avez ajouté leurs dépendances et leurs points d'entrée aux fichiers de configuration du package.</p>
                             </li>
                         </ol>
                         
@@ -1116,10 +1153,12 @@ ros2 run py_pubsub listener
                             <li>
                                 <p>Vous obtiendrez le graphe suivant dans rqt_graph :</p>
                                 <img src="images/tuto_2/section6/Images/rqt_graph package.png" width="400px">
+                                <p>Le nom des deux noeuds provient directement de leur code <code>setup.py</code> respectif. Les noeuds ont été créés avec la fonction <code>super().__init__('minimal_publisher')</code> et <code>super().__init__('minimal_subscriber')</code></p>
+                                <p>Le nom du topic provient directement de la fonction <code>self.publisher_ = self.create_publisher(String, 'topic', 10)</code> qui signifie qu'un topic 'topic' va être crée pour des messages de type String et que le noeud <code>minimal_publisher</code> va publier des données dessus. <br> Et la fonction <code>self.subscription = self.create_subscription(String,'topic', self.listener_callback, 10)</code> signifie que l noeud minimal_subscriber va s'abonner au topic 'topic'.</p>
                             </li>
                         </ol>
                         
-                        <p>Vous savez maintenant créer plusieurs nœuds dans un seul package Python. Pour le faire en CMake, la méthode est similaire (langage en C++ et structure différentes), mais nous ne la traiterons pas ici.</p>
+                        <p>Vous savez maintenant créer plusieurs nœuds dans un seul package Python. Pour le faire en CMake, la méthode est similaire (langage en <code>C++</code> et structure différentes), mais nous ne la traiterons pas ici.</p>
                         
                     </section>
 
@@ -1134,7 +1173,7 @@ ros2 run py_pubsub listener
                         <h4>Créer le package en Python</h4>
                         <ol>
                             <li>
-                                <p>Déplacez-vous dans le répertoire src de votre workspace. Pour ce faire, tapez la commande :</p>
+                                <p>Déplacez-vous dans le répertoire <code>src</code> de votre workspace. Pour ce faire, tapez la commande :</p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code47')">Copier</button>
 <pre id="code47" class="code-content">
@@ -1197,11 +1236,11 @@ cd ~/ros2_ws/src/my_turtle_controller/my_turtle_controller
 sudo nano draw_circle.py
 </pre>
                                 </div>
-                                <img src="images/tuto_2/section7/Images/sudo nano draw_circle py.png" width="550px" />
+                                <img src="images/tuto_2/section7/Images/sudo nano draw_circle py.png" width="600px" />
                             </li>
                             
                             <li id="code_draw_circle.py">
-                                <p>Écrivez le code suivant dans la fenêtre de l'éditeur de texte (Vous trouverez ce script en <a href="#script-3">Annexe 3</a>) :</p>
+                                <p>Écrivez le code suivant dans la fenêtre de l'éditeur de texte (Vous trouverez ce script en <a href="#annexe3">Annexe 3</a>) :</p>
                                 <img src="images/tuto_2/section7/Images/code draw_circle py.png" width="550px" />
                             
                                 <p>Comme vous le constatez peut-être, ce code ressemble fortement au code du publisher du précédent tutoriel. La seule différence est que les messages transmis sont ici du type <code>geometry_msgs/msg/Twist</code> (une structure sous la forme de deux vecteurs, l'un pour les vitesses linéaires et l'autre pour les vitesses angulaires).</p>
@@ -1212,7 +1251,7 @@ sudo nano draw_circle.py
                                     Faites attention à <code>__init__</code> qui contient 2 underscores avant et après le <code>init</code>. Pareil pour <code>__name__</code> et <code>__main__</code>.
                                 </p>
 
-                                <p>Sauvegardez avec "ctrl+O", puis "Entrer" et "ctrl+X".</p>
+                                <p>Sauvegardez avec <code>ctrl+O</code>, puis <code>Entrer</code> et <code>ctrl+X</code>.</p>
                             </li>
                         </ol>
 
@@ -1222,9 +1261,9 @@ sudo nano draw_circle.py
                         <h4>Explication du code du publisher</h4>
                         <ol>
                             <li>
-                                <p>Les premières lignes de code après les commentaires permettent d'importer rclpy pour que sa classe Node puisse être utilisée :</p>
+                                <p>Les premières lignes de code après les commentaires permettent d'importer <code>rclpy</code> pour que sa classe Node puisse être utilisée :</p>
                                 <img src="images/tuto_2/section7/Images draw_circle/import rclpy.png" width="175px" />
-                                <p>La déclaration suivante importe le type de message Twist que le nœud utilise pour structurer les données qu'il transmet au topic /turtle1/cmd_vel :</p>
+                                <p>La déclaration suivante importe le type de message Twist que le nœud utilise pour structurer les données qu'il transmet au topic <code>/turtle1/cmd_vel</code> :</p>
                                 <img src="images/tuto_2/section7/Images draw_circle/import Twist.png" width="225px" />
                             </li>
                             <li>
@@ -1233,8 +1272,8 @@ sudo nano draw_circle.py
                             </li>
                             <li>
                                 <p>Voici, ci-dessous, le constructeur de la classe. La fonction <code>super().__init__</code> appelle le constructeur de la classe Node et lui donne le nom de votre nœud, dans ce cas "draw_circle".</p>
-                                <p><code>create_publisher</code> déclare que le nœud publie des messages de type Twist (importé du module geometry_msgs.msg), sur le topic nommé <code>/turtle1/cmd_vel</code> de TurtleSim, et que la "taille de la file d'attente" est de 10. La taille de la file d'attente est un paramètre de QoS (qualité de service) requis qui limite le nombre de messages mis en file d'attente si un subscriber ne les reçoit pas assez rapidement.</p>
-                                <p>Ensuite, un timer est créé avec un callback à exécuter toutes les 0,5 secondes :</p>
+                                <p><code>create_publisher</code> déclare que le nœud publie des messages de type Twist (importé du module <code>geometry_msgs.msg</code>), sur le topic nommé <code>/turtle1/cmd_vel</code> de TurtleSim, et que la "taille de la file d'attente" est de 10. La taille de la file d'attente est un paramètre de QoS (qualité de service) requis qui limite le nombre de messages mis en file d'attente si un subscriber ne les reçoit pas assez rapidement.</p>
+                                <p>Ensuite, un timer est créé avec un callback à exécuter toutes les 0.5 secondes :</p>
                                 <img src="images/tuto_2/section7/Images draw_circle/def init().png" width="425px" />
                             </li>
                             <li>
@@ -1304,10 +1343,20 @@ cd ~/ros2_ws/
 <button class="copy-button" onclick="copyCode('code55')">Copier</button>
 <pre id="code55" class="code-content">
 rosdep init
-rosdep update
-rosdep install -i --from-path src --rosdistro humble -y
 </pre>
                                 </div>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code55.1')">Copier</button>
+<pre id="code55.1" class="code-content">
+rosdep update
+</pre>
+                                </div>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code55.2')">Copier</button>
+<pre id="code55.2" class="code-content">
+rosdep install -i --from-path src --rosdistro humble -y
+</pre>
+                              </div>
                             </li>
                             <li>
                                 <p>Construisez votre package en reconstruisant tout votre workspace en tapant la commande :</p>
@@ -1353,7 +1402,7 @@ ros2 run &lt;package_name&gt; &lt;node_name&gt;
 ros2 run turtlesim turtlesim_node
 </pre>
                                 </div>
-                                <img src="images/tuto_2/section7/Images/ros2 run turtlesim.png" width="275px">
+                                <img src="images/tuto_2/section7/Images/ros2 run turtlesim.png" width="300px">
                             </li>
                             <li>
                                 <p>Testez votre package en tapant la commande :</p>
@@ -1363,14 +1412,14 @@ ros2 run turtlesim turtlesim_node
 ros2 run my_turtle_controller draw_circle
 </pre>
                                 </div>
-                                <img src="images/tuto_2/section7/Images/ros2 run draw_circle.png" width="425px">
+                                <img src="images/tuto_2/section7/Images/ros2 run draw_circle.png" width="475px">
                                 <p>Vous pourrez voir que la tortue commencera à bouger sous la forme d'un cercle dans TurtleSim :</p>
                                 <img src="images/tuto_2/section7/Images/TurtleSim.png" width="300px">
                     
                             </li>
                         </ol>
                         <br>
-                        Le tutoriel <strong>Création de packages Python et C++</strong>est fini. Vous avez maintenant les bases pour créer vos propres packages sur ROS2 !
+                        Le tutoriel <strong>Création de packages Python et C++</strong> est fini. Vous avez maintenant les bases pour créer vos propres packages sur ROS2 !
                         
                     </section>
 
