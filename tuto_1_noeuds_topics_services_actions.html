@@ -76,19 +76,18 @@
                                 temps réel distribués/répartis. Cela signifie que l'architecture est composée de nœuds qui se chargent 
                                 d'effectuer des calculs ou des opérations simples, reliés entre eux par un réseau en temps réel.
                             </p>
-                            <p>La différence entre les deux vient du protocole réseau utilisé. ROS2 utilise un protocole réseau DDS (Data Distribution Service),
+                            <p>La différence entre les deux, vient du protocole réseau utilisé. ROS2 utilise un protocole réseau DDS (Data Distribution Service),
                                  qui a pour but de simplifier la programmation réseau. Chaque nœud créé avec ce protocole est à la fois un Publisher et un Subscriber 
-                                 (voir la partie suivante pour plus de détails sur ce que sont les Publishers et Subscribers ), et est automatiquement créé sur une 
+                                 , et est automatiquement créé sur une 
                                  fraction du sous-réseau auquel ROS2 a accès. Cette fraction est appelée domaine, et tous les nœuds d'un domaine sont connectés entre 
-                                 eux lors de leurs créations. Cela rend à la fois la connexion à un réseau ROS2 plus facile, et plus sécuritaire, car la simple création 
+                                 eux dès lors leur création. Cela rend à la fois la connexion à un réseau ROS2 plus facile, et plus sécuritaire, car la simple création 
                                  d'un nœud sur le réseau permet d'avoir accès à l'ensemble du réseau, mais il faut connaître à l'avance le sous-réseau ainsi que le 
                                  domaine sur lequel le réseau est situé.
                             </p>
                         </li>
                         <li>
                             <p><strong>TurtleSim</strong> : TurtleSim est un outil d'apprentissage créé pour ROS et ROS2 afin d'appréhender plus facilement leurs différents concepts. 
-                                Cet outil se compose d'un espace sur lequel plusieurs tortues peuvent évoluer, et différents topics, services et actions (voir la 
-                                partie suivante pour plus de détails sur ce que sont les topics, services et actions) sont accessibles afin de faire bouger ces 
+                                Cet outil se compose d'un espace sur lequel plusieurs tortues peuvent évoluer, et différents topics, services et actions sont accessibles afin de faire bouger ces 
                                 tortues et récupérer les données disponibles. Bien que pouvant paraître simple, TurtleSim permet d'avoir un premier contact avec 
                                 l'ensemble des concepts de ROS et ROS2, sans risque d'abimer un système réel.
                             </p>
@@ -111,15 +110,18 @@
                                 information à plusieurs "Subscriber".
                             </p>
                             <p>Les trois points suivants sont des interfaces permettant aux nœuds de communiquer entre eux. Chacun de ces types d'interface diffère 
-                                des autres sur certains points. De plus, ils ont chacun leur domaine d'application.
+                            des autres sur certains points. De plus, ils ont chacun leur domaine d'application.
                             </p><br>
+                            
                         </li>
+
+                        
 
                         <li>
                             <p><strong>Topics</strong> : Les topics sont des canaux de communication unidirectionnels qui relient entre eux les différents nœuds. Ils agissent comme une 
-                                sorte de relayeur d'informations. Ils reçoivent chacun les informations d'un seul noeud Publisher et peuvent transmettre à plusieurs Subscriber. 
+                                sorte de relayeur d'informations. Ils reçoivent chacun les informations d'un seul noeud Publisher et peuvent les transmettre à plusieurs Subscriber. 
                                 Ils permettent ainsi à plusieurs entités d'avoir accès à un même topic, mais l'information ne se transmets que dans un seul sens.
-                                Un topic est donc dit asynchrone. Le "Publisher" ne sait pas exactement qui sont les "Subscriber" qui vont récupérer les informations 
+                                Un topic est donc dit "<strong>asynchrone</strong>". Le "Publisher" ne sait pas qui sont les "Subscriber" qui vont récupérer les informations 
                                 transmises à ce topic. Les topics sont utilisées pour les flots de données continus, tel que des données de capteurs (position/vitesse/distance...).
                             </p><br>
                         </li>
@@ -196,7 +198,7 @@ source /opt/ros/humble/setup.bash
                                 </div>
 
                                 <img src="images/tuto_1/section3/source_ROS2.png" width="350px">
-                                <p>Après avoir taper cette commande dans votre terminal, vous pourrez donc avoir accès à toutes les fonctions primaires de ROS2. Une autre méthode permet d'avoir 
+                                <p>Après avoir tapé cette commande dans votre terminal, vous pourrez donc avoir accès à toutes les fonctions primaires de ROS2. Une autre méthode permet d'avoir 
                                     automatiquement tous les terminaux sourcés. Cette seconde méthode sera vu dans la section <a href="#subsection3-5">Mise de la source dans fichier ~/.bashrc</a>.
                                 </p>
                             </li>
@@ -214,7 +216,7 @@ source /opt/ros/humble/setup.bash
 ros2 run &lt;package_name&gt; &lt;executable_name&gt;
 </pre>
                                 </div>
-                                <p>Dans notre cas &lt;package_name&gt; sera l'application TurtleSim qui se nommera "turtlesim" et &lt;executable_name&gt; sera l'exécutable du nœud de TurtleSim qui sera "turtlesim_node".</p>
+                                <p>Dans notre cas <code>&lt;package_name&gt;</code> sera l'application TurtleSim qui se nommera <code>turtlesim</code> et <code>&lt;executable_name&gt;</code> sera l'exécutable du nœud de TurtleSim qui sera <code>turtlesim_node</code>.</p>
                             </li>
 
                             <li>
@@ -236,9 +238,9 @@ ros2 run turtlesim turtlesim_node
                             <li>
                                 <p>Plusieurs informations apparaissent dans le terminal :</p>
                                 <ul style="list-style-type: '- ';">
-                                    <li><p>TurtleSim a été démarré avec le nœud "<code>/turtlesim</code>"</p></li>
-                                    <li><p>Une tortue a été créée avec le nom "turtle1"</p></li>
-                                    <li><p>Et elle a été placée dans la fenêtre TurtleSim avec les coordonnées x,y et &theta; suivantes : x=5.54 ; y=5,54 et une orientation &theta;=0.00&deg;</p></li>
+                                    <li><p>TurtleSim a été démarré avec le nœud <code>/turtlesim</code></p></li>
+                                    <li><p>Une tortue a été créée avec le nom <code>turtle1</code></p></li>
+                                    <li><p>Et elle a été placée dans la fenêtre TurtleSim avec les coordonnées x, y et &theta; suivantes : <br> <code>x=5.54</code>, <code>y=5.54</code> et une orientation <code> &theta;=0.00 rad</code></p></li>
                                 </ul>
                             </li>
                         </ol>
@@ -246,22 +248,27 @@ ros2 run turtlesim turtlesim_node
 
                     <section id="subsection3-3">
                         <h4>Lancer la télécommande</h4>
-                        <p>Dans cette partie, nous allons voir comment lancer une télécommande qui nous permettra de faire bouger la tortue dans la fenêtre TurtleSim.</p>
+                        <p>Dans cette partie, nous allons voir comment lancer une télécommande qui nous permettra de faire bouger la tortue, <code>turtle1</code> dans la fenêtre TurtleSim.</p>
 
                         <ol>
                             <li>
                                 <p>Ouvrez un second terminal et tapez la commande pour ajouter la source à ce terminal.</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code2.1')">Copier</button>
+<pre id="code2.1" class="code-content">
+source /opt/ros/humble/setup.bash
+</pre>
+                                </div>
                             </li>
                             <li>
-                                <p>Pour lancer la télécommande, nous devons lancer le nœud de la télécommande. Pour ce faire nous devons utiliser la structure de commande précédente.</p>
-                                <p>Voici la structure :</p>
+                                <p>Pour lancer la télécommande, nous devons lancer le nœud de la télécommande. Voici la structure :</p>
                                 <div class="code-block" style="background-color: lightgrey;">
 <pre class="code-content">
 ros2 run &lt;package_name&gt; &lt;executable_name&gt;
 </pre>
                                 </div>
 
-                                <p>Dans notre cas &lt;package_name&gt; est TurtleSim qui se nommera "turtlesim" et &lt;executable_name&gt; est l'exécutable du nœud de la télécommande qui sera "turtle_teleop_key".</p>
+                                <p>Dans ce cas <code>&lt;package_name&gt;</code> est TurtleSim qui se nommera <code>turtlesim</code> et <code>&lt;executable_name&gt;</code> est l'exécutable du nœud de la télécommande qui sera <code>turtle_teleop_key</code>.</p>
                             </li>
 
                             <li>
@@ -288,13 +295,13 @@ ros2 run turtlesim turtle_teleop_key
                         <h4>Lancer TurtleSim et la télécommande dans le même terminal</h4>
                         <ol>
                             <li>
-                                <p>Arrêtez la commande de de la télécommande TurtleSim dans le second terminal et aussi la commande de TurtleSim dans le premier terminal, en faisant un "<i>ctrl+C</i>" dans chaque terminal.</p>
+                                <p>Arrêtez la commande de de la télécommande TurtleSim dans le second terminal et aussi la commande de TurtleSim dans le premier terminal, en faisant un "<code>ctrl+C</code>" dans chaque terminal.</p>
                             </li>
                             <li>
                                 <p>Fermez un des deux terminaux.</p>
                             </li>
                             <li id="turtlesim_arr_p">
-                                <p>Sur le terminal qui vous reste, tapez la commande pour lancer le nœud de TurtleSim avec un "&" à la fin . Le "&" a pour but de faire fonctionner TurtleSim en arrière-plan dans ce terminal.</p>
+                                <p>Sur le terminal qui vous reste, tapez la commande pour lancer le nœud de TurtleSim avec un "<code>&</code>" à la fin . Le "<code>&</code>" a pour but de faire fonctionner TurtleSim en arrière-plan dans ce terminal.</p>
                                 <p id="cmd_turtlesim_arr_plan">Voici la commande :</p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code4')">Copier</button>
@@ -303,11 +310,11 @@ ros2 run turtlesim turtlesim_node &
 </pre>
                                 </div>
                                 <img src="images/tuto_1/section3/ros2 run turtlesim arriere plan.png" width="380px">
-                                <p>Faites "<i>Entrer</i>" et vous constaterez que vous pouvez de nouveau utiliser ce terminal.</p>
+                                <p>Faites "<code>Entrer</code>" et vous constaterez que vous pouvez de nouveau utiliser ce terminal.</p>
                             </li>
 
                             <li id="télécommande">
-                                <p>Tapez la commande pour avoir la télécommande teleop_key :</p>
+                                <p>Tapez la commande pour avoir la télécommande <code>teleop_key</code> :</p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code5')">Copier</button>
 <pre id="code5" class="code-content">
@@ -319,10 +326,10 @@ ros2 run turtlesim turtle_teleop_key
                             </li>
 
                             <li>
-                                <p>Arrêtez la télécommande en faisant "<code>Ctrl+C</code>".</p>
+                                <p>Arrêtez la télécommande en faisant "<code>ctrl+C</code>".</p>
                             </li>
                             <li>
-                                <p>Arrêtez maintenant la commande qui à lancé TurtleSim en arrière plan. Pour retrouver la commande mise en arrière plan tapez la commande "<code>fg</code>" puis faites "<code>Ctrl+C</code>".</p>
+                                <p>Arrêtez maintenant la commande qui à lancé TurtleSim en arrière plan. Pour retrouver la commande mise en arrière plan tapez la commande "<code>fg</code>" ("<code>fg</code>" signifie foreground) puis faites "<code>ctrl+C</code>".</p>
                             </li>
 
                             <p>Vous avez réussi à faire bouger votre tortue dans TurtleSim à l'aide de la télécommande en ayant lancé le noeuds de TurtleSim en arrière plan. 
@@ -342,7 +349,7 @@ ros2 run turtlesim turtle_teleop_key
                         <ol>
                             <li>
                                 <p>
-                                    Ouvrez un terminal avec "<i>ctrl+alt+T</i>", puis modifier le fichier ".bashrc" avec la commande suivante puis tapez votre mot de passe 
+                                    Ouvrez un terminal avec "<code>ctrl+alt+T</code>", puis modifier le fichier <code>.bashrc</code> avec la commande suivante puis tapez votre mot de passe 
                                     (<i>lorsque vous rentrez votre mot de passe celui-ci ne s'affiche pas</i>):
                                 </p>
                                 <div class="code-block">
@@ -356,11 +363,11 @@ sudo nano .bashrc
                                     Explication de la commande :
                                 </p>
                                 <ul style="list-style-type: '';">
-                                    <li><p><strong>sudo</strong> : nous l'utilisons pour lancer une commande dans un terminal en mode administrateur.</p></li>
+                                    <li><p><strong>sudo</strong> : nous l'utilisons pour lancer une commande dans un terminal en mode administrateur (pas obligatoire).</p></li>
                                     <li><p><strong>nano</strong> : c'est un éditeur de fichier et permet de les modifier.</p> </li>
                                     <li><p><strong>.bashrc</strong> : c'est un fichier de configuration de notre machine virtuelle.</p></li>
                                 </ul>
-                                <p>Donc la commande <i>sudo nano .bashrc</i> permet d'ouvrir le fichier ".bashrc" dans l'éditeur de fichier "nano" le tout en mode administrateur.</p>
+                                <p>Donc la commande <code>sudo nano .bashrc</code> permet d'ouvrir le fichier <code>.bashrc</code> dans l'éditeur de fichier <code>nano</code> le tout en mode administrateur.</p>
                             </li>
 
                             <li>
@@ -381,17 +388,17 @@ source /opt/ros/humble/setup.bash
                             </li>
 
                             <li>
-                                <p>Sauvegardez et quittez le fichier avec "<i>Ctrl + O</i>", "<i>Entrer</i>" et ensuite "<i>Crtl + X</i>".</p>
+                                <p>Sauvegardez et quittez le fichier avec "<code>ctrl+O</code>", "<code>Entrer</code>" et ensuite "<code>crtl+X</code>".</p>
                                 <p>L'ajout de cette ligne de code permet au système de connaître automatiquement le chemin du fichier setup de ROS2. 
                                     C'est-à-dire, que pour chaque nouveau Terminal que vous ouvrez, le fichier setup sera sourcé.
                                 </p>
                             </li>
 
                             <li>
-                                <p>Fermez ce terminal soit en cliquant sur la croix en haut à droite soit en écrivant la commande <code>exit</code> dans le terminal.</p>
+                                <p>Fermez ce terminal soit en cliquant sur la croix en haut à droite soit en écrivant la commande "<code>exit</code>" dans le terminal.</p>
                             </li>
 
-                            <p> Le 1er tutoriel est fini. Passons au suivant pour contrôler la tortue en publiant des messages directement sur le topic "turtle1/cmd_vel".</p>
+                            <p> Le 1er tutoriel est fini. Passons au suivant pour contrôler la tortue en publiant des messages directement sur le topic <code>turtle1/cmd_vel</code>.</p>
                         </ol>
                     </section>
 
@@ -401,17 +408,9 @@ source /opt/ros/humble/setup.bash
                 <section id="section4">
                     <h3>Visualisation des nœuds et topics avec rqt graph</h3>
 
-                    <!-- Sous-section avec titre h4 -->
                     <section id="subsection4-1">
-                        <h4>Ouvrir <code>rqt_graph</code></h4>
+                        <h4>Ouvrir rqt_graph</h4>
                         <ol>
-                            <li>
-                                <p>
-                                    Vérifiez que la source des fichiers de setup de ROS2 est bien dans la fichier <code>.bashrc</code>. 
-                                    Cette étape a été vue à la section
-                                </p>
-                            </li>
-
                             <li>
                                 <p>Ouvrez un terminal avec "<code>ctrl+alt+T</code>"</p>
                             </li>
@@ -428,11 +427,11 @@ rqt_graph
                                 <br>
                                 <img src="images/tuto_1/section4/rqt_graph_vide.png" width="450px">
                                 <ul style="list-style-type: '- ';">
-                                    <li><p>Dans la fenêtre <code>rqt_graph</code>, cliquez sur "Nodes only" (A côté des deux flèches bleues)</p></li>
-                                    <li><p>Choisissez ensuite "Nodes/Topics (all)".</p></li>
-                                    <li><p>Décocher ensuite "Dead sinks" et "Leaf topics" de la partie "Hide".</p></li>
+                                    <li><p>Dans la fenêtre <code>rqt_graph</code>, cliquez sur <code>Nodes only</code> (A côté des deux flèches bleues)</p></li>
+                                    <li><p>Choisissez ensuite <code>Nodes/Topics (all)</code>.</p></li>
+                                    <li><p>Décocher ensuite <code>Dead sinks</code> et <code>Leaf topics</code> de la partie <code>Hide</code>.</p></li>
                                 </ul>
-                                <p><code>rqt_graph</code> permet de voir l'interaction entre les différents nœuds et topics actifs en ce moment. Notre <code>rqt_graph</code> est vide. <i>Est-ce normal ?</i>
+                                <p><code>rqt_graph</code> permet de voir l'interaction entre les différents nœuds et topics actifs en ce moment. Notre <code>rqt_graph</code> est vide. <br><i>Est-ce normal ?</i>
                                     Oui, nous avons pour le moment aucun nœud actif dans les terminaux. De ce fait nous voyons rien sur ce graph</p>
                             </li>
                         </ol>
@@ -463,8 +462,8 @@ ros2 run turtlesim turtlesim_node &
                             </li>
                             
                             <p>Vous pouvez donc voir le nœud turtlesim que vous venez de lancer avec la commande ci-dessus. 
-                                Vous pouvez voir aussi tous les topics, liés à la tortue "<code>/turtle1</code>", qui peuvent interagir avec le nœud. 
-                                Vous retrouverez le topic "<code>/turtle1/cmd_vel</code>" qui sera utilisé dans la suite de ce tutoriel.</p>
+                                Vous pouvez voir aussi tous les topics, liés à la tortue <code>/turtle1</code>, qui peuvent interagir avec le nœud. 
+                                Vous retrouverez le topic <code>/turtle1/cmd_vel</code> qui sera utilisé dans la suite de ce tutoriel.</p>
                             
                         </ol>
 
@@ -475,7 +474,7 @@ ros2 run turtlesim turtlesim_node &
 
                         <ol>
                             <li>
-                                <p>Tapez la commande suivante, pour lancer la télécommande :</p>
+                                <p>Tapez la commande suivante, dans le second terminal, pour lancer la télécommande :</p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code10')">Copier</button>
 <pre id="code10" class="code-content">
@@ -503,7 +502,8 @@ ros2 run turtlesim turtle_teleop_key
                     <section id="subsection5-1">
                         <h4>Trouver la liste des "topics" actifs</h4>
                         
-                        <ol>
+                        <ol start="0">
+                            <li><p>Fermez tous les terminaux ouverts.</p></li>
                             <li><p>Lancez TurtleSim dans un nouveau terminal.</p></li>
                             <li>
                                 <p>Dans un second terminal, visualisez les topics actifs en tapant la commande :</p>
@@ -526,7 +526,7 @@ ros2 topic list
                         <h4>Trouver les informations précises d'un "topic"</h4>
                         <ol>
                             <li>
-                                <p>Tapez la commande :</p>
+                                <p>Tapez la commande suivante dans le second terminal :</p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code12')">Copier</button>
 <pre id="code12" class="code-content">
@@ -538,7 +538,7 @@ ros2 topic info /turtle1/cmd_vel
                             <li>
                                 <p>Le topic <code>/turtle1/cmd_vel</code> accepte uniquement les messages de type <code>geometry_msgs/msg/Twist</code>.</p>
                             </li>
-                            <p>On peut remarquer que nous avons la présence des termes "Publisher" et "Subscriber". Le Publisher est un noeud qui publie des données sur un topic et un Subscriber quant à lui est un noeud qui s'abonne à un topic pour recevoir les données que ce topic reçoit. Dans notre cas la télécommande de TurtleSim est un noeud "Publisher" du topic /turtle1/cmd_vel et TurtleSim est un noeud "Subscriber" de ce topic.</p>
+                            <p>On peut remarquer que nous avons la présence des termes "Publisher" et "Subscriber". Le Publisher est un noeud qui publie des données sur un topic et un Subscriber quant à lui est un noeud qui s'abonne à un topic pour recevoir les données que ce topic reçoit. Dans notre cas la télécommande de TurtleSim est un noeud "Publisher" du topic <code>/turtle1/cmd_vel</code> et TurtleSim est un noeud "Subscriber" de ce topic.</p>
                         </ol>
                     </section>
 
@@ -557,7 +557,7 @@ ros2 interface show geometry_msgs/msg/Twist
                             </li>
 
                             <li>
-                                <p>Vous pouvez voir qu'un message de type <code>geometry_msgs/msg/Twist</code> contient deux vecteurs. Un pour indiquer les vitesses linéaires 
+                                <p>Vous pouvez voir qu'un message de type <code>geometry_msgs/msg/Twist</code> contient deux vecteurs de dimension 3. Le premier pour indiquer les vitesses linéaires 
                                     que l'on veut donner à la tortue et le second pour les vitesses angulaires.
                                 </p>
                                 <p>La tortue évoluant dans un système 2D, il sera uniquement possible de lui envoyer des vitesses linéaires selon x et y et une 
@@ -591,12 +591,12 @@ ros2 topic pub --once /turtle1/cmd_vel geometry_msgs/msg/Twist "{linear: {x: 2.0
 </pre>
                                 </div>
                                 <img src="images/tuto_1/section5/cmd_pub_geo_once.png" width="600px">
-                                <p>Vous pourrez voir dans le terminal que le geometry_msgs/msg/Twist a été publié /turtle1/cmd_vel :</p>
+                                <p>Vous pourrez voir dans le terminal que le <code>geometry_msgs/msg/Twist</code> a été publié <code>/turtle1/cmd_vel</code> :</p>
                                 <img src="images/tuto_1/section5/pub_geo_msg_twist_once.png" width="600px">
                             </li>
 
                             <li>
-                                <p>On remarque que notre tortue "turtle1" a avancée en tournant sur la gauche.</p>
+                                <p>On remarque que notre tortue <code>turtle1</code> a avancée en tournant sur la gauche.</p>
                                 <img src="images/tuto_1/section5/turtlesim_pub_once.png" width="250px">
                                 <p>Ce qui correspond bien à une vitesse linéaire selon x et une vitesse angulaire selon z.</p>
                             </li>
@@ -624,15 +624,15 @@ ros2 topic pub --rate 1 /turtle1/cmd_vel geometry_msgs/msg/Twist "{linear: {x: 2
                             </li>
 
                             <li>
-                                <p>On remarque donc que le message est bien envoyé en boucle avec une fréquence de 1Hz et que la tortue tourne en boucle :</p>
+                                <p>On remarque donc que le message est bien envoyé en boucle avec une fréquence de 1Hz et que la tortue tourne en rond :</p>
                                 <img src="images/tuto_1/section5/turtlesim_pub_rate.png" width="600px">
-                                <p> Vous pourrez voir les messages que vous avez publiés sur le topic /turtle1/cmd_vel, 
+                                <p> Vous pourrez voir les messages qui ont été publiés sur le topic <code>/turtle1/cmd_vel</code>, 
                                     s'afficher toutes les secondes (<i>car on à mis un rate de 1Hz</i>)
                                 </p>
                             </li>
 
                             <li>
-                                <p>Arrêtez l'envoi de ce message périodique en faisant simplement "<code>Crtl+C</code>".</p>
+                                <p>Arrêtez l'envoi de ce message périodique en faisant simplement "<code>crtl+C</code>".</p>
                             </li>
                             <li>
                                 <p>Fermez l'ensemble des terminaux pour passer au tutoriel suivant !</p>
@@ -652,7 +652,7 @@ ros2 topic pub --rate 1 /turtle1/cmd_vel geometry_msgs/msg/Twist "{linear: {x: 2
                         <ol>
                             <li><p>Ouvrez un nouveau terminal et vérifiez la source de ROS2</p></li>
                             <li>
-                                <p>Tapez la commande suivante pour ouvrir rqt :</p>
+                                <p>Tapez la commande suivante pour ouvrir <code>rqt</code> :</p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code16')">Copier</button>
 <pre id="code16" class="code-content">
@@ -660,16 +660,16 @@ rqt
 </pre>
                                 </div>
                                 <img src="images/tuto_1/section6/cmd_rqt.png" width="150px">
-                                <p>Une fenêtre "<i>rqt</i>" va s'ouvrir :</p>
+                                <p>Une fenêtre <code>rqt</code> va s'ouvrir :</p>
                                 <img src="images/tuto_1/section6/rqt_vide.png" width="400px">
-                                <p>Si vous arrivez sur rqt mais pour autre chose que "&gt;Message Publisher". 
+                                <p>Si vous arrivez sur <code>rqt</code> mais pour autre chose que <code>&gt;Message Publisher</code>. 
                                     Allez dans Plugins, puis Topics et cliquez sur Message Publisher.
                                 </p>
-                                <p><strong>Définition</strong> : <i>rqt</i> est un outil de ROS permettant de visualiser, interagir et 
+                                <p><strong>Définition</strong> : <code>rqt</code> est un outil de ROS et ROS2 permettant de visualiser, interagir et 
                                     modifier la structure des nœuds, des topics et des services du système, en offrant une interface 
                                     graphique pour le développement et le débogage de robots.
                                 </p>
-                                <p>Dans notre cas, nous allons utiliser rqt pour envoyer des messages sur le topic <code>cmd_vel</code> d'une tortue dans TurtleSim.</p>
+                                <p>Dans notre cas, nous allons utiliser <code>rqt</code> pour envoyer des messages sur le topic <code>cmd_vel</code> d'une tortue dans TurtleSim.</p>
                             </li>
 
                             <li>
@@ -693,13 +693,13 @@ ros2 run turtlesim turtlesim_node
                             </li>
                             <li>
                                 <p>Cliquez sur les flèches bleues pour rafraîchir rqt et ensuite cliquez sur le menus déroulant des différents topics actifs. 
-                                    Les topics liés à TurtleSim sont apparu et sélectionnez le topic /turtle1/cmd_vel :
+                                    Les topics liés à TurtleSim sont apparu et sélectionnez le topic <code>/turtle1/cmd_vel</code> :
                                 </p>
                                 <img src="images/tuto_1/section6/rqt_choix_topic.png" width="250px">
                             </li>
 
                             <li>
-                                <p>On remarque que rqt trouve directement le type de message à utiliser sur ce topic :</p>
+                                <p>On remarque que <code>rqt</code> trouve directement le type de message à utiliser sur ce topic :</p>
                                 <img src="images/tuto_1/section6/rqt_choix_msg_auto.png" width="550px">
                             </li>
                         </ol>
@@ -709,7 +709,7 @@ ros2 run turtlesim turtlesim_node
                         <h4>Envoyer un geometry_msgs/msg/Twist sur le topic /turtle1/cmd_vel avec rqt</h4>
                         <ol>
                             <li>
-                                <p>Cliquez sur le "+" bleu pour créer un geometry_msgs/msg/Twist :</p>
+                                <p>Cliquez sur le "<code>+</code>" bleu pour créer un <code>geometry_msgs/msg/Twist</code> :</p>
                                 <img src="images/tuto_1/section6/creation_msg.png" width="550px">
                             </li>
 
@@ -720,16 +720,16 @@ ros2 run turtlesim turtlesim_node
 
                             <li>
                                 <p> Paramétrez le message que vous allez envoyer. Choisissez les mêmes valeurs que pour la section <a href="#envoie_msg_twist_topic">Envoyer un message en boucle sur le topic /turtle1/cmd_vel 2.</a> 
-                                    soit une vitesse linéaire x : 2.0, y : 0.0 , z : 0.0  et une vitesse angulaire x : 0.0, y : 0.0 , z : 1.8 : 
+                                    , soit une vitesse linéaire <code>x : 2.0, y : 0.0 , z : 0.0</code>  et une vitesse angulaire <code>x : 0.0, y : 0.0 , z : 1.8</code> : 
                                 </p>
                                 <img src="images/tuto_1/section6/msg_rqt_deroulé_modif.png" width="350px">
-                                <p>La valeur du paramètre "rate" est effective uniquement lorsque la case en haut à gauche du message est coché. Dans notre cas, 
+                                <p>La valeur du paramètre "<code>rate</code>" est effective uniquement lorsque la case en haut à gauche du message est coché. Dans notre cas, 
                                     nous voulons l'envoyer qu'une seule fois, donc laissez cette case décochée.
                                 </p>
                             </li>
 
                             <li>
-                                <p>Faites un clic droite sur le message à envoyer, puis cliquez sur "Publish Selected Once" (permet d'envoyer qu'un seul message)</p>
+                                <p>Faites un clic droite sur le message à envoyer, puis cliquez sur <code>Publish Selected Once</code> (permet d'envoyer qu'un seul message)</p>
                                 <img src="images/tuto_1/section6/published_selected_once.png" width="450px">
                                 <p>Vous pouvez alors voir votre tortue bouger dans la fenêtre TurtleSim :</p>
                                 <img src="images/tuto_1/section6/turtlesim_move.png" width="250px">
@@ -738,7 +738,7 @@ ros2 run turtlesim turtlesim_node
                             <li>
                                 <p>Amusez-vous en changeant les paramètres du message et puis en l'envoyant. </p>
                                 <p>Cependant certains messages ne sont pas valides. Vous ne pouvez utiliser que les vitesses linéaires x et y  (resp. déplacement avant/arrière et déplacement latéral droite/gauche) 
-                                    et une vitesse angulaire selon z (l'axe z pointant vers vous) car ces 3 paramètres déterminent la position de la tortue dans ce système 2D :
+                                    et une vitesse angulaire selon z (l'axe z pointant vers vous) car ces 3 paramètres permettent de déterminer la position et l'orientation de la tortue dans ce système 2D :
                                 </p>
                                 <img src="images/tuto_1/section6/turtlesim_move_2.png" width="250px">
                             </li>
@@ -749,13 +749,13 @@ ros2 run turtlesim turtlesim_node
                         <h4>Envoyer un geometry_msgs/msg/Twist en boucle avec rqt</h4>
                         <ol>
                             <li>
-                                <p>Utilisez la fonctionnalité "rate" qui permet d'envoyer en boucle le même message. Modifiez les paramètres de votre message et aussi la valeur de "rate". 
+                                <p>Utilisez la fonctionnalité <code>rate</code> qui permet d'envoyer en boucle le même message. Modifiez les paramètres de votre message et aussi la valeur de <code>rate</code>. 
                                     La valeur de rate correspond à la fréquence d'envoi du message.
                                 </p>
                             </li>
 
                             <li>
-                                <p>Cochez la case à gauche du message pour que le paramètre "rate" soit pris en compte :</p>
+                                <p>Cochez la case à gauche du message pour que le paramètre <code>rate</code> soit pris en compte :</p>
                                 <img src="images/tuto_1/section6/msg_rqt_deroulé_coché.png" width="350px">
                                 <p>Vous verrez votre tortue bouger en boucle en fonction de votre message dès que vous aurez coché cette case. Décochez la case pour arrêter l'envoi cyclique de message.</p>
                             </li>
@@ -774,19 +774,19 @@ ros2 run turtlesim turtlesim_node
                         <h4>Découvrir les actions</h4>
                         
                         <ol>
-                            <li><p>Faites "<i>crtl+C</i>" dans tous les terminaux pour arrêter tous les processus en cours et fermez tous les terminaux ouverts.</p></li>
+                            <li><p>Faites "<code>crtl+C</code>" dans tous les terminaux pour arrêter tous les processus en cours et fermez tous les terminaux ouverts.</p></li>
                             <li><p>Ouvrez un terminal et lancez TurtleSim en arrière plan (Voir la section <a href="#turtlesim_arr_p">Lancer TurtleSim et la télécommande dans le même terminal 3.</a>).</p></li>
                             <li>
                                 <p>Lancez, ensuite, la télécommande dans le même terminal (Voir la section <a href="#télécommande">Lancer TurtleSim et la télécommande dans le même terminal 4.</a>).</p>
                                 <p>Vous pourez voir ce message dans la télécommande :</p>
                                 <img src="images/tuto_1/section7/0 teleop_touches_absolute.png" width="500px">
-                                <p>La deuxième ligne correspond aux actions que l'on peut demander à la tortue de TurtleSim. (La première ligne correspond à l'utilisation des flèches pour piloter la tortue avec le topic "cmd_vel", abordé précédemment dans les tutoriels).</p>
-                                <p>On remarque que les touches G|B|V|C|D|E|R|T forment un "carré" autour de la touche F sur votre clavier. La position de chaque touche autour de F correspond à cette orientation dans la fenêtre TurtleSim. Par exemple, le E fera pivoter l'orientation de la tortue vers le coin supérieur gauche.</p>
+                                <p>La deuxième ligne correspond aux actions que l'on peut demander à la tortue de TurtleSim. (La première ligne correspond à l'utilisation des flèches pour piloter la tortue avec le topic <code>/turtle1/cmd_vel</code>, abordé précédemment dans les tutoriels).</p>
+                                <p>On remarque que les touches <code>G|B|V|C|D|E|R|T</code> forment un "carré" autour de la touche '<code>F</code>' sur votre clavier. La position de chaque touche autour de '<code>F</code>' correspond à cette orientation dans la fenêtre TurtleSim. Par exemple, le '<code>E</code>' fera pivoter l'orientation de la tortue vers le coin supérieur gauche.</p>
                                 <p>Prêtez attention au terminal où le nœud <code>/turtlesim</code> est exécuté. Chaque fois que vous appuierez sur l'une de ces touches, vous enverrez un objectif à un serveur d'action qui fait partie du nœud <code>/turtlesim</code>. L'objectif est de faire tourner la tortue dans une direction précise.</p>
                             </li>
 
                             <li>
-                                <p>Appuyez sur la touche 'E'. Un message relayant le résultat de l'objectif devrait s'afficher une fois que la tortue a terminée sa rotation : </p>
+                                <p>Appuyez sur la touche '<code>E</code>'. Un message relayant le résultat de l'objectif devrait s'afficher une fois que la tortue a terminée sa rotation : </p>
                                 <img src="images/tuto_1/section7/1 result_goal.png" width="500px">
                                 <p>Votre tortue à tournée vers le coin supérieur gauche :</p>
                                 <div> 
@@ -794,11 +794,11 @@ ros2 run turtlesim turtlesim_node
                                     <img src="images/tuto_1/section7/2 fleche.png" width="125px" style="display: inline-block;">
                                     <img src="images/tuto_1/section7/3 turtle after result.png" width="220px" style="display: inline-block; margin-left: 30px;">
                                 </div>
-                                <p>La touche 'F', au centre du carré de touche, permet d'annuler l'objectif en cours.</p>
+                                <p>La touche '<code>F</code>', au centre du carré de touche, permet d'annuler l'objectif en cours.</p>
                             </li>
 
                             <li>
-                                <p>Appuyer, par exemple sur la touche 'C',  pour faire tourner la tortue vers une coin inférieur gauche, puis sur la touche 'F' avant que la tortue ne termine sa rotation.
+                                <p>Appuyer, par exemple sur la touche '<code>C</code>',  pour faire tourner la tortue vers une coin inférieur gauche, puis sur la touche '<code>F</code>' avant que la tortue ne termine sa rotation.
                                     Dans le terminal où le nœud <code>/turtlesim</code> est exécuté, vous verrez le message suivant :
                                 </p>
                                 <img src="images/tuto_1/section7/4 cancel_goal.png" width="450px">
@@ -808,9 +808,9 @@ ros2 run turtlesim turtlesim_node
                             </li>
 
                             <li>
-                                <p>Essayez d'appuyer sur la touche 'T', puis sur la touche 'G' avant que la première rotation ne soit terminée. Dans le terminal où le nœud <code>/turtlesim</code> est exécuté, vous verrez le message suivant :</p>
+                                <p>Essayez d'appuyer sur la touche '<code>T</code>', puis sur la touche '<code>G</code>' avant que la première rotation ne soit terminée. Dans le terminal où le nœud <code>/turtlesim</code> est exécuté, vous verrez le message suivant :</p>
                                 <img src="images/tuto_1/section7/5 rotation goal received before a previous goal.png" width="500px">
-                                <p>On remarque, sur la fenêtre TurtleSim, que la rotation vers 'T' (coin supérieur droit) a été annulée et a été remplacée par une rotation vers l'orientation de 'G' (droite).</p>
+                                <p>On remarque, sur la fenêtre TurtleSim, que la rotation vers '<code>T</code>' (coin supérieur droit) a été annulée et a été remplacée par une rotation vers l'orientation de '<code>G</code>' (droite).</p>
                             </li>
                         </ol>
                     </section>
@@ -861,7 +861,7 @@ ros2 action list
                                 <img src="images/tuto_1/section7/9 actions list.png" width="220px">
                                 <p>Vous obtiendrez dans le terminal la liste des actions disponible :</p>
                                 <img src="images/tuto_1/section7/10 actions list result.png" width="220px">
-                                <p>Cependant, chaque action possède un type précis. Il est possible de l'afficher en ajoutant le paramètre "-t" dans la commande précédente.</p>
+                                <p>Cependant, chaque action possède un type précis. Il est possible de l'afficher en ajoutant le paramètre "<code>-t</code>" dans la commande précédente.</p>
                             </li>
 
                             <li>
@@ -874,7 +874,7 @@ ros2 action list -t
                                 </div>
                                 <img src="images/tuto_1/section7/11 actions list result type.png" width="400px">
                                 <p>Entre crochets à droite de chaque nom d'action (dans notre cas, uniquement pour l'action <code>/turtle1/rotate_absolute</code>) se trouve le type d'action, 
-                                    turtlesim/action/RotateAbsolute. Vous en aurez besoin lorsque vous voudrez exécuter une action à partir de la ligne de commande ou du code.
+                                    <code>turtlesim/action/RotateAbsolute</code>. Vous en aurez besoin lorsque vous voudrez exécuter une action à partir de la ligne de commande ou du code.
                                 </p>
                             </li>
 
@@ -895,7 +895,7 @@ ros2 action info /turtle1/rotate_absolute
                     </section>
 
                     <section id="subsection7-4">
-                        <h4>Visualisation de l'action <code>/turtle1/rotate_absolute</code> avec <code>rqt_graph</code></h4>
+                        <h4>Visualisation de l'action /turtle1/rotate_absolute avec rqt_graph</h4>
                         
                         <ol>
                             <li><p>Tapez la commande pour ouvrir <code>rqt_graph</code>, toujours dans le second terminal (Voir la section <a href="#rqt_graph">Visualisation des nœuds et topics avec rqt graph 1.</a>).</p></li>
@@ -911,7 +911,7 @@ ros2 action info /turtle1/rotate_absolute
                     <section id="subsection7-5">
                         <h4>Trouver la structure du type d'action "turtlesim/action/RotateAbsolute"</h4>
                         <p>Une autre information dont vous aurez besoin avant d'envoyer ou d'exécuter vous-même un objectif d'action est la structure du type de cette action.
-                            Rappelez-vous que vous avez identifié précédemment le type de /turtle1/rotate_absolue en exécutant la commande <i>$ ros2 action list -t</i> (type : turtlesim/action/RotateAbsolute).
+                            Rappelez-vous que vous avez identifié précédemment le type de <code>/turtle1/rotate_absolue</code> en exécutant la commande <code>$ ros2 action list -t</code> (type : <code>turtlesim/action/RotateAbsolute</code>).
                         </p>
 
                         <ol>
@@ -953,7 +953,7 @@ ros2 action send_goal &lt;action_name&gt; &lt;action_type&gt; &lt;values&gt;
                             </li>
 
                             <li>
-                                <p>Gardez un oeil sur la fenêtre TurtleSim, et entrez la commande suivante dans votre terminal :</p>
+                                <p>Gardez un oeil sur la fenêtre TurtleSim, et entrez la commande suivante dans votre terminal ([&theta;] = radian):</p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code20.2')">Copier</button>
 <pre id="code20.2" class="code-content">
@@ -969,8 +969,8 @@ ros2 action send_goal /turtle1/rotate_absolute turtlesim/action/RotateAbsolute "
                             </li>
 
                             <li>
-                                <p>Ajoutez le paramètre "--feedback" à la commande ros2 action send_goal, pour voir le feedback d'un objectif. 
-                                    Changez la valeur de theta, par exemple <i>&theta;=-1.57</i> et n'oubliez pas d'ajouter le paramètre "--feedback" :
+                                <p>Ajoutez le paramètre "<code>--feedback</code>" à la commande ros2 action send_goal, pour voir le feedback d'un objectif. 
+                                    Changez la valeur de theta, par exemple <code>&theta;=-1.57</code> et n'oubliez pas d'ajouter le paramètre "<code>--feedback</code>" :
                                 </p>    
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code20.3')">Copier</button>
@@ -1035,7 +1035,7 @@ ros2 service list
 </pre>
                                 </div>
                                 <img src="images/tuto_1/section8/service list turtlesim.png" width="275px">
-                                <p>Comme vous pouvez le voir, tous les services liés au noeud turtlesim et à la /turtle1 sont visibles, donc actifs.</p>
+                                <p>Comme vous pouvez le voir, tous les services liés au noeud turtlesim et à la <code>turtle1</code> sont visibles, donc actifs.</p>
                             </li>
 
                             <li>
@@ -1053,11 +1053,11 @@ ros2 service list
 </pre>
                                 </div>
                                 <img src="images/tuto_1/section8/service list turtlesim teleop.png" width="275px">
-                                <p>Vous verrez que les deux nœuds ont six services identiques avec des paramètres dans leurs noms. Presque tous les nœuds de ROS 2 ont ces services d'infrastructure à partir desquels les paramètres sont construits.</p>
+                                <p>Vous verrez que les deux nœuds ont six services identiques avec des paramètres dans leurs noms. Presque tous les nœuds de ROS2 ont ces services d'infrastructure à partir desquels les paramètres sont construits.</p>
                             </li>
                         </ol>
                         <p> Dans ce tutoriel, les services de paramètres seront omis de la discussion.</p>
-                        <p>Pour l'instant, concentrons-nous sur les services spécifiques à turtlesim, /clear, /kill, /reset, /spawn, /turtle1/set_pen, /turtle1/teleport_absolute, et /turtle1/teleport_relative.</p>
+                        <p>Pour l'instant, concentrons-nous sur les services spécifiques à turtlesim, <code>/clear</code>, <code>/kill</code>, <code>/reset</code>, <code>/spawn</code>, <code>/turtle1/set_pen</code>, <code>/turtle1/teleport_absolute</code>, et <code>/turtle1/teleport_relative</code>.</p>
                     </section>
 
                     <section id="subsection8-2">
@@ -1066,7 +1066,7 @@ ros2 service list
                     
                         <ol start="0">
                             <li>
-                                <p>TurtleSim et la télécommande doivent rester actives pour cette section !</p>
+                                <p>Les noeuds, TurtleSim et la télécommande, doivent rester actifs pour cette section !</p>
                             </li>
                             <li>
                                 <p>Observez la structure d'une commande pour trouver le type d'un service :</p>
@@ -1078,7 +1078,7 @@ ros2 service type &lt;service_name&gt;
                             </li>
 
                             <li>
-                                <p>Utilisez cette commande pour le service /clear de TurtleSim (Le service /clear permet d'effacer la trace que la tortue laisse sur la fenêtre de TurtleSim après avoir bougée) :</p>
+                                <p>Utilisez cette commande pour le service <code>/clear</code> de TurtleSim (Le service <code>/clear</code> permet d'effacer la trace que la tortue laisse sur la fenêtre de TurtleSim après avoir bougée) :</p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code24')">Copier</button>
 <pre id="code24" class="code-content">
@@ -1088,7 +1088,7 @@ ros2 service type /clear
                                 <img src="images/tuto_1/section8/service type clear.png" width="250px">
                                 <p>Le terminal vous renvoie :</p>
                                 <img src="images/tuto_1/section8/service type clear res.png" width="250px">
-                                <p>Le type <i>Empty</i> signifie que l'appel de service n'envoie aucune donnée lorsqu'il émet une requête et ne reçoit aucune donnée lorsqu'il reçoit une réponse.</p>
+                                <p>Le type <code>Empty</code> signifie que l'appel de service n'envoie aucune donnée lorsqu'il émet une requête et ne reçoit aucune donnée lorsqu'il reçoit une réponse.</p>
 
                             </li>
 
@@ -1119,7 +1119,7 @@ ros2 service find &lt;type_name&gt;
                             </li>
 
                             <li>
-                                <p>Utilisez cette commande pour trouver tous les services actifs du type Empty  :</p>
+                                <p>Utilisez cette commande pour trouver tous les services actifs du type <code>Empty</code>  :</p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code26')">Copier</button>
 <pre id="code26" class="code-content">
@@ -1147,15 +1147,15 @@ ros2 interface show &lt;type_name&gt;
                             </li>
 
                             <li>
-                                <p>Utilisez cette commande pour trouver la structure du type de service Empty :</p>
+                                <p>Utilisez cette commande pour trouver la structure du type de service <code>Empty</code> :</p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code28')">Copier</button>
 <pre id="code28" class="code-content">
 ros2 interface show std_srvs/srv/Empty
 </pre>
                                 </div>
-                                <p>Le terminal ne vous renvoie rien et c'est normal car ce type de service est Empty. 
-                                    Le type <i>Empty</i> signifie que l'appel de service n'envoie aucune donnée 
+                                <p>Le terminal ne vous renvoie rien et c'est normal car ce type de service est <code>Empty</code>. 
+                                    Le type <code>Empty</code> signifie que l'appel de service n'envoie aucune donnée 
                                     lorsqu'il émet une requête et ne reçoit aucune donnée lorsqu'il reçoit une réponse.
                                 </p>
                             </li>
@@ -1172,7 +1172,7 @@ ros2 service type /spawn
                             </li>
 
                             <li>
-                                <p>Trouvez ensuite la structure du type du service /spawn avec la commande :</p>
+                                <p>Trouvez ensuite la structure du type du service <code>/spawn</code> avec la commande :</p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code28.1')">Copier</button>
 <pre id="code28.1" class="code-content">
@@ -1180,11 +1180,11 @@ ros2 interface show turtlesim/srv/Spawn
 </pre>
                                 </div>
                                 <img src="images/tuto_1/section8/interface show spawn.png" width="500px">
-                                <p>Les informations au-dessus de la ligne - - - nous indiquent les arguments nécessaires pour appeler /spawn. 
-                                    x, y et &theta; déterminent la pose 2D de la tortue engendrée, et name est clairement optionnel.
+                                <p>Les informations au-dessus de la ligne <code>---</code> nous indiquent les arguments nécessaires pour appeler <code>/spawn</code>. 
+                                    <code>x, y</code> et <code>&theta;</code> déterminent la pose 2D de la tortue engendrée, et name est clairement optionnel.
                                 </p>
                                 <p>Les informations sous la ligne ne sont pas nécessaires dans ce cas, mais elles peuvent vous aider à 
-                                    comprendre le type de données de la réponse que vous obtenez lors de l'appel du service /spawn.
+                                    comprendre le type de données de la réponse que vous obtenez lors de l'appel du service <code>/spawn</code>.
                                 </p>
                             </li>
 
@@ -1201,11 +1201,11 @@ ros2 interface show turtlesim/srv/Spawn
 ros2 service call &lt;service_name&gt; &lt;service_type&gt; &lt;arguments&gt;
 </pre>
                                 </div>
-                                <p>La partie &lt;arguments&gt; est facultative. Par exemple, vous savez que les services du type /Empty n'ont pas d'arguments.</p>
+                                <p>La partie <code>&lt;arguments&gt;</code> est facultative. Par exemple, vous savez que les services du type <code>Empty</code> n'ont pas d'arguments.</p>
                             </li>
 
                             <li>
-                                <p>Utilisez cette structure de commande pour appeler le service /clear. Le service clear à pour but d'effacer le chemin parcouru par la tortue dans la fenêtre TurtleSim.
+                                <p>Utilisez cette structure de commande pour appeler le service <code>/clear</code>. Le service clear à pour but d'effacer le chemin parcouru par la tortue dans la fenêtre TurtleSim.
                                     Avant d'utiliser cette commande pour effacer le chemin parcouru par la tortue faites bouger la tortue grâce à la télécommande.
                                 </p>
                             </li>
@@ -1235,7 +1235,7 @@ ros2 service call /clear std_srvs/srv/Empty
                         <h4>Faire spawn une nouvelle tortue dans TurtleSim</h4>
                         <ol>
                             <li>
-                                <p>Faites spawn une nouvelle tortue en appelant le service /spawn et en définissant des arguments. Les <arguments> d'entrée dans un appel de service à partir de la ligne de commande doivent être en syntaxe YAML.</p>
+                                <p>Faites spawn une nouvelle tortue en appelant le service <code>/spawn</code> et en définissant des arguments. Les <arguments> d'entrée dans un appel de service à partir de la ligne de commande doivent être en syntaxe <code>YAML</code>.</p>
                                 <p>Voici la syntaxe :</p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code30')">Copier</button>
@@ -1246,7 +1246,7 @@ ros2 service call /spawn turtlesim/srv/Spawn "{x: 2, y: 2, theta: 0.2, name: 'tu
                                 <img src="images/tuto_1/section8/service call spawn.png" width="640px">
                                 <p>Le terminal va vous renvoyer les informations suivantes :</p>
                                 <img src="images/tuto_1/section8/service call spawn res.png" width="640px">
-                                <p>Ces informations montrent que nous avons appelé le service spawn avec les données x,y et theta et qu'en sortie nous avons bien fait spawn une nouvelle tortue nommée comme on le souhaitait.</p>
+                                <p>Ces informations montrent que nous avons appelé le service spawn avec les données <code>x, y</code> et <code>&theta;</code> et qu'en sortie nous avons bien fait spawn une nouvelle tortue nommée comme on le souhaitait.</p>
                             
                             </li>
 
