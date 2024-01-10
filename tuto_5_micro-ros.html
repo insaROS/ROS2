@@ -99,7 +99,7 @@ git clone -b $ROS_DISTRO https://github.com/micro-ROS/micro_ros_setup.git src/mi
                         <h4>Mise à jour des dépendances avec rosdep et installation de pip</h4>
                         <ol>
                             <li>
-                                <p>Mettez à jour les dépendances avec rosdep :</p>
+                                <p>Mettez à jour les dépendances avec <code>rosdep</code> :</p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code1')">Copier</button>
 <pre id="code1" class="code-content">
@@ -109,7 +109,7 @@ rosdep install --from-paths src --ignore-src -y
                                 </div>
                             </li>
                             <li>
-                                <p>Installez pip :</p>
+                                <p>Installez <code>pip</code> :</p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code2')">Copier</button>
 <pre id="code2" class="code-content">
@@ -146,7 +146,7 @@ source install/local_setup.bash
 ros2 run micro_ros_setup create_firmware_ws.sh host
 </pre>
                         </div>
-                        <p>Le paramètre "host" signifie que nous utilisons notre ordinateur comme cible du firmware. En utilisant la commande « ls », le dossier du firmware devrait être visible.</p>
+                        <p>Le paramètre "host" signifie que nous utilisons notre ordinateur comme cible du firmware. En utilisant la commande <code>ls</code>, le dossier du firmware devrait être visible.</p>
 
                     </section>
 
@@ -154,7 +154,7 @@ ros2 run micro_ros_setup create_firmware_ws.sh host
                         <h4>Création des fichiers de l'application pour le Publisher et le Subscriber</h4>
                         <ol>
                             <li>
-                                <p>Allez dans le dossier « rclc » qui contient les codes des applications micro-ROS en langage C avec la commande suivante :</p>
+                                <p>Allez dans le dossier <code>rclc</code> qui contient les codes des applications micro-ROS en langage C avec la commande suivante :</p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code6')">Copier</button>
 <pre id="code6" class="code-content">
@@ -174,7 +174,7 @@ mkdir Sub
                             </li>
 
                             <li>
-                                <p>Dans chaque dossier, nous allons créer un fichier « main.c » qui contiendra le code de nos application, et un fichier « CMakeLists.txt » qui contiendra le code permettant de compiler notre application.</p>
+                                <p>Dans chaque dossier, nous allons créer un fichier <code>main.c</code> qui contiendra le code de nos application, et un fichier <code>CMakeLists.txt</code> qui contiendra le code permettant de compiler notre application.</p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code8')">Copier</button>
 <pre id="code8" class="code-content">
@@ -189,8 +189,8 @@ cd ..
                                 </div>
                             </li>
 
-                            <li>
-                                <p>Nous allons maintenant remplir différents les fichiers que nous avons créés. Commençons par l'application « Pub ». Ouvrons le fichier main.c qui se trouve dedans :</p>
+                            <li id="main_pub">
+                                <p>Nous allons maintenant remplir différents les fichiers que nous avons créés. Commençons par l'application <code>Pub</code>. Ouvrons le fichier <code>main.c</code> qui se trouve dedans :</p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code9')">Copier</button>
 <pre id="code9" class="code-content">
@@ -198,12 +198,9 @@ cd Pub
 sudo nano main.c
 </pre>
                                 </div>
+                                <p>Remplissez-le avec le code qui se trouve en <a href="#annexe1">Annexe 1</a>. Les commentaires expliquent son fonctionnement. Sauvegardez avec <code>ctrl+O</code> et sortez du fichier avec <code>ctrl+X</code>.</p>
                             </li>
-                            <li id="main_pub">
-                                <p>Remplissez-le avec le code qui se trouve en <a href="#annexe1">Annexe 1</a>. Les commentaires expliquent son fonctionnement.</p>
-                                <p>Sauvegardez avec ctrl+O et sortez du fichier avec ctrl+X.</p>
-                            </li>
-                            <li>
+                            <li id="cmakelist_pub">
                                 <p>Occupez-vous maintenant du fichier CMakeLists.txt :</p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code10')">Copier</button>
@@ -211,14 +208,11 @@ sudo nano main.c
 sudo nano CMakeLists.txt
 </pre>
                                 </div>
-                            </li>
-                            <li id="cmakelist_pub">
-                                <p>Remplissez-le avec le texte en <a href="#annexe2">Annexe 2</a> afin de donner les informations complémentaires au compilateur, enregistrez-les, et quittez l'éditeur de texte.</p>
-                                Le Publisher est maintenant codé. Occupez-vous de la même façon du Subscriber !
+                                <p>Remplissez-le avec le texte en <a href="#annexe2">Annexe 2</a> afin de donner les informations complémentaires au compilateur, enregistrez-les, et quittez l'éditeur de texte. Le Publisher est maintenant codé. Occupez-vous de la même façon du Subscriber !</p>
                             </li>
 
-                            <li>
-                                <p>Nous allons maintenant remplir différents les fichiers que nous avons créés. Commençons par l'application « Pub ». Ouvrons le fichier main.c qui se trouve dedans :</p>
+                            <li id="main_sub">
+                                <p>Nous allons maintenant remplir différents les fichiers que nous avons créés. Continuons avec l'application <code>Sub</code>. Ouvrons le fichier main.c qui se trouve dedans :</p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code9')">Copier</button>
 <pre id="code9" class="code-content">
@@ -226,12 +220,9 @@ cd ../Sub
 sudo nano main.c
 </pre>
                                 </div>
+                                <p>Remplissez-le avec le code qui se trouve en <a href="#annexe3">Annexe 3</a>. Les commentaires expliquent son fonctionnement. Sauvegardez avec <code>ctrl+O</code> et sortez du fichier avec <code>ctrl+X</code>.</p>
                             </li>
-                            <li id="main_sub">
-                                <p>Remplissez-le avec le code qui se trouve en <a href="#annexe3">Annexe 3</a>. Les commentaires expliquent son fonctionnement.</p>
-                                <p>Sauvegardez avec ctrl+O et sortez du fichier avec ctrl+X.</p>
-                            </li>
-                            <li>
+                            <li id="cmakelist_sub">
                                 <p>Occupez-vous maintenant du fichier CMakeLists.txt :</p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code10')">Copier</button>
@@ -239,10 +230,7 @@ sudo nano main.c
 sudo nano CMakeLists.txt
 </pre>
                                 </div>
-                            </li>
-                            <li id="cmakelist_sub">
-                                <p>Remplissez-le avec le texte en <a href="#annexe4">Annexe 4</a> afin de donner les informations complémentaires au compilateur, enregistrez-les, et quittez l'éditeur de texte.</p>
-                                Le Subcriber est maintenant codé !
+                                <p>Remplissez-le avec le texte en <a href="#annexe4">Annexe 4</a> afin de donner les informations complémentaires au compilateur, enregistrez-les, et quittez l'éditeur de texte. Le Subcriber est maintenant codé !</p>
                             </li>
                         </ol>
                         
@@ -253,7 +241,7 @@ sudo nano CMakeLists.txt
                         <h4>Ajout de nos deux programmes dans le registre des exécutables micro-ROS</h4>
                         <ol>
                             <li>
-                                <p>Ajoutez les deux applications dans la liste des applications exécutables par micro-ROS. Pour cela, nous allons ouvrir le fichier CMakeLists.txt du dossier « rclc ». Nous pouvons retourner dans le dossier « rclc » avec la commande suivante :</p>
+                                <p>Ajoutez les deux applications dans la liste des applications exécutables par micro-ROS. Pour cela, nous allons ouvrir le fichier <code>CMakeLists.txt</code> du dossier <code>rclc</code>. Nous pouvons retourner dans le dossier <code>rclc</code> avec la commande suivante :</p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code11')">Copier</button>
 <pre id="code11" class="code-content">
@@ -263,7 +251,7 @@ cd ..
                             </li>
 
                             <li>
-                                <p>Utilisez la commande suivante pour modifier le fichier CMakelist du répertoire "rclc" :</p>
+                                <p>Utilisez la commande suivante pour modifier le fichier <code>CMakelist</code> du répertoire <code>rclc</code> :</p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code12')">Copier</button>
 <pre id="code12" class="code-content">
@@ -274,8 +262,7 @@ sudo nano CMakeLists.txt
 
                             <li>
                                 <p>Dans ce fichier, il y a un moment une longue liste d'export de fichiers exécutables présentés comme suit : </p>
-                                <div class="code-block">
-<button class="copy-button" onclick="copyCode('code13')">Copier</button>
+                                <div class="code-block" style="background-color: lightgray;">
 <pre id="code13" class="code-content">
 export_executable(&lt;App&gt;)
 </pre>
@@ -304,7 +291,7 @@ export_executable(Sub)
 
                     <section id="subsection2-6">
                         <h4>Mise en place du firmware</h4>
-                        <p>Nous allons mettre en place notre firmware afin qu'il prenne en compte nos deux nouvelles applications. Pour cela nous allons retourner dans le workspace microros_linux_ws, puis nous allons utiliser la commande pour mettre en place notre firmware. Nous allons ensuite sourcer à nouveau notre installation locale pour qu'il prenne en compte ces changements.</p>
+                        <p>Nous allons mettre en place notre firmware afin qu'il prenne en compte nos deux nouvelles applications. Pour cela nous allons retourner dans le workspace <code>microros_linux_ws</code>, puis nous allons utiliser la commande pour mettre en place notre firmware. Nous allons ensuite sourcer à nouveau notre installation locale pour qu'il prenne en compte ces changements.</p>
                         <ol>
                             <li>
                                 <p>Tapez les commandes :</p>
@@ -313,10 +300,17 @@ export_executable(Sub)
 <pre id="code15" class="code-content">
 cd ~/microros_linux_ws
 ros2 run micro_ros_setup build_firmware.sh
+</pre>
+                                </div>
+                            </li>
+                            <li>
+                                <p>Puis tapez la commande pour sourcer ce workspace :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code15.1')">Copier</button>
+<pre id="code15.1" class="code-content">
 source install/local_setup.bash
 </pre>
                                 </div>
-                            
                                 <p>Une fois cette étape réalisée, nous pouvons passer à la création et à la mise en place de l'agent micro-ROS qui remplace le stack ROS comme expliqué dans l'introduction. </p>
                             </li>
                         </ol>
@@ -327,7 +321,8 @@ source install/local_setup.bash
                         <h4>Création, mise en place et lancement d'un agent micro-ROS</h4>
                         <ol>
                             <li>
-                                <p>Afin de permettre à notre application micro-ROS de communiquer avec ROS2, nous devons créer un agent qui nous servira de passerelle. Une fois cet agent créé, nous allons le mettre en place puis re-sourcer notre installation locale pour que l'agent soit pris en compte :</p>
+                                <p>Afin de permettre à notre application micro-ROS de communiquer avec ROS2, nous devons créer un agent qui nous servira de passerelle. Une fois cet agent créé, nous allons le mettre en place puis re-sourcer notre installation locale pour que l'agent soit pris en compte.</p>
+                                <p>Tapez ces commandes à la suite dans un même terminal :</p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code16')">Copier</button>
 <pre id="code16" class="code-content">
@@ -350,7 +345,8 @@ source install/local_setup.bash
                             </li>
 
                             <li>
-                                <p>Une fois l'agent mis en place, nous allons pouvoir le lancer. Comme il remplace le stack, il faut le considérer comme un « roscore » pour micro-ROS, c'est-à-dire que le terminal dans lequel il sera lancé devra continuer à tourner pour que l'application micro-ROS soit fonctionnelle. Pour le lancer, il faut choisir un port de l'ordinateur sur lequel utiliser l'agent. Dans ce cas, nous allons le mettre en place sur le port 8888 qui fonctionne en UDP. La commande est alors la suivante : </p>
+                                <p>Une fois l'agent mis en place, nous allons pouvoir le lancer. Comme il remplace le stack, il faut le considérer comme un <code>roscore</code> (serveur ROS1) pour micro-ROS, c'est-à-dire que le terminal dans lequel il sera lancé devra continuer à tourner pour que l'application micro-ROS soit fonctionnelle. Pour le lancer, il faut choisir un port de l'ordinateur sur lequel utiliser l'agent. Dans ce cas, nous allons le mettre en place sur le port 8888 qui fonctionne en UDP.</p>
+                                <p>La commande est alors la suivante (toujours dans le même terminal) :</p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code18')">Copier</button>
 <pre id="code18" class="code-content">
@@ -359,7 +355,7 @@ ros2 run micro_ros_agent micro_ros_agent udp4 --port 8888
                                 </div>
                         
                                 <p>L'agent est alors lancé et le terminal doit ressembler à celui-ci :</p>
-                                <img src="images/tuto_5/section2/agent lancé.png" width="400px">
+                                <img src="images/tuto_5/section2/agent lancé.png" width="650px">
                             </li>
                         </ol>
                     </section>
@@ -368,7 +364,7 @@ ros2 run micro_ros_agent micro_ros_agent udp4 --port 8888
                         <h4>Lancement du Publisher et du Subscriber</h4>
                         <ol>
                             <li>
-                                <p>Notre agent mis en place, nous pouvons à présent lancer notre Publisher. Pour cela, nous allons retourner dans notre dossier microros\_linux\_ws, sourcer l'installation locale et utiliser une implémentation de notre middleware semblable à celle d'un microcontrôleur connecté en DDS (Nous émulons un microcontrôleur à l'aide de notre terminal). Afin de réaliser ceci, ouvrez un nouveau terminal avec ctrl+alt+T et entrez les commandes suivantes : </p>
+                                <p>Notre agent mis en place, nous pouvons à présent lancer notre Publisher. Pour cela, nous allons retourner dans notre dossier <code>microros_linux_ws</code>, sourcer l'installation locale et utiliser une implémentation de notre middleware semblable à celle d'un microcontrôleur connecté en DDS (Nous émulons un microcontrôleur à l'aide de notre terminal). Afin de réaliser ceci, ouvrez un nouveau terminal avec <code> ctrl+alt+T</code> et entrez les commandes suivantes : </p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code19')">Copier</button>
 <pre id="code19" class="code-content">
@@ -380,7 +376,7 @@ export RMW_IMPLEMENTATION=rmw_microxrcedds
                             </li>
 
                             <li>
-                                <p>Maintenant que tout est en place, nous pouvons simplement lancer notre Publisher avec une simple commande ros2 run comme suit : </p>
+                                <p>Maintenant que tout est en place, nous pouvons simplement lancer notre Publisher avec une simple commande <code>ros2 run</code> comme suit : </p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code20')">Copier</button>
 <pre id="code20" class="code-content">
@@ -423,7 +419,7 @@ ros2 run micro_ros_demos_rclc Sub
                         <p>Afin de vérifier que tout fonctionne comme prévu dans nos programmes, nous voulons vérifier que les messages transitent bien par le topic My_Topic créé dans nos programmes, et connecté au nœud My_Node que nous créons auparavant dans ceci. Pour cela, nous pouvons utiliser « rqt_graph » simplement avec la commande :</p>
                         <ol>
                             <li>
-                                <p>Tapez la commande pour ouvrir rqt_graph :</p>
+                                <p>Ouvrez un nouveau terminal et tapez la commande pour ouvrir rqt_graph :</p>
                                 <div class="code-block">
 <button class="copy-button" onclick="copyCode('code23')">Copier</button>
 <pre id="code23" class="code-content">
