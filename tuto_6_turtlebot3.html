@@ -729,8 +729,8 @@ ssh ubuntu@10.173.20.207
                             <li>
                                 <p>Indiquez à ce terminal le type de votre TurtleBot3. Choisissez le bon modèle parmi : <em>burger</em>, <em>waffle</em> et <em>waffle_pi</em>. Tapez alors la commande suivante en modifiant en fonction de votre modèle :</p>
                                 <div class="code-block">
-<button class="copy-button" onclick="copyCode('code36')">Copier</button>
-<pre id="code36" class="code-content">
+<button class="copy-button" onclick="copyCode('code36.1')">Copier</button>
+<pre id="code36.1" class="code-content">
 export TURTLEBOT3_MODEL=burger
 </pre>
                                 </div>
@@ -781,8 +781,8 @@ ros2 topic list
                             <li>
                                 <p>Tapez la commande permettant de publier un message sur le topic <code>/cmd_vel</code> du TurtleBot3 (Rappel : les messages des topics <code>/cmd_vel</code> sont du type <code>geometry_msgs/Twist</code>) :</p>
                                 <div class="code-block">
-<button class="copy-button" onclick="copyCode('code41')">Copier</button>
-<pre id="code41" class="code-content">
+<button class="copy-button" onclick="copyCode('code39')">Copier</button>
+<pre id="code39" class="code-content">
 ros2 topic pub /cmd_vel geometry_msgs/Twist "{linear: {x: 2.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 2.0}}"
 </pre>
                                 </div>
@@ -790,8 +790,8 @@ ros2 topic pub /cmd_vel geometry_msgs/Twist "{linear: {x: 2.0, y: 0.0, z: 0.0}, 
                             <li>
                                 <p>Votre TurtleBot3 devrait bouger. Pour l'arrêter, renvoyez un message avec toutes les composantes à 0.0 :</p>
                                 <div class="code-block">
-<button class="copy-button" onclick="copyCode('code42')">Copier</button>
-<pre id="code42" class="code-content">
+<button class="copy-button" onclick="copyCode('code40')">Copier</button>
+<pre id="code40" class="code-content">
 ros2 topic pub /cmd_vel geometry_msgs/Twist "{linear: {x: 0.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 0.0}}"
 </pre>
                                 </div>
@@ -806,8 +806,8 @@ ros2 topic pub /cmd_vel geometry_msgs/Twist "{linear: {x: 0.0, y: 0.0, z: 0.0}, 
                             <li>
                                 <p>Tapez la commande pour lancer la télécommande consacré au TurtleBot en étant toujours dans le terminal en SSH :</p>
                                 <div class="code-block">
-<button class="copy-button" onclick="copyCode('code40')">Copier</button>
-<pre id="code40" class="code-content">
+<button class="copy-button" onclick="copyCode('code40.1')">Copier</button>
+<pre id="code40.1" class="code-content">
 ros2 run turtlebot3_teleop teleop_keyboard
 </pre>
                                 </div>
@@ -828,8 +828,8 @@ ros2 run turtlebot3_teleop teleop_keyboard
                             <li>
                                 <p>Vérifiez l'arrêt du bringup du TurtleBot3 en vérifiant que les topics du TurtleBot3 ne sont plus accessibles/actifs (vérifiez avec la commande <code>$ ros2 topic list</code>).</p>
                                 <div class="code-block">
-<button class="copy-button" onclick="copyCode('code40.1')">Copier</button>
-<pre id="code40.1" class="code-content">
+<button class="copy-button" onclick="copyCode('code40.2')">Copier</button>
+<pre id="code40.2" class="code-content">
 ros2 topic list
 </pre>
                                 </div>
@@ -849,8 +849,8 @@ ros2 topic list
                                 <li>
                                     <p>Rendez-vous dans le répertoire "<code>/src</code>"" du workspace <code>/ros2_ws</code> :</p>
                                     <div class="code-block">
-<button class="copy-button" onclick="copyCode('code42.1')">Copier</button>
-<pre id="code42.1" class="code-content">
+<button class="copy-button" onclick="copyCode('code41')">Copier</button>
+<pre id="code41" class="code-content">
 cd ~/ros2_ws/src
 </pre>
                                     </div>
@@ -858,8 +858,8 @@ cd ~/ros2_ws/src
                                 <li>
                                     <p>Utilisez la commande pour créer un nouveau package python. Vous nommerez le package turtlebot3\_teleop\_fr :</p>
                                     <div class="code-block">
-<button class="copy-button" onclick="copyCode('code42.2')">Copier</button>
-<pre id="code42.2" class="code-content">
+<button class="copy-button" onclick="copyCode('code42')">Copier</button>
+<pre id="code42" class="code-content">
 ros2 pkg create --build-type ament_python turtlebot3_teleop_fr
 </pre>
                                     </div>
@@ -1001,8 +1001,8 @@ colcon build
                                 <li>
                                     <p>Tapez la commande pour lancer le bringup du TurtleBot3 en étant toujours dans le terminal en SSH sur la Raspberry Pi du Turtlebot 3 :</p>
                                 <div class="code-block">
-<button class="copy-button" onclick="copyCode('code64')">Copier</button>
-<pre id="code64" class="code-content">
+<button class="copy-button" onclick="copyCode('code52.1')">Copier</button>
+<pre id="code52.1" class="code-content">
 ros2 launch turtlebot3_bringup robot.launch.py
 </pre>
                                 </div>
@@ -1060,8 +1060,8 @@ ros2 run turtlebot3_teleop_fr turtlebot3_teleop_fr
                             <li>
                                 <p>Vérifiez que vous êtes bien connecté au même wifi avec cette VM et le TurtleBot3. Pour rappel, le wifi peut se changer dans le fichier <code>/etc/netplan/50-cloud-init.yaml</code> :</p>
                                 <div class="code-block">
-<button class="copy-button" onclick="copyCode('code58.0')">Copier</button>
-<pre id="code58.0" class="code-content">
+<button class="copy-button" onclick="copyCode('code58')">Copier</button>
+<pre id="code58" class="code-content">
 sudo nano /etc/netplan/50-cloud-init.yaml
 </pre>
                                 </div>
@@ -1076,15 +1076,15 @@ exit
                             </li>
                             <li><p>Ouvrez un terminal dans votre VM et mettez la source de ROS2 dans le fichier <code>.bashrc</code> :</p></li>
                             <div class="code-block">
-<button class="copy-button" onclick="copyCode('code58')">Copier</button>
-<pre id="code58" class="code-content">
+<button class="copy-button" onclick="copyCode('code59')">Copier</button>
+<pre id="code59" class="code-content">
 echo 'source /opt/ros/humble/setup.bash' >> ~/.bashrc
 </pre>
                             </div>
                             <li><p>Actualisez la source du fichier <code>.bashrc</code> :</p></li>
                             <div class="code-block">
-<button class="copy-button" onclick="copyCode('code59')">Copier</button>
-<pre id="code59" class="code-content">
+<button class="copy-button" onclick="copyCode('code59.1')">Copier</button>
+<pre id="code59.1" class="code-content">
 source ~/.bashrc
 </pre>
                             </div>
