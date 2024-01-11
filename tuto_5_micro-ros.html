@@ -50,29 +50,16 @@
                     <h3>Table des matières</h3>
                     <ul>
                         <li><a href="#section1">Introduction</a></li>
-                        <li>
-                            <a href="#section2">Création d'une communication Publisher-Subscriber sur un Topic grâce à micro-ROS sur Linux</a>
-                            <ul>
-                                <li><a href="#subsection2-1">Création d'un espace de travail micro-ROS</a></li>
-                                <li><a href="#subsection2-2">Mise à jour des dépendances avec rosdep et installation de pip</a></li>
-                                <li><a href="#subsection2-3">Création du firmware</a></li>
-                                <li><a href="#subsection2-4">Création des fichiers de l'application pour le Publisher et le Subscriber</a></li>
-                                <li><a href="#subsection2-5">Ajout de nos deux programmes dans le registre des exécutables micro-ROS</a></li>
-                                <li><a href="#subsection2-6">Mise en place du firmware</a></li>
-                                <li><a href="#subsection2-7">Création, mise en place et lancement d'un agent micro-ROS</a></li>
-                                <li><a href="#subsection2-8">Lancement du Publisher et du Subscriber</a></li>
-                                <li><a href="#subsection2-9">Observation du nœud et du topic avec rqt_graph</a></li>
-                            </ul>
-                        </li>
-
-                        <li><a href="#section3">Titre en construction</a></li>
+                        <li><a href="#section2">Création d'une communication Publisher-Subscriber sur un Topic grâce à micro-ROS sur Linux</a></li>
+                        <li><a href="#section3">Création d'un Publisher sur un topic via une liaison série grâce à Micro-ROS sur un micro-processeur</a></li>
+                        <li><a href="#section4">Création d'un Publisher sur un Topic via une liaison internet grâce à Micro-ROS sur un micro-processeur</a></li>
                         <li><a href="#section8">Annexes</a></li>
                     </ul>
                 </div>
 
                 <section id="section1">
                     <h3>Introduction</h3>
-                    <p>Ce premier tutoriel a pour but de comprendre un petit peu plus ce qu'est micro-ROS et de créer une première application micro-ROS.</p>
+                    <p>Ces tutoriels on pour but de montrer ce qu'est micro-ROS et de créer une première application micro-ROS.</p>
                     <p><strong>Micro-ROS</strong> : ROS est un middleware ( un software qui se comporte comme une passerelle entre des applications et des bases de données ou des systèmes d'exploitation, aussi appelé intergiciel en français ), et ROS2 est sa nouvelle version. Elle comporte à peu près les mêmes composants, mais son architecture change fondamentalement en utilisant le protocole DDS (Data Distribution Service), qui a pour but de simplifier la programmation réseau. Micro-ROS est la version de ROS2 créée pour être utilisé directement avec des microcontrôleurs. Pour cela, quelques changements sont opérés sur son architecture. Le stack ROS2 utilisé sur les systèmes d'exploitation deviennent des agents dont le seul but est de gérer micro-ROS sur le microcontrôleur. On retrouve les RTOS (système d'exploitation en temps réel), mais avec des drivers spécifiques à micro-ROS, avec en plus le RTOS Arduino open source, qui est « Community based » et non proposé de base par micro-ROS. En plus des API ROS et des RCL (ROS Client Libraries), codés en langage C, on retrouve le RCLC qui aoute des fonctions, des exécuteurs ainsi que d'autres choses spécialement pour l'utilisation sur microcontrôleur. Pour le point de vue Middleware, le ROS Middleware Interface ne suffit plus, car il ne permet pas au microcontrôleur d'utiliser le protocole réseau DDS. Pour cela, un adaptateur DDS est ajouté, et un client avec à l'intérieur du Middleware. Le microcontrôleur ne peut donc pas assumer le rôle de serveur DDS.</p>
                     <p><strong>RTOS</strong> : Un système d'exploitation en temps réel (RTOS) est un système d'exploitation (OS) léger, utilisé pour faciliter le fonctionnement multitâche et l'intégration des tâches dans les conceptions où les ressources et le temps sont limités, ce qui est généralement le cas dans les systèmes embarqués. En outre, le terme « temps réel » suggère la prévisibilité/le déterminisme du temps d'exécution plutôt que la vitesse brute. Ainsi, on peut généralement démontrer qu'un RTOS répond aux exigences de temps réel dur en raison de son déterminisme (source : <a href="https://www.digikey.fr/fr/articles/real-time-operating-systems-and-their-applications#:~:text=Qu'est%2Dce%20qu',cas%20dans%20les%20syst%C3%A8mes%20embarqu%C3%A9s." target="_blank">Systèmes d'exploitation en temps réel (RTOS) et applications, DigiKey</a>).</p>
                 
@@ -437,6 +424,586 @@ rqt_graph
                     </section>
                 </section>
 
+
+                <section id="section3">
+                    <h3>Création d'un Publisher sur un Topic via une liaison série grâce à micro-ROS sur un micro-processeur.</h3>
+
+                    <section id="subsection3-1">
+                        <h4>Installation des prérequis</h4>
+                        <p>Commençons par l'installations de différents prérequis.</p>
+                        <ol>
+                            <li>
+                                <p>La commande suivante nous permet d'installer le gcc contenant les bibliothèques nécessaires à la construction de la bibliothèque micro-ROS Pico. Tapez la commande ci-dessous :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code24')">Copier</button>
+<pre id="code24" class="code-content">
+sudo apt install build-essential cmake gcc-arm-none-eabi libnewlib-arm-none-eabi doxygen git python3
+</pre>
+                                </div>
+                            </li>
+
+                            <li>
+                                <p>Ajoutez les lignes indiquant où trouver la bibliothèque Pico SDK et le chemin vers la Tool Chain dans le <code>.bashrc</code>. Cela nous permettra d'utiliser la bibliothèque micro-ROS sans devoir indiquer ces chemins à chaque fois :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code25')">Copier</button>
+<pre id="code25" class="code-content">
+echo "export PICO_TOOLCHAIN_PATH=..." >> ~/.bashrc
+echo "export PICO_SDK_PATH=$HOME/microros_pico_ws/src/pico-sdk" >> ~/.bashrc
+</pre>
+                                </div>
+                            </li>
+
+                            <li>
+                                <p>Sourcez le fichier <code>.bashrc</code> :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code26')">Copier</button>
+<pre id="code26" class="code-content">
+source ~/.bashrc
+</pre>
+                                </div>
+                            </li>
+                        </ol>
+                    </section>
+
+
+                    <section id="subsection3-2">
+                        <h4>Création d'un espace de travail micro-ROS et mise à jour des installations</h4>
+                        <ol>
+                            <li>
+                                <p>Créez un dossier <code>microros_pico_ws</code> avec un sous-dossier <code>src</code>, et rentrer dedans :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code27')">Copier</button>
+<pre id="code27" class="code-content">
+mkdir -p ~/microros_pico_ws/src
+cd ~/microros_pico_ws/src
+</pre>
+                                </div>
+                            </li>
+
+                            <li>
+                                <p>Clonez la bibliothèque Pico SDK. Cette étape peut être longue, il faut donc être patient.</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code28')">Copier</button>
+<pre id="code28" class="code-content">
+git clone --recurse-submodules https://github.com/raspberrypi/pico-sdk.git
+</pre>
+                                </div>
+                            </li>
+
+                            <li>
+                                <p>Clonez la bibliothèque micro-ROS Pico. Cette étape peut être longue, il faut donc être patient.</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code29')">Copier</button>
+<pre id="code29" class="code-content">
+git clone https://github.com/micro-ROS/micro_ros_raspberrypi_pico_sdk.git
+</pre>
+                                </div>
+                            </li>
+
+                            <li>
+                                <p>Mettez à jour vos installations et votre système :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code30')">Copier</button>
+<pre id="code30" class="code-content">
+sudo apt-get update && sudo apt upgrade
+</pre>
+                                </div>
+                            </li>
+                        </ol>
+
+                    </section>
+
+                    <section id="subsection3-3">
+                        <h4>Création du Publisher</h4>
+                        <p>Cette étape à pour but de créer un programme contenant un Publisher micro-ROS, et de l'ajouter au CMakeLists.txt pour qu'il soit compilé. Cela servira aussi à le transformer dans un format que la carte Pico pourra comprendre.</p>
+                        <ol>
+                            <li id="pub_serie">
+                                <p>Rendez vous dans le répertoire <code>micro_ros_raspberrypi_pico_sdk</code> puis créez et ouvrez un fichier <code>Pub.c</code> :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code31')">Copier</button>
+<pre id="code31" class="code-content">
+cd micro_ros_raspberrypi_pico_sdk
+sudo nano Pub.c
+</pre>
+                                </div>
+                            </li>
+
+                            <li>
+                                <p>Remplissez-le avec le texte en <a href="#annexe5">Annexe 5</a>. Le code à été annoté pour plus de compréhension.<br>Une fois le programme ci-dessus écrit, sauvegardez-le avec <code>ctrl+O</code> et quittez avec <code>ctrl+X</code></p>
+                            </li>
+
+                            <li>
+                                <p>Modifiez le <code>CMakeLists.txt</code> afin de l'ajouter. Pour cela, utilisez la commande suivante :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code32')">Copier</button>
+<pre id="code32" class="code-content">
+sudo nano CMakeLists.txt
+</pre>
+                                </div>
+                            </li>
+
+                            <li>
+                                <p>Modifiez ce code en ajoutant les lignes encadrées en rouge dans les images ci-dessous :</p>
+                                <img src="images/tuto_5/section3/Image1.png" width="350px" style="margin-bottom: 10px;">
+                                <img src="images/tuto_5/section3/Image2.png" width="450px">
+                                <p>Sauvegardez avec <code>ctrl+O</code> et quittez avec <code>ctrl+X</code></p>
+
+                                <p>Voici une explication détaillée de ce que font ces lignes que nous avons ajouté, dans l'ordre d'apparition des carrées rouges : </p>
+                                <ul style="list-style-type: square;">
+                                    <li><p>Nous commençons par créer un nouveau projet, en précisant que les fichiers de ce projet auront comme langages de programmation le C, le C++ et l'assembleur.</p></li>
+                                    <li><p>Ensuite, nous indiquons que notre projet contient deux fichiers exécutables : Notre programme en C, et le fichier pico_uart_transport.c qui est le programme permettant à la carte Pico de communiquer via le port série.</p></li>
+                                    <li><p>Par la suite, nous ajoutons les différentes bibliothèques dont nous allons nous servir, ici microros qui contient les fonctions et les types nécessaires à l'utilisation de micro-ROS, et pico_stdlib qui est la version de stdlib pour une carte Pico. Stdlib est l'ensemble des bibliothèques standards, contenant les types de base tel que les entier, les chaines de caractères, etc.</p></li>
+                                    <li><p>On indique ensuite où notre projet va chercher les différents fichiers qu'on inclut, ici dans le dossier libmicroros et le sous-dossier include.</p></li>
+                                    <li><p>On indique que lors de la mise sur carte du projet le port USB doit se fermer et le port UART doit s'ouvrir.</p></li>
+                                    <li><p>On crée un fichier UF2 (les fichiers de programmation pour la carte Pico), qui est l'image du projet, et qui sera enregistré dans le dossier « build ».</p></li>
+                                </ul>
+                            </li>
+
+                        </ol>
+                    
+                    </section>
+
+                    <section id="subsection3-4">
+                        <h4>Construction du répertoire micro_ros_raspberry_pico_sdk</h4>
+                        <ol>
+                            <li>
+                                <p>Créez le sous-répertoire <code>build</code> :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code33')">Copier</button>
+<pre id="code33" class="code-content">
+mkdir build
+cd build    
+</pre>
+                                </div>
+                            </li>
+
+                            <li>
+                                <p>Créez le sous-répertoire <code>build</code> et build notre workspace :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code34')">Copier</button>
+<pre id="code34" class="code-content">
+mkdir build
+cd build
+cmake ..
+make
+</pre>
+                                </div>
+                            </li>
+
+                            <li>
+                                <p>Vérifiez que notre fichier Pub.uf2 qui est notre programme pour la carte Pico s'y trouve bien. Tapez la commande :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code35')">Copier</button>
+<pre id="code35" class="code-content">
+ls
+</pre>
+                                </div>
+                                <p>Vous devriez avoir :</p>
+                                <img src="images/tuto_5/section3/Image3.png" width="400px">
+                                <p>Si le fichier y est bien, on peut retourner dans le dossier <code>micro_ros_raspberrypi_pico_sdk</code> avec la commande :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code36')">Copier</button>
+<pre id="code36" class="code-content">
+cd ..
+</pre>
+                                </div>
+                            </li>
+
+                            <li>
+                                <p>Branchez la carte à l'ordinateur en maintenant le bouton BOOTSEL pour programmer notre carte Pico.Ensuite, nous devons lui envoyer le fichier <code>Pub.uf2</code> en tapant la commande :</p>
+                                <img src="images/tuto_5/section3/Image4.png" width="225px">
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code37')">Copier</button>
+<pre id="code37" class="code-content">
+cp build/Pub.uf2 /media/$USER/RPI-RP2
+</pre>
+                                </div>
+                                <p>Il faut vérifier que la carte disparait bien de la liste des appareils de stockage connectés. Cela signifirait que la programmation à bien réussie. </p>
+                            </li>
+                        </ol>
+                    </section>
+
+                    <section id="subsection3-5">
+                        <h4>Installation et configuration du module micro-ros-agent de snap</h4>
+                        <ol start="0">
+                            <li><p>Requis : <code>snap</code>. <br>Si l'ordinateur sur lequel vous êtes possède une version de Ubuntu supérieure à la 20.04, snap doit déjà être installé dessus. Sinon, référez-vous à ce <a href="https://snapcraft.io/docs/installing-snap-on-ubuntu">lien</a>.</p></li>
+                            <li>
+                                <p>Utiliser les commandes suivantes pour installer le module, le configurer et redémarrer snap pour appliquer les changements :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code38')">Copier</button>
+<pre id="code38" class="code-content">
+sudo snap install micro-ros-agent
+sudo snap set core experimental.hotplug=true
+sudo systemctl restart snapd
+</pre>
+                                </div>
+                                
+                            </li>
+                        </ol>
+                    </section>
+
+                    <section id="subsection3-6">
+                        <h4>Vérification de la présence de la carte Pico et connexion via le port série</h4>
+                        <ol>
+                            <li>
+                                <p>Tapez la commande suivante :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code39')">Copier</button>
+<pre id="code39" class="code-content">
+snap interface serial-port
+</pre>
+                                </div>
+                                <p>Vérifiez que vous obtenez ceci :</p>
+                                <img src="images/tuto_5/section3/Image5.png" width="300px">
+
+                            </li>
+
+                            <li>
+                                <p>Connectez vous alors à la carte Pico :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code40')">Copier</button>
+<pre id="code40" class="code-content">
+snap connect micro-ros-agent:serial-port snapd:pico
+</pre>
+                                </div>
+                                <p>Si le slots porte un autre nom, pensez à changer celui-ci dans la commande ci-dessus !</p>
+                                
+                            </li>
+                        </ol>
+                    </section>
+
+                    <section id="subsection3-7">
+                        <h4>Lancement du Publisher sur la carte Pico et vérifications</h4>
+                        <ol>
+                            <li>
+                                <p>Lancez le programme. Il suffit alors de lancer l'agent sur le port de la carte Pico avec le bon baudrate :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code41')">Copier</button>
+<pre id="code41" class="code-content">
+sudo micro-ros-agent serial --dev /dev/ttyACM0 baudrate=115200
+</pre>
+                                </div>
+                                <p>La LED devrait alors s'allumer sur la carte Pico, indiquant que le programme tourne bien. <br>Si ce n'est pas le cas, débranchez et rebranchez la carte Pico avant de recommencer, cela est probablement dû au Timeout que nous avons rédigé dans le programme (Si il n'y a pas de connexion pendant 2 min après la mise sous tension de la carte Pico, le programme arrête de tourner).</p>
+                                
+                            </li>
+
+                            <li>
+                                <p>Vous devriez alors observer les messages suivants :</p>
+                                <img src="images/tuto_5/section3/Image6.png" width="400px">
+
+                            </li>
+
+                            <li>
+                                <p>Vérifiez la présence du topic avec la commande suivante </p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code42')">Copier</button>
+<pre id="code42" class="code-content">
+ros2 topic list
+</pre>
+                                </div>
+                            </li>
+                            <li>
+                                <p>Vous devriez alors obtenir :</p>
+                                <img src="images/tuto_5/section3/Image7.png" width="225px">
+
+                            </li>
+
+                            <li>
+                                <p>Récupérez alors les messages qui sont envoyés sur le topic :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code43')">Copier</button>
+<pre id="code43" class="code-content">
+ros2 topic echo /pico_publisher
+</pre>
+                                </div>
+                            </li>
+
+                            <li>
+                                <p>Vous devriez alors obtenir :</p>
+                                <img src="images/tuto_5/section3/Image8.png" width="300px">
+
+                            </li>
+
+                            <li>
+                                <p>Observez les détails grâce à <code>rqt_graph</code> :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code44')">Copier</button>
+<pre id="code44" class="code-content">
+rqt_graph
+</pre>
+                                </div>
+                            </li>
+
+                            <li>
+                                <p>Vous devriez alors obtenir :</p>
+                                <img src="images/tuto_5/section3/Image9.png" width="400px">
+
+                            </li>
+
+                        </ol>
+                    </section>
+
+                </section>
+
+
+                <section id="section4">
+                    <h3>Création d'un Publisher sur un Topic via une liaison série grâce à micro-ROS sur un micro-processeur.</h3>
+                    <p>Maintenant que nous avons réussi à mettre en place un Publisher via une liaison série nous allons essayer de faire la même chose, mais avec une liaison internet, et plus précisément, avec de l'udp4. <br>Pour cela, nous allons avoir besoin d'une carte spécifique avec un module wifi : la carte Raspberry Pi Pico W.</p>
+                    <p>Voici une carte Raspberry Pi Pico W :</p>
+                    <img src="images/tuto_5/section4/Image1.png" width="250px">
+                    <p>La différence entre cette carte et la carte Pico est la présence d'un module wifi qui se rajoute pour la Pico W.</p>
+
+                    <section id="subsection4-1">
+                        <h4>Installation des prérequis</h4>
+                        <ol>
+
+                            <li>
+                                <p>Retourner dans le workspace :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code45')">Copier</button>
+<pre id="code45" class="code-content">
+cd ~/microros_pico_ws/src/micro_ros_raspberrypi_pico_sdk
+</pre>
+                                </div>
+                            </li>
+
+                            <li>
+                                <p>Vérifiez que vous pouvez voir les fichiers <code>pico_uart_transport.c</code> et <code>pico_uart_transport.h</code> avec la commande :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code46')">Copier</button>
+<pre id="code46" class="code-content">
+ls
+</pre>
+                                </div>
+                                <p>Vous devriez alors obtenir :</p>
+                                <img src="images/tuto_5/section4/Image2.png" width="400px">
+                                <p>Ces deux fichiers sont ceux qui permettent à notre carte Pico de communiquer avec l'ordinateur via une liaison série. Afin de pouvoir faire la même chose pour le wifi, nous allons devoir en récupérer deux nouveaux : <code>pico_wifi_transport.c</code> et <code>pico_wifi_transport.h</code>.</p>
+                                <p>La création de ces deux fichiers avec les différents paramètres à fournir et les méthodes à créer serait très compliqué. Heureusement, une personne a déjà réussi à mettre en place une communication wifi avec une carte Pico W avec micro-ROS, même si son application consiste à faire bouger un robot. Son github est le suivant : <a href="https://github.com/PICO-MAZING/micro_ros_raspberrypi_pico_sdk/tree/humble">https://github.com/PICO-MAZING/micro_ros_raspberrypi_pico_sdk/tree/humble</a>. Nous n'avons cependant pas besoin de tous ces fichiers, mais il a notamment créé les deux fichiers qu'il nous faut, et un troisième fichier qui permet le fonctionement de ceux-ci : lwipopts.h qui est une bibliothèque contenant les options du LWIP, une petite implémentation du protocole TCP/IP.</p>
+                                <p>Le fichier <code>pico_wifi_transport.c</code> contient les différentes fonctions qui vont nous permettre de gérer les connexions wifi, alors que <code>pico_wifi_transport.h</code> contient la méthode permettant de se connecter à un réseau wifi via un protocole udp4.</p>
+                            
+                            </li>
+
+                            <li>
+                                <p>Créez les 3 fichiers <code>pico_wifi_transport.c</code>, <code>pico_wifi_transport.h</code> et <code>lwipopts.h</code> :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code47')">Copier</button>
+<pre id="code47" class="code-content">
+touch pico_wifi_transport.c pico_wifi_transport.h lwipopts.h
+</pre>
+                                </div>
+                            </li>
+
+                            <li id="pico_wifi_transport.c">
+                                <p>Ouvrez le fichier <code>pico_wifi_transport.c</code></p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code48')">Copier</button>
+<pre id="code48" class="code-content">
+sudo nano pico_wifi_transport.c
+</pre>
+                                </div>
+                            
+                                <p>Remplissez-le avec le texte en <a href="#annexe6">Annexe 6</a>. Le code à été annoté pour plus de compréhension.<br>Une fois le programme ci-dessus écrit, sauvegardez-le avec <code>ctrl+O</code> et quittez avec <code>ctrl+X</code></p>
+                            </li>
+
+                            <li id="pico_wifi_transport.h">
+                                <p>Ouvrez le fichier <code>pico_wifi_transport.h</code> :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code49')">Copier</button>
+<pre id="code49" class="code-content">
+sudo nano pico_wifi_transport.h
+</pre>
+                                </div>
+                            
+                                <p>Remplissez-le avec le texte en <a href="#annexe7">Annexe 7</a>. Le code à été annoté pour plus de compréhension.<br>Une fois le programme ci-dessus écrit, sauvegardez-le avec <code>ctrl+O</code> et quittez avec <code>ctrl+X</code></p>
+                            </li>
+
+                            <li id="lwipopts.h">
+                                <p>Ouvrez le fichier <code>pico_wifi_transport.c</code> :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code50')">Copier</button>
+<pre id="code50" class="code-content">
+sudo nano lwipopts.h
+</pre>
+                                </div>
+                            
+                                <p>Remplissez-le avec le texte en <a href="#annexe8">Annexe 8</a>. Le code à été annoté pour plus de compréhension.<br>Une fois le programme ci-dessus écrit, sauvegardez-le avec <code>ctrl+O</code> et quittez avec <code>ctrl+X</code></p>
+                            </li>
+                            
+                        </ol>
+                    </section>
+
+                    <section id="subsection4-2">
+                        <h4>Création du Publisher</h4>
+                        <p>Maintenant que nous avons tous les fichiers nécessaires, nous allons créer notre programme. Ce code est très similaire à celui créé précédemment, la seule différence étant la connexion à l'agent ainsi que les noms des nœuds et Publisher.</p>
+                        <ol>
+                            <li id="Pub_wifi.c">
+                                <p>Ouvrez le fichier <code>pico_wifi_transport.c</code> :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code51')">Copier</button>
+<pre id="code51" class="code-content">
+sudo nano Pub_wifi.c
+</pre>
+                                </div>
+                            
+                                <p>Remplissez-le avec le texte en <a href="#annexe9">Annexe 9</a>. Le code à été annoté pour plus de compréhension.</p>
+                                <p>N'oubliez pas de remplacer, à la ligne suivante, le <code>SSID</code> par le nom du réseau wifi, <code>PWD</code> par le mot de passe de ce réseau, et <code>IP</code> par l'adresse IP de l'ordinateur auquel vous voulez vous connecte :</p>
+                                <div class="code-block" style="background-color: lightgray;">
+<pre id="code52" class="code-content">
+set_microros_wifi_transports("SSID", "PWD", "IP", 4444); // connexion à un réseau wifi
+</pre>
+                                </div>
+                                <p>Une fois le programme ci-dessus écrit et modifié, sauvegardez-le avec <code>ctrl+O</code> et quittez avec <code>ctrl+X</code></p>
+                            </li>
+
+                            <li>
+                                <p>Ouvrez le fichier <code>CMakeLists.txt</code> :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code52')">Copier</button>
+<pre id="code52" class="code-content">
+sudo nano CMakeLists.txt
+</pre>
+                                </div>
+                            </li>
+                            <li>
+                                <p>Modifiez ce code en ajoutant les lignes encadrées en rouge dans les images ci-dessous :</p>
+                                <ul style="list-style-type: square;">
+                                    <li>
+                                        <p><i>On précise que nous avons une carte Pico W et on définit notre nouveau projet :</i></p>
+                                        <img src="images/tuto_5/section4/Image6.png" width="350px" style="margin-bottom: 10px;">
+                                    </li>
+                                    <li>
+                                        <p><i>On ajoute les deux fichiers exécutables dans notre projet :</i></p>
+                                        <img src="images/tuto_5/section4/Image7.png" width="180px">
+                                    </li>
+                                    <li>
+                                        <p><i>On ajoute nos deux bibliothèques :</i></p>
+                                        <img src="images/tuto_5/section4/Image8.png" width="200px">
+                                    </li>
+                                    <li>
+                                        <p><i>On lui indique où trouver les fichiers <code>include</code>, en ajoutant le répertoire de base et son parent pour ajouter nos nouveaux fichiers <code>.h</code> et on rajoute le module wifi à la liste des bibliothèques.</i></p>
+                                        <img src="images/tuto_5/section4/Image9.png" width="280px">
+
+                                    </li>
+                                    <li>
+                                        <p><i>On lui demande de fermer les ports UART et USB, et on crée le fichier uf2 pour programmer la carte Pico W.</i></p>
+                                        <img src="images/tuto_5/section4/Image10.png" width="350px">
+                                    </li>
+                                </ul>
+                                
+                                
+                                <p>Sauvegardez avec <code>ctrl+O</code> et quittez avec <code>ctrl+X</code></p>
+
+                                
+                            </li>
+                        </ol>
+                    
+                    </section>
+
+                    <section id="subsection4-3">
+                        <h4>Construction du répertoire micro_ros_raspberry_pico_sdk</h4>
+                        <ol>
+                            <li>
+                                <p>Retournez dans le dossier <code>build</code> et recommencer notre construction de workspace :</code> :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code53')">Copier</button>
+<pre id="code53" class="code-content">
+cd build
+cmake ..
+make
+</pre>
+                                </div>
+                            </li>
+
+                            <li>
+                                <p>De nouveaux fichiers doivent être apparus, dont notre <code>Pub_wifi.uf2</code> :</p>
+                                <img src="images/tuto_5/section4/Image11.png" width="500px">
+                            </li>
+
+                            <li>
+                                <p>Retournez dans le dossier parent :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code54')">Copier</button>
+<pre id="code54" class="code-content">
+cd ..
+</pre>
+                                </div>
+                            </li>
+
+                            <li>
+                                <p>Branchez la carte à l'ordinateur en maintenant le bouton BOOTSEL pour programmer notre carte Pico.Ensuite, nous devons lui envoyer le fichier <code>Pub.uf2</code> en tapant la commande :</p>
+                                <img src="images/tuto_5/section4/Image12.png" width="225px">
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code55')">Copier</button>
+<pre id="code55" class="code-content">
+cp build/Pub_wifi.uf2 /media/$USER/RPI-RP2
+</pre>
+                                </div>
+                                <p>Il faut vérifier que la carte disparait bien de la liste des appareils de stockage connectés. Cela signifirait que la programmation à bien réussie. </p>
+                            
+                                <p>Vous devriez normalement voir apparaître un appareil sur votre réseau wifi. Si ce n'est pas le cas, débranchez et rebranchez la carte Pico W.</p>
+                            
+                            </li>
+
+                        </ol>
+                    </section>
+
+                    <section id="subsection4-4">
+                        <h4>Lancement du Publisher sur la carte Pico W et vérifications</h4>
+                        <ol>
+                            <li>
+                                <p>Lancez le client, une fois la carte connectée au réseau Wifi :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code56')">Copier</button>
+<pre id="code56" class="code-content">
+micro-ros-agent udp4 --port 4444
+</pre>
+                                </div>
+                            </li>
+
+                            <li>
+                                <p>Vous devriez obtenir :</p>
+                                <img src="images/tuto_5/section4/Image13.png" width="550px">
+                            </li>
+
+                            <li>
+                                <p>utilisez la commande <code>ros2 topic list</code> pour observer les différents topics, vous devriez normalement voir :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code57')">Copier</button>
+<pre id="code57" class="code-content">
+ros2 topic list
+</pre>
+                                </div>
+                                <img src="images/tuto_5/section4/Image14.png" width="220px">
+
+                            </li>
+
+                            <li>
+                                <p>Regardez les messages envoyés dessus :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code58')">Copier</button>
+<pre id="code58" class="code-content">
+ros2 topic echo /pico_wifi_publisher
+</pre>
+                                </div>
+                                <img src="images/tuto_5/section4/Image15.png" width="320px">
+                            </li>
+
+                            <li>
+                                <p>Regardez avec <code>rqt_graph</code> la réprésentation de la structure de ce système Publisher :</p>
+                                <div class="code-block">
+<button class="copy-button" onclick="copyCode('code59')">Copier</button>
+<pre id="code55" class="code-content">
+rqt_graph
+</pre>
+                                </div>
+                                <img src="images/tuto_5/section4/Image16.png" width="300px">
+                            </li>
+                            <p>Ceci conclut notre tutoriel sur l'utilisation de micro-ROS sur un microcontrôleur, et plus particulièrement une carte Raspberry Pi Pico et Pico W.</p>
+                        </ol>
+                    </section>
+
+                </section>
+
                 <section id="section8">
                     <h3>Annexes</h3>
                     
@@ -703,6 +1270,561 @@ install(TARGETS ${PROJECT_NAME}
 </pre>
                         </div>
                     </section>
+
+
+                    <section id="annexe5">
+                        <h4>Annexe 5 : Code pour le Publisher (communication série)</h4>
+                        <p>Revenez <a href="#pub_serie">au bon endroit</a> dans le tuto !</p>
+                        
+                        <div class="code-block">
+<button class="copy-button" onclick="copyCode('code_pub_serie')">Copier</button>
+<pre id="code_pub_serie" class="code-content">
+//Installation des bibliothèques
+#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+//Bibliothèque permettant de gérer les entrées sorties
+#include &lt;rcl/rcl.h&gt;
+#include &lt;rcl/error_handling.h&gt;
+#include &lt;rclc/rclc.h&gt;
+#include &lt;rclc/executor.h&gt;
+//Bibliothèques de gestion des API en C
+#include &lt;std_msgs/msg/string.h&gt;
+#include &lt;rmw_microros/rmw_microros.h&gt;
+//Bibliotheque de String
+#include "pico/stdlib.h"
+#include "pico_uart_transports.h"
+//Bibliothèque propre à la carte Pico pour le transport UART et les formats de messages
+//On définit une variable LED_PIN qui est le pin de la led de la carte Pico. 
+const uint LED_PIN = 25;
+
+//On définit une variable ARRAY_LEN qui sera la taille maimale
+// de notre STRING
+#define ARRAY_LEN 200
+
+//Initialisation du publisher et du message
+rcl_publisher_t publisher;
+std_msgs__msg__String msg;
+
+//On crée notre boucle callback qui va se lancer à chaque tic de notre timer ( on envoie alors notre message)
+void timer_callback(rcl_timer_t *timer, int64_t last_call_time)
+{
+    sprintf(msg.data.data, "Hello World !!!");
+    msg.data.size = strlen(msg.data.data);
+    rcl_ret_t ret = rcl_publish(&publisher, &msg, NULL);
+}
+
+//Fonction principale qui se lance automatiquement lors de l'alimentation de la carte Pico.
+int main()
+{
+    //On crée une communication UROS avec le port série de la carte Pico.
+    rmw_uros_set_custom_transport(
+        true,
+        NULL,
+        pico_serial_transport_open,
+        pico_serial_transport_close,
+        pico_serial_transport_write,
+        pico_serial_transport_read
+    );
+
+    //on définit la led comme une sortie pour pouvoir l'allumer.
+    gpio_init(LED_PIN);
+    gpio_set_dir(LED_PIN, GPIO_OUT);
+
+    //Création des différents élèments de notre Publisher
+    rcl_timer_t timer;
+    rcl_node_t node;
+    rcl_allocator_t allocator;
+    rclc_support_t support;
+    rclc_executor_t executor;
+
+    //Création de l'allocateur qui gère la mémoire dynamique 
+    //allouée au programme
+    allocator = rcl_get_default_allocator();
+
+    // On essaie pendant 2 minutes après la connexion à l'ordinateur de .se connecter à un agen micro-ROS.
+    const int timeout_ms = 1000; 
+    const uint8_t attempts = 120;
+
+    rcl_ret_t ret = rmw_uros_ping_agent(timeout_ms, attempts);
+
+    if (ret != RCL_RET_OK)
+    {
+        // Si on arrive pas à atteindre l'agent au bout de 2 minutes, on arrête le programme.
+        return ret;
+    }
+
+    //Création du support qui va créer le client micro-ros et 
+    //gérer les données
+    rclc_support_init(&support, 0, NULL, &allocator);
+
+    //Création d'un noeud micro-ROS.
+    rclc_node_init_default(&node, "pico_node", "", &support);
+
+    //Création du Publisher sur le topic pico_publisher
+    rclc_publisher_init_default(
+        &publisher,
+        &node,
+        ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, String),
+        "pico_publisher");
+
+    //Création du timer auquel on va ajouter la fonction que 
+    //nous avons défini plus haut
+    rclc_timer_init_default(
+        &timer,
+        &support,
+        RCL_MS_TO_NS(1000),
+        timer_callback);
+
+    //Création de l'executeur qui est un API gérant les timers et les
+    //souscription à des topics
+    rclc_executor_init(&executor, &support.context, 1, &allocator);
+    rclc_executor_add_timer(&executor, &timer);
+    
+
+//On allume la led pour indiquer que le programme tourne bien
+    gpio_put(LED_PIN, 1);
+
+    //On initialise notre message
+    msg.data.data = (char * ) malloc(ARRAY_LEN * sizeof(char));
+    msg.data.size = 0;
+    msg.data.capacity = ARRAY_LEN;
+    while (true)
+    {
+        //On lance une boucle infinie dans laquelle on met notre exécuteur
+        rclc_executor_spin_some(&executor, RCL_MS_TO_NS(100));
+    }
+    return 0;
+}
+    
+</pre>
+                        </div>
+                    </section>
+
+
+                    <section id="annexe6">
+                        <h4>Annexe 6 : Code pico_wifi_transport.c (communication wifi)</h4>
+                        <p>Revenez <a href="#pico_wifi_transport.c">au bon endroit</a> dans le tuto !</p>
+                        
+                        <div class="code-block">
+<button class="copy-button" onclick="copyCode('code_pico_wifi_transport.c')">Copier</button>
+<pre id="code_pico_wifi_transport.c" class="code-content">
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;stdlib.h&gt;
+    
+#include "pico/stdlib.h"
+#include "pico/cyw43_arch.h"
+    
+#include "lwip/pbuf.h"
+#include "lwip/udp.h"
+    
+#include &lt;uxr/client/profile/transport/custom/custom_transport.h&gt;
+    
+struct micro_ros_agent_locator
+{
+    ip_addr_t address;
+    int port;
+};
+    
+struct transport_buffer
+{
+    uint8_t *buf;
+    bool packet_received;
+};
+    
+void usleep(uint64_t us)
+{
+    sleep_us(us);
+}
+    
+int clock_gettime(clockid_t unused, struct timespec *tp)
+{
+    uint64_t m = time_us_64();
+    tp-&gt;tv_sec = m / 1000000;
+    tp-&gt;tv_nsec = (m % 1000000) * 1000;
+    return 0;
+}
+    
+static struct udp_pcb *pcb;
+    
+bool pico_wifi_transport_open(struct uxrCustomTransport *transport)
+{
+    struct micro_ros_agent_locator *locator = (struct micro_ros_agent_locator *)transport-&gt;args;
+    
+    pcb = udp_new();
+    
+    err_t bind_error = udp_bind(pcb, IP_ADDR_ANY, locator-&gt;port);
+    
+    bind_error = udp_connect(pcb, &locator-&gt;address, locator-&gt;port);
+    
+    return bind_error == ERR_OK;
+}
+bool pico_wifi_transport_close(struct uxrCustomTransport *transport)
+{
+    udp_disconnect(pcb);
+    return true;
+}
+    
+size_t pico_wifi_transport_write(struct uxrCustomTransport *transport, const uint8_t *buf, size_t len, uint8_t *errcode)
+{
+    
+    struct micro_ros_agent_locator *locator = (struct micro_ros_agent_locator *)transport-&gt;args;
+    
+    struct pbuf *p = pbuf_alloc(PBUF_TRANSPORT, len, PBUF_RAM);
+
+    memcpy(p-&gt;payload, buf, p-&gt;len);
+    
+    err_t er = udp_send(pcb, p);
+    
+    pbuf_free(p);
+    
+    if (er != ERR_OK)
+    {
+        printf("Writing error");
+        return 0;
+    }
+    return len;
+}
+    
+static void udp_recv_callback(void *arg, struct udp_pcb *pcb,
+                                struct pbuf *p, const ip_addr_t *addr, u16_t port)
+{
+    struct transport_buffer *transport_buffer = (struct transport_buffer *)arg;
+    memcpy(transport_buffer-&gt;buf, p-&gt;payload, p-&gt;len);
+    pbuf_free(p);
+    transport_buffer-&gt;packet_received = true;
+}
+    
+size_t pico_wifi_transport_read(struct uxrCustomTransport *transport, uint8_t *buf, size_t len, int timeout, uint8_t *errcode)
+{
+    (void)errcode;
+    
+    struct transport_buffer transport_buffer = {buf, false};
+    
+    uint64_t start_time_us = time_us_64();
+    int64_t elapsed_time_us = timeout * 1000 - (time_us_64() - start_time_us);
+    
+    while (!transport_buffer.packet_received && elapsed_time_us &gt; 0)
+    {
+        udp_recv(pcb, udp_recv_callback, &transport_buffer);
+        sleep_ms(1);
+        elapsed_time_us = timeout * 1000 - (time_us_64() - start_time_us);
+    }
+    
+    return (elapsed_time_us &lt; 0) ? 0 : len;
+}
+
+</pre>
+                        </div>
+                    </section>
+
+
+                    <section id="annexe7">
+                        <h4>Annexe 7 : Code pico_wifi_transport.h (communication wifi)</h4>
+                        <p>Revenez <a href="#pico_wifi_transport.h">au bon endroit</a> dans le tuto !</p>
+                        
+                        <div class="code-block">
+<button class="copy-button" onclick="copyCode('code_pico_wifi_transport.h')">Copier</button>
+<pre id="code_pico_wifi_transport.h" class="code-content">
+#ifndef MICRO_ROS_PICOSDK
+#define MICRO_ROS_PICOSDK
+    
+#include &lt;stdio.h&gt;
+#include &lt;stdint.h&gt;
+#include &lt;string.h&gt;
+#include &lt;stdlib.h&gt;
+    
+#include "pico/stdlib.h"
+#include "pico/cyw43_arch.h"
+    
+#include "lwip/pbuf.h"
+#include "lwip/udp.h"
+    
+#include &lt;uxr/client/profile/transport/custom/custom_transport.h&gt;
+    
+bool pico_wifi_transport_open(struct uxrCustomTransport *transport);
+bool pico_wifi_transport_close(struct uxrCustomTransport *transport);
+size_t pico_wifi_transport_write(struct uxrCustomTransport *transport, const uint8_t *buf, size_t len, uint8_t *err);
+size_t pico_wifi_transport_read(struct uxrCustomTransport *transport, uint8_t *buf, size_t len, int timeout, uint8_t *err);
+    
+struct micro_ros_agent_locator
+{
+    ip_addr_t address;
+    int port;
+};
+    
+static inline bool set_microros_wifi_transports(char *ssid, char *pass, char *agent_ip, uint agent_port)
+{
+    
+        stdio_init_all();
+
+
+    if (cyw43_arch_init())
+    {
+        printf("failed to initialise\n");
+        return 1;
+    }
+    cyw43_arch_enable_sta_mode();
+    
+    sleep_ms(1000);
+    
+    printf("Connecting to Wi-Fi...\n");
+    if (cyw43_arch_wifi_connect_timeout_ms(ssid, pass, CYW43_AUTH_WPA2_AES_PSK, 20000))
+    {
+        printf("failed to connect.\n");
+        return 1;
+    }
+    else
+    {
+        printf("Connected.\n");
+    }
+    
+    static struct micro_ros_agent_locator locator;
+    ipaddr_aton(agent_ip, &locator.address);
+    locator.port = agent_port;
+    
+    rmw_uros_set_custom_transport(
+        false,
+        (void *)&locator,
+        pico_wifi_transport_open,
+        pico_wifi_transport_close,
+        pico_wifi_transport_write,
+        pico_wifi_transport_read);
+    
+    return 0;
+}
+    
+#endif // MICRO_ROS_PICOSDK
+    
+</pre>
+                        </div>
+                    </section>
+
+
+                    <section id="annexe8">
+                        <h4>Annexe 8 : Code lwipopts.h (communication wifi)</h4>
+                        <p>Revenez <a href="#lwipopts.h">au bon endroit</a> dans le tuto !</p>
+                        
+                        <div class="code-block">
+<button class="copy-button" onclick="copyCode('code_lwipopts.h')">Copier</button>
+<pre id="code_lwipopts.h" class="code-content">
+#ifndef __LWIPOPTS_H__
+#define __LWIPOPTS_H__
+    
+// Common settings used in most of the pico_w examples
+// (see https://www.nongnu.org/lwip/2_1_x/group__lwip__opts.html for details)
+    
+// allow override in some examples
+#ifndef NO_SYS
+#define NO_SYS                      1
+#endif
+// allow override in some examples
+#ifndef LWIP_SOCKET
+#define LWIP_SOCKET                 0
+#endif
+#if PICO_CYW43_ARCH_POLL
+#define MEM_LIBC_MALLOC             1
+#else
+// MEM_LIBC_MALLOC is incompatible with non polling versions
+#define MEM_LIBC_MALLOC             0
+#endif
+#define MEM_ALIGNMENT               4
+#define MEM_SIZE                    4000
+#define MEMP_NUM_TCP_SEG            32
+#define MEMP_NUM_ARP_QUEUE          10
+#define PBUF_POOL_SIZE              24
+#define LWIP_ARP                    1
+#define LWIP_ETHERNET               1
+#define LWIP_ICMP                   1
+#define LWIP_RAW                    1
+#define TCP_WND                     (8 * TCP_MSS)
+#define TCP_MSS                     1460
+#define TCP_SND_BUF                 (8 * TCP_MSS)
+#define TCP_SND_QUEUELEN            ((4 * (TCP_SND_BUF) + (TCP_MSS - 1)) / (TCP_MSS))
+#define LWIP_NETIF_STATUS_CALLBACK  1
+#define LWIP_NETIF_LINK_CALLBACK    1
+#define LWIP_NETIF_HOSTNAME         1
+#define LWIP_NETCONN                0
+#define MEM_STATS                   0
+#define SYS_STATS                   0
+#define MEMP_STATS                  0
+#define LINK_STATS                  0
+// #define ETH_PAD_SIZE                2
+#define LWIP_CHKSUM_ALGORITHM       3
+#define LWIP_DHCP                   1
+#define LWIP_IPV4                   1
+#define LWIP_TCP                    1
+#define LWIP_UDP                    1
+#define LWIP_DNS                    1
+#define LWIP_TCP_KEEPALIVE          1
+#define LWIP_NETIF_TX_SINGLE_PBUF   1
+#define DHCP_DOES_ARP_CHECK         0
+#define LWIP_DHCP_DOES_ACD_CHECK    0
+    
+#ifndef NDEBUG
+#define LWIP_DEBUG                  1
+#define LWIP_STATS                  1
+#define LWIP_STATS_DISPLAY          1
+#endif
+    
+#define ETHARP_DEBUG                LWIP_DBG_OFF
+#define NETIF_DEBUG                 LWIP_DBG_OFF
+#define PBUF_DEBUG                  LWIP_DBG_OFF
+#define API_LIB_DEBUG               LWIP_DBG_OFF
+#define API_MSG_DEBUG               LWIP_DBG_OFF
+#define SOCKETS_DEBUG               LWIP_DBG_OFF
+#define ICMP_DEBUG                  LWIP_DBG_OFF
+#define INET_DEBUG                  LWIP_DBG_OFF
+#define IP_DEBUG                    LWIP_DBG_OFF
+#define IP_REASS_DEBUG              LWIP_DBG_OFF
+#define RAW_DEBUG                   LWIP_DBG_OFF
+#define MEM_DEBUG                   LWIP_DBG_OFF
+#define MEMP_DEBUG                  LWIP_DBG_OFF
+#define SYS_DEBUG                   LWIP_DBG_OFF
+#define TCP_DEBUG                   LWIP_DBG_OFF
+#define TCP_INPUT_DEBUG             LWIP_DBG_OFF
+#define TCP_OUTPUT_DEBUG            LWIP_DBG_OFF
+#define TCP_RTO_DEBUG               LWIP_DBG_OFF
+#define TCP_CWND_DEBUG              LWIP_DBG_OFF
+#define TCP_WND_DEBUG               LWIP_DBG_OFF
+#define TCP_FR_DEBUG                LWIP_DBG_OFF
+#define TCP_QLEN_DEBUG              LWIP_DBG_OFF
+#define TCP_RST_DEBUG               LWIP_DBG_OFF
+#define UDP_DEBUG                   LWIP_DBG_OFF
+#define TCPIP_DEBUG                 LWIP_DBG_OFF
+#define PPP_DEBUG                   LWIP_DBG_OFF
+#define SLIP_DEBUG                  LWIP_DBG_OFF
+#define DHCP_DEBUG                  LWIP_DBG_OFF
+    
+#endif /* __LWIPOPTS_H__ */
+    
+</pre>
+                        </div>
+                    </section>
+
+                    <section id="annexe9">
+                        <h4>Annexe 9 : Code Pub_wifi.c (communication wifi)</h4>
+                        <p>Revenez <a href="#Pub_wifi.c">au bon endroit</a> dans le tuto !</p>
+                        
+                        <div class="code-block">
+<button class="copy-button" onclick="copyCode('code_Pub_wifi.c')">Copier</button>
+<pre id="code_Pub_wifi.c" class="code-content">
+//Installation des bibliothèques
+#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+//Bibliothèque permettant de gérer les entrées sorties
+#include &lt;rcl/rcl.h&gt;
+#include &lt;rcl/error_handling.h&gt;
+#include &lt;rclc/rclc.h&gt;
+#include &lt;rclc/executor.h&gt;
+//Bibliothèques de gestion des API en C
+#include &lt;std_msgs/msg/string.h&gt;
+#include &lt;rmw_microros/rmw_microros.h&gt;
+//Bibliotheque de String
+#include "pico/stdlib.h"
+#include "pico_wifi_transport.h"
+//Bibliothèque propre à la carte Pico pour le transport UART et les formats de messages
+//On définit une variable LED_PIN qui est le pin de la led de la carte Pico. 
+const uint LED_PIN = 25;
+
+//On définit une variable ARRAY_LEN qui sera la taille maimale
+// de notre STRING
+#define ARRAY_LEN 200
+
+//Initialisation du publisher et du message
+rcl_publisher_t publisher;
+std_msgs__msg__String msg;
+
+//On crée notre boucle callback qui va se lancer à chaque tic de notre timer ( on envoie alors notre message)
+void timer_callback(rcl_timer_t *timer, int64_t last_call_time)
+{
+    sprintf(msg.data.data, "Hello World !!!");
+    msg.data.size = strlen(msg.data.data);
+    rcl_ret_t ret = rcl_publish(&publisher, &msg, NULL);
+}
+
+//Fonction principale qui se lance automatiquement lors de l'alimentation de la carte Pico.
+int main()
+{
+    //On crée une communication WIFI avec le port 4444 de l'ordinateur via un réseau mobile. 
+    
+        set_microros_wifi_transports("SSID", "PWD", "IP", 4444); // connexion à un réseau wifi
+    
+    
+
+
+
+    //on définit la led comme une sortie pour pouvoir l‘allumer.
+    gpio_init(LED_PIN);
+    gpio_set_dir(LED_PIN, GPIO_OUT);
+
+    //Création des différents élèments de notre Publisher
+    rcl_timer_t timer;
+    rcl_node_t node;
+    rcl_allocator_t allocator;
+    rclc_support_t support;
+    rclc_executor_t executor;
+
+    //Création de l'allocateur qui gère la mémoire dynamique 
+    //allouée au programme
+    allocator = rcl_get_default_allocator();
+
+    // On essaie pendant 2 minutes après la connexion à l'ordinateur de .se connecter à un agen micro-ROS.
+    const int timeout_ms = 1000; 
+    const uint8_t attempts = 120;
+
+    rcl_ret_t ret = rmw_uros_ping_agent(timeout_ms, attempts);
+
+    if (ret != RCL_RET_OK)
+    {
+        // Si on arrive pas à atteindre l'agent au bout de 2 minutes, on arrête le programme.
+        return ret;
+    }
+
+    //Création du support qui va créer le client micro-ros et 
+    //gérer les données
+    rclc_support_init(&support, 0, NULL, &allocator);
+
+    //Création d'un noeud micro-ROS.
+    rclc_node_init_default(&node, "pico_wifi_node", "", &support);
+
+    //Création du Publisher sur le topic pico_publisher
+    rclc_publisher_init_default(
+        &publisher,
+        &node,
+        ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, String),
+        "pico_wifi_publisher");
+
+    //Création du timer auquel on va ajouter la fonction que 
+    //nous avons défini plus haut
+    rclc_timer_init_default(
+        &timer,
+        &support,
+        RCL_MS_TO_NS(1000),
+        timer_callback);
+
+    //Création de l'executeur qui est un API gérant les timers et les
+    //souscription à des topics
+    rclc_executor_init(&executor, &support.context, 1, &allocator);
+    rclc_executor_add_timer(&executor, &timer);
+//On allume la led pour indiquer que le programme tourne bien
+    gpio_put(LED_PIN, 1);
+
+    //On initialise notre message
+    msg.data.data = (char * ) malloc(ARRAY_LEN * sizeof(char));
+    msg.data.size = 0;
+    msg.data.capacity = ARRAY_LEN;
+    while (true)
+    {
+        //On lance une boucle infinie dans laquelle on met notre exécuteur
+        rclc_executor_spin_some(&executor, RCL_MS_TO_NS(100));
+    }
+    return 0;
+}
+</pre>
+                        </div>
+                    </section>
+
                 </section>
             </article>
             <!-- Ajoutez d'autres articles pour chaque tutoriel -->
