@@ -194,12 +194,12 @@ img {
         transition: background-color 0.2s;
     }
     
-    #menu-dropdown a:hover {
-        background-color: #9b9ea0;  /*#2574a9*/
+    #menu-dropdown a:hover {  /*Couleur de onglet sur lequel le curseur est en survol*/
+        background-color: #9b9ea0;
     }
 
-    #menu-dropdown a.active {
-        background-color: #9b9ea0; /* Bleu foncé */
+    #menu-dropdown a.active { /*Couleur onglet actif*/
+        background-color: #9b9ea0;
         color: white;
     }
 }
