@@ -187,6 +187,9 @@ sudo nano main.c
 </pre>
                                 </div>
                                 <p>Remplissez-le avec le code qui se trouve en <a href="#annexe1">Annexe 1</a>. Les commentaires expliquent son fonctionnement. Sauvegardez avec <code>ctrl+O</code> et sortez du fichier avec <code>ctrl+X</code>.</p>
+                                <p>On notera que le type de message n'est pas un String classique, mais un “std_msgs__msg__String”. Ce sont des types de messages définis dans la bibliothèque micro-ROS, et c'est ceux-là qu'il faut utiliser pour les messages, les types classiques causant des erreurs. Le nom des différents types disponibles se trouve dans le dossier “~/micro_pico_ws/src/micro_ros_raspberrypi_pico_sdk/libmicroros/include/std_msgs/msg/detail”</p>
+                                <p>On peut alors retrouver le nom que chaque type de données possède dans son fichier structure. Par exemple, dans le fichier “bool__struct.h”, on retrouve la structure std_msgs__msg__Bool qui est le type de message à utilliser pour un booléen.</p>
+                            
                             </li>
                             <li id="cmakelist_pub">
                                 <p>Occupez-vous maintenant du fichier CMakeLists.txt :</p>
@@ -220,9 +223,7 @@ sudo nano CMakeLists.txt
                                 </div>
                                 <p>Remplissez-le avec le texte en <a href="#annexe4">Annexe 4</a> afin de donner les informations complémentaires au compilateur, enregistrez-les, et quittez l'éditeur de texte. Le Subcriber est maintenant codé !</p>
                             
-                                <p>On notera que le type de message n'est pas un String classique, mais un “std_msgs__msg__String”. Ce sont des types de messages définis dans la bibliothèque micro-ROS, et c'est ceux-là qu'il faut utiliser pour les messages, les types classiques causant des erreurs. Le nom des différents types disponibles se trouve dans le dossier “~/micro_pico_ws/src/micro_ros_raspberrypi_pico_sdk/libmicroros/include/std_msgs/msg/detail”</p>
-                                <p>On peut alors retrouver le nom que chaque type de données possède dans son fichier structure. Par exemple, dans le fichier “bool__struct.h”, on retrouve la structure std_msgs__msg__Bool qui est le type de message à utilliser pour un booléen.</p>
-                            </li>
+                                </li>
                         </ol>
                         
 
